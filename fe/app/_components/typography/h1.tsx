@@ -4,17 +4,17 @@ import { cn } from "@/lib/utils";
 type Props = ComponentProps<"h1">;
 
 export const TypographyH1: FC<PropsWithChildren<Props>> = (props) => {
-  const { className, children, ...rest } = props;
+	const { className, children, ...rest } = props;
 
-  return (
-    <h1
-      {...rest}
-      className={cn(
-        "scroll-m-20 text-center text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-balance",
-        className,
-      )}
-    >
-      {children}
-    </h1>
-  );
+	return (
+		<h1
+			{...rest}
+			className={cn(
+				"scroll-m-20 text-center text-5xl md:text-7xl font-extrabold tracking-tight drop-shadow-sm text-balance",
+				className,
+			)}
+		>
+			{children}
+		</h1>
+	);
 };
