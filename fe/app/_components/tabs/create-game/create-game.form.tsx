@@ -205,7 +205,7 @@ export const CreateGameForm = () => {
 								/>
 							</FormControl>
 							<FormDescription>
-								Set on which Side of the Target Price you bid on.
+								Set on which Side of the Target Price you bet on.
 							</FormDescription>
 							<FormMessage />
 						</FormItem>
@@ -245,7 +245,9 @@ export const CreateGameForm = () => {
 							<FormControl>
 								<Input {...field} className="max-sm:w-full w-64" />
 							</FormControl>
-							<FormDescription>Amount You Want to Bid (ETH).</FormDescription>
+
+							<FormDescription>Amount You Want to Bet (ETH).</FormDescription>
+
 							<FormMessage />
 						</FormItem>
 					)}

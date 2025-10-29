@@ -11,9 +11,7 @@ import { ThemeProvider } from "./theme-provider";
 
 const queryClient = new QueryClient();
 
-export const Providers: FC<PropsWithChildren> = (props) => {
-	const { children } = props;
-
+export const Providers: FC<PropsWithChildren> = ({ children }) => {
 	return (
 		<ThemeProvider
 			attribute="class"
