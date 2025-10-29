@@ -6,8 +6,8 @@ import {
 	CardTitle,
 } from "@/components/ui/card";
 import { TabsContent } from "@/components/ui/tabs";
-import { TypographyH2 } from "../typography/h2";
-import { TypographyLead } from "../typography/lead";
+import { TypographyH2 } from "../../typography/h2";
+import { TypographyLead } from "../../typography/lead";
 
 export const BidOnGamesTab = () => {
 	return (
