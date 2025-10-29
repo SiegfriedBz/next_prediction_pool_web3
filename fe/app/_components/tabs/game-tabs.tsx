@@ -1,18 +1,17 @@
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { BidOnGamesTab } from "./bid-on-games-tab";
-import { ClaimRewardsTab } from "./claim-rewards-tab";
-import { StartNewGameTab } from "./start-new-game-tab";
+import { BidOnGamesTab } from "./bid-on-games/bid-on-games.tab";
+import { ClaimRewardsTab } from "./claim-rewards/claim-rewards.tab";
+import { CreateGameTab } from "./create-game/create-game.tab";
 
 export const GameTabs = () => {
 	return (
-		<Tabs defaultValue="start-new-game">
+		<Tabs defaultValue="create-game">
 			<TabsList className="mx-auto justify-center flex max-sm:flex-wrap max-sm:items-start h-full md:gap-4">
-				{" "}
 				<TabsTrigger
-					value="start-new-game"
+					value="create-game"
 					className="max-md:text-lg text-2xl font-bold cursor-pointer w-fit"
 				>
-					Start a New Game
+					Create Game
 				</TabsTrigger>
 				<TabsTrigger
 					value="bid-on-games"
@@ -28,7 +27,7 @@ export const GameTabs = () => {
 				</TabsTrigger>
 			</TabsList>
 
-			<StartNewGameTab />
+			<CreateGameTab />
 			<BidOnGamesTab />
 			<ClaimRewardsTab />
 		</Tabs>
