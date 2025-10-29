@@ -1,34 +1,31 @@
-import {
-	cookieStorage,
-	createConfig,
-	createStorage,
-	http,
-	webSocket,
-} from "wagmi";
+import { getDefaultConfig } from "@rainbow-me/rainbowkit";
+import { cookieStorage, createStorage, http, webSocket } from "wagmi";
 import { sepolia } from "wagmi/chains";
 
 const ETH_SEPOLIA_ALCHEMY_HTTP_URL =
-	process.env.NEXT_PUBLIC_ETH_SEPOLIA_ALCHEMY_HTTP_URL_URL;
+	process.env.NEXT_PUBLIC_ETH_SEPOLIA_ALCHEMY_HTTP_URL ?? "";
 const ETH_SEPOLIA_ALCHEMY_WS_URL =
-	process.env.NEXT_PUBLIC_ETH_SEPOLIA_ALCHEMY_WS_URL_URL;
+	process.env.NEXT_PUBLIC_ETH_SEPOLIA_ALCHEMY_WS_URL ?? "";
+const WALLETCONNECT_PROJECT_ID =
+	process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID ?? "";
 
-// Used for reading, writing, connecting wallets, etc.
-export const wagmiHttpConfig = createConfig({
+export const wagmiHttpConfig = getDefaultConfig({
+	appName: "Bet2Gether",
+	projectId: WALLETCONNECT_PROJECT_ID,
 	chains: [sepolia],
 	ssr: true,
-	storage: createStorage({
-		storage: cookieStorage,
-	}),
+	storage: createStorage({ storage: cookieStorage }),
 	transports: {
-		[sepolia.id]: http(ETH_SEPOLIA_ALCHEMY_HTTP_URL ?? ""),
+		[sepolia.id]: http(ETH_SEPOLIA_ALCHEMY_HTTP_URL),
 	},
 });
 
-// Used ONLY for listening to events
-export const wagmiWsConfig = createConfig({
+export const wagmiWsConfig = getDefaultConfig({
+	appName: "Bet2Gether",
+	projectId: WALLETCONNECT_PROJECT_ID,
 	chains: [sepolia],
 	ssr: true,
 	transports: {
-		[sepolia.id]: webSocket(ETH_SEPOLIA_ALCHEMY_WS_URL ?? ""),
+		[sepolia.id]: webSocket(ETH_SEPOLIA_ALCHEMY_WS_URL),
 	},
 });
