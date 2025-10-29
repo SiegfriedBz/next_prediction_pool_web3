@@ -245,7 +245,9 @@ export const CreateGameForm = () => {
 							<FormControl>
 								<Input {...field} className="max-sm:w-full w-64" />
 							</FormControl>
+
 							<FormDescription>Amount You Want to Bet (ETH).</FormDescription>
+
 							<FormMessage />
 						</FormItem>
 					)}
