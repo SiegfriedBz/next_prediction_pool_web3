@@ -57,7 +57,7 @@ const formSchema = z.object({
 
 	dataFeedAddress: z.string().min(1, "Please select a pair"),
 
-	gteTargetPrice: z.boolean(),
+	isAboveTarget: z.boolean(),
 });
 
 type FormSchemaT = z.infer<typeof formSchema>;
@@ -73,11 +73,11 @@ export const CreateGameForm = () => {
 	const form = useForm<FormSchemaT>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
-			ethValue: "0",
+			ethValue: "0.1",
 			dataFeedAddress: "",
 			targetPrice: "",
 			duration: "10",
-			gteTargetPrice: true,
+			isAboveTarget: true,
 		},
 	});
 
@@ -95,7 +95,7 @@ export const CreateGameForm = () => {
 
 	const onSubmit = useCallback(
 		async (values: FormSchemaT) => {
-			const { dataFeedAddress, gteTargetPrice } = values;
+			const { dataFeedAddress, isAboveTarget } = values;
 			const ethValueInWei = parseEther(values.ethValue);
 			const targetPriceInWei = parseEther(values.targetPrice);
 			const duration = parseInt(values.duration, 10) * 60;
@@ -104,7 +104,7 @@ export const CreateGameForm = () => {
 				...contractConfig,
 				functionName: "createRound",
 				// payable createRound(address _feed, uint256 _target, BetSide _betSide, uint256 _duration)
-				args: [dataFeedAddress, targetPriceInWei, gteTargetPrice, duration],
+				args: [dataFeedAddress, targetPriceInWei, isAboveTarget, duration],
 				value: ethValueInWei,
 			});
 		},
@@ -191,7 +191,7 @@ export const CreateGameForm = () => {
 
 				<FormField
 					control={form.control}
-					name="gteTargetPrice"
+					name="isAboveTarget"
 					render={({ field }) => (
 						<FormItem>
 							<FormLabel className="flex items-center font-semibold">
