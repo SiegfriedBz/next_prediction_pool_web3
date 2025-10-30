@@ -18,7 +18,7 @@ const badgeVariants = cva(
 				outline:
 					"text-foreground [a&]:hover:bg-accent [a&]:hover:text-accent-foreground",
 				chartTwo:
-					"border-transparent bg-chart-2 text-chart-2-foreground [a&]:hover:bg-chart-2/90",
+					"border-transparent bg-chart-2 text-accent-foreground [a&]:hover:bg-chart-2/90",
 			},
 		},
 		defaultVariants: {

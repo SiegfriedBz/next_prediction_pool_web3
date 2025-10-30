@@ -8,6 +8,7 @@ import {
 import { TabsContent } from "@/components/ui/tabs";
 import { TypographyH2 } from "../../typography/h2";
 import { TypographyLead } from "../../typography/lead";
+import { GamesTable } from "./games-table";
 
 export const BetOnGamesTab = () => {
 	return (
@@ -15,13 +16,15 @@ export const BetOnGamesTab = () => {
 			<Card>
 				<CardHeader>
 					<CardTitle>
-						<TypographyH2>Bet on running Games</TypographyH2>
+						<TypographyH2>Bet on Games</TypographyH2>
 					</CardTitle>
 					<CardDescription>
 						<TypographyLead>Select Games on which to bet</TypographyLead>
 					</CardDescription>
 				</CardHeader>
-				<CardContent>Bet on running Games - TABLE</CardContent>
+				<CardContent>
+					<GamesTable />
+				</CardContent>
 			</Card>
 		</TabsContent>
 	);
