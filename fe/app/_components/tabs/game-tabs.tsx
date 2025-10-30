@@ -1,5 +1,5 @@
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { BidOnGamesTab } from "./bid-on-games/bid-on-games.tab";
+import { BetOnGamesTab } from "./bet-on-games/bet-on-games.tab";
 import { ClaimRewardsTab } from "./claim-rewards/claim-rewards.tab";
 import { CreateGameTab } from "./create-game/create-game.tab";
 
@@ -14,10 +14,10 @@ export const GameTabs = () => {
 					Create Game
 				</TabsTrigger>
 				<TabsTrigger
-					value="bid-on-games"
+					value="bet-on-games"
 					className="max-md:text-lg text-2xl font-bold cursor-pointer w-fit"
 				>
-					Bid on Games
+					Bet on Games
 				</TabsTrigger>
 				<TabsTrigger
 					value="claim-rewards"
@@ -28,7 +28,7 @@ export const GameTabs = () => {
 			</TabsList>
 
 			<CreateGameTab />
-			<BidOnGamesTab />
+			<BetOnGamesTab />
 			<ClaimRewardsTab />
 		</Tabs>
 	);
