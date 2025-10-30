@@ -1,18 +1,490 @@
-
-import { HexAddress, Network, NetworkT } from "../_types";
-import { ContractConfigT } from "./types";
+import { type HexAddress, Network, type NetworkT } from "../_types";
+import type { ContractConfigT } from "./types";
 
 const predictionPoolAddressMap = new Map<NetworkT, HexAddress>([
-  [Network.SEPOLIA, "0xA166111823928C98c9C24510459EC343fDFDBDC3"],
-  // [Network.MUMBAI, ""]
-])
+	[Network.SEPOLIA, "0x1A3D6f547ce55463B03151cBC17f323501FC9170"],
+	// [Network.MUMBAI, ""]
+]);
 
-export const getPredictionPoolContractConfig = (chainId: number): ContractConfigT=> {
+export const getPredictionPoolContractConfig = (
+	chainId: number,
+): ContractConfigT => {
+	const address = predictionPoolAddressMap.get(chainId);
 
-  const address = predictionPoolAddressMap.get(chainId);
-
-  return {
-    address: address!,
-    abi: [{"inputs":[{"internalType":"address[]","name":"_allowedDataFeeds","type":"address[]"},{"internalType":"uint256","name":"_minRoundDuration","type":"uint256"}],"stateMutability":"nonpayable","type":"constructor"},{"inputs":[{"internalType":"address","name":"owner","type":"address"}],"name":"OwnableInvalidOwner","type":"error"},{"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"OwnableUnauthorizedAccount","type":"error"},{"inputs":[],"name":"PredictionPool_AlreadyClaimed","type":"error"},{"inputs":[],"name":"PredictionPool_CanBidOnlyOncePerRound","type":"error"},{"inputs":[{"internalType":"uint8","name":"decimals","type":"uint8"}],"name":"PredictionPool_InvalidChainlinkDecimals","type":"error"},{"inputs":[],"name":"PredictionPool_InvalidDuration","type":"error"},{"inputs":[],"name":"PredictionPool_InvalidFeed","type":"error"},{"inputs":[],"name":"PredictionPool_InvalidValue","type":"error"},{"inputs":[],"name":"PredictionPool_NegativeChainlinkPrice","type":"error"},{"inputs":[],"name":"PredictionPool_NotAWinner","type":"error"},{"inputs":[],"name":"PredictionPool_RewardTransferFailed","type":"error"},{"inputs":[],"name":"PredictionPool_RoundIsNotActive","type":"error"},{"inputs":[],"name":"PredictionPool_RoundNotResolved","type":"error"},{"inputs":[],"name":"PredictionPool_ZeroAddressNotAllowed","type":"error"},{"inputs":[],"name":"ReentrancyGuardReentrantCall","type":"error"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"previousOwner","type":"address"},{"indexed":true,"internalType":"address","name":"newOwner","type":"address"}],"name":"OwnershipTransferred","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"uint256","name":"roundId","type":"uint256"},{"indexed":true,"internalType":"address","name":"player","type":"address"},{"indexed":true,"internalType":"uint256","name":"value","type":"uint256"},{"indexed":false,"internalType":"enum PredictionPool.BidSide","name":"bidSide","type":"uint8"},{"indexed":false,"internalType":"uint256","name":"playTime","type":"uint256"}],"name":"PredictionPool_NewBet","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"uint256","name":"duration","type":"uint256"}],"name":"PredictionPool_NewMinRoundDuration","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"uint256","name":"roundId","type":"uint256"},{"indexed":true,"internalType":"enum PredictionPool.RoundStatus","name":"status","type":"uint8"}],"name":"PredictionPool_NewRoundStatus","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"feed","type":"address"},{"indexed":true,"internalType":"bool","name":"enabled","type":"bool"}],"name":"PredictionPool_PriceFeedToggled","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"uint256","name":"roundId","type":"uint256"},{"indexed":true,"internalType":"address","name":"player","type":"address"},{"indexed":true,"internalType":"uint256","name":"value","type":"uint256"}],"name":"PredictionPool_RewardClaimed","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"uint256","name":"roundId","type":"uint256"},{"indexed":true,"internalType":"address","name":"player","type":"address"},{"indexed":true,"internalType":"uint256","name":"value","type":"uint256"},{"indexed":false,"internalType":"enum PredictionPool.BidSide","name":"bidSide","type":"uint8"},{"indexed":false,"internalType":"uint256","name":"end","type":"uint256"}],"name":"PredictionPool_RoundCreated","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"uint256","name":"roundId","type":"uint256"},{"indexed":true,"internalType":"address","name":"creator","type":"address"},{"indexed":true,"internalType":"bool","name":"creatorIsWinner","type":"bool"}],"name":"PredictionPool_RoundResolved","type":"event"},{"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"allowedDataFeeds","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"allowedDataFeedsList","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"_roundId","type":"uint256"},{"internalType":"enum PredictionPool.BidSide","name":"_bidSide","type":"uint8"}],"name":"bidOn","outputs":[],"stateMutability":"payable","type":"function"},{"inputs":[{"internalType":"bytes","name":"","type":"bytes"}],"name":"checkUpkeep","outputs":[{"internalType":"bool","name":"upkeepNeeded","type":"bool"},{"internalType":"bytes","name":"performData","type":"bytes"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"_roundId","type":"uint256"}],"name":"claimReward","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_feed","type":"address"},{"internalType":"uint256","name":"_target","type":"uint256"},{"internalType":"enum PredictionPool.BidSide","name":"_bidSide","type":"uint8"},{"internalType":"uint256","name":"_duration","type":"uint256"}],"name":"createRound","outputs":[],"stateMutability":"payable","type":"function"},{"inputs":[{"internalType":"address","name":"_dataFeed","type":"address"}],"name":"getChainlinkDataFeedNormalizedPrice","outputs":[{"internalType":"uint256","name":"normalizedPrice","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"_roundId","type":"uint256"}],"name":"getRound","outputs":[{"components":[{"internalType":"uint256","name":"id","type":"uint256"},{"internalType":"address","name":"creator","type":"address"},{"internalType":"enum PredictionPool.RoundStatus","name":"status","type":"uint8"},{"internalType":"uint256","name":"gteTotal","type":"uint256"},{"internalType":"uint256","name":"ltTotal","type":"uint256"},{"internalType":"address","name":"priceFeed","type":"address"},{"internalType":"uint256","name":"target","type":"uint256"},{"internalType":"uint256","name":"end","type":"uint256"}],"internalType":"struct PredictionPool.Round","name":"","type":"tuple"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"},{"internalType":"address","name":"","type":"address"}],"name":"isRoundWinner","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"minRoundDuration","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"nextRoundId","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"owner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"bytes","name":"performData","type":"bytes"}],"name":"performUpkeep","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"renounceOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_roundId","type":"uint256"}],"name":"roundIsReadyForUpkeep","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"},{"internalType":"address","name":"","type":"address"}],"name":"roundToPlayerBid","outputs":[{"internalType":"uint256","name":"amount","type":"uint256"},{"internalType":"uint256","name":"time","type":"uint256"},{"internalType":"bool","name":"claimed","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"rounds","outputs":[{"internalType":"uint256","name":"id","type":"uint256"},{"internalType":"address","name":"creator","type":"address"},{"internalType":"enum PredictionPool.RoundStatus","name":"status","type":"uint8"},{"internalType":"uint256","name":"gteTotal","type":"uint256"},{"internalType":"uint256","name":"ltTotal","type":"uint256"},{"internalType":"address","name":"priceFeed","type":"address"},{"internalType":"uint256","name":"target","type":"uint256"},{"internalType":"uint256","name":"end","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"_duration","type":"uint256"}],"name":"setRoundDuration","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_dataFeed","type":"address"}],"name":"toggleAllowPriceFeed","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"}]
-  }
-}
+	return {
+		address: address as `0x${string}`,
+		abi: [
+			{
+				inputs: [
+					{
+						internalType: "address[]",
+						name: "_allowedDataFeeds",
+						type: "address[]",
+					},
+					{
+						internalType: "uint256",
+						name: "_minRoundDuration",
+						type: "uint256",
+					},
+				],
+				stateMutability: "nonpayable",
+				type: "constructor",
+			},
+			{
+				inputs: [{ internalType: "address", name: "owner", type: "address" }],
+				name: "OwnableInvalidOwner",
+				type: "error",
+			},
+			{
+				inputs: [{ internalType: "address", name: "account", type: "address" }],
+				name: "OwnableUnauthorizedAccount",
+				type: "error",
+			},
+			{ inputs: [], name: "PredictionPool_AlreadyClaimed", type: "error" },
+			{
+				inputs: [],
+				name: "PredictionPool_CanBetOnlyOncePerRound",
+				type: "error",
+			},
+			{
+				inputs: [{ internalType: "uint8", name: "decimals", type: "uint8" }],
+				name: "PredictionPool_InvalidChainlinkDecimals",
+				type: "error",
+			},
+			{ inputs: [], name: "PredictionPool_InvalidDuration", type: "error" },
+			{ inputs: [], name: "PredictionPool_InvalidFeed", type: "error" },
+			{ inputs: [], name: "PredictionPool_InvalidValue", type: "error" },
+			{
+				inputs: [],
+				name: "PredictionPool_NegativeChainlinkPrice",
+				type: "error",
+			},
+			{ inputs: [], name: "PredictionPool_NotAWinner", type: "error" },
+			{
+				inputs: [],
+				name: "PredictionPool_RewardTransferFailed",
+				type: "error",
+			},
+			{ inputs: [], name: "PredictionPool_RoundIsNotActive", type: "error" },
+			{ inputs: [], name: "PredictionPool_RoundNotResolved", type: "error" },
+			{
+				inputs: [],
+				name: "PredictionPool_ZeroAddressNotAllowed",
+				type: "error",
+			},
+			{ inputs: [], name: "ReentrancyGuardReentrantCall", type: "error" },
+			{
+				anonymous: false,
+				inputs: [
+					{
+						indexed: true,
+						internalType: "address",
+						name: "previousOwner",
+						type: "address",
+					},
+					{
+						indexed: true,
+						internalType: "address",
+						name: "newOwner",
+						type: "address",
+					},
+				],
+				name: "OwnershipTransferred",
+				type: "event",
+			},
+			{
+				anonymous: false,
+				inputs: [
+					{
+						indexed: true,
+						internalType: "uint256",
+						name: "roundId",
+						type: "uint256",
+					},
+					{
+						indexed: true,
+						internalType: "address",
+						name: "player",
+						type: "address",
+					},
+					{
+						indexed: true,
+						internalType: "uint256",
+						name: "value",
+						type: "uint256",
+					},
+					{
+						indexed: false,
+						internalType: "enum PredictionPool.BetSide",
+						name: "betSide",
+						type: "uint8",
+					},
+					{
+						indexed: false,
+						internalType: "uint256",
+						name: "playTime",
+						type: "uint256",
+					},
+				],
+				name: "PredictionPool_NewBet",
+				type: "event",
+			},
+			{
+				anonymous: false,
+				inputs: [
+					{
+						indexed: true,
+						internalType: "uint256",
+						name: "duration",
+						type: "uint256",
+					},
+				],
+				name: "PredictionPool_NewMinRoundDuration",
+				type: "event",
+			},
+			{
+				anonymous: false,
+				inputs: [
+					{
+						indexed: true,
+						internalType: "uint256",
+						name: "roundId",
+						type: "uint256",
+					},
+					{
+						indexed: true,
+						internalType: "enum PredictionPool.RoundStatus",
+						name: "status",
+						type: "uint8",
+					},
+				],
+				name: "PredictionPool_NewRoundStatus",
+				type: "event",
+			},
+			{
+				anonymous: false,
+				inputs: [
+					{
+						indexed: true,
+						internalType: "address",
+						name: "feed",
+						type: "address",
+					},
+					{
+						indexed: true,
+						internalType: "bool",
+						name: "enabled",
+						type: "bool",
+					},
+				],
+				name: "PredictionPool_PriceFeedToggled",
+				type: "event",
+			},
+			{
+				anonymous: false,
+				inputs: [
+					{
+						indexed: true,
+						internalType: "uint256",
+						name: "roundId",
+						type: "uint256",
+					},
+					{
+						indexed: true,
+						internalType: "address",
+						name: "player",
+						type: "address",
+					},
+					{
+						indexed: true,
+						internalType: "uint256",
+						name: "value",
+						type: "uint256",
+					},
+				],
+				name: "PredictionPool_RewardClaimed",
+				type: "event",
+			},
+			{
+				anonymous: false,
+				inputs: [
+					{
+						indexed: true,
+						internalType: "uint256",
+						name: "roundId",
+						type: "uint256",
+					},
+					{
+						indexed: true,
+						internalType: "address",
+						name: "player",
+						type: "address",
+					},
+					{
+						indexed: true,
+						internalType: "uint256",
+						name: "value",
+						type: "uint256",
+					},
+					{
+						indexed: false,
+						internalType: "enum PredictionPool.BetSide",
+						name: "betSide",
+						type: "uint8",
+					},
+					{
+						indexed: false,
+						internalType: "uint256",
+						name: "end",
+						type: "uint256",
+					},
+				],
+				name: "PredictionPool_RoundCreated",
+				type: "event",
+			},
+			{
+				anonymous: false,
+				inputs: [
+					{
+						indexed: true,
+						internalType: "uint256",
+						name: "roundId",
+						type: "uint256",
+					},
+					{
+						indexed: true,
+						internalType: "address",
+						name: "creator",
+						type: "address",
+					},
+					{
+						indexed: true,
+						internalType: "bool",
+						name: "creatorIsWinner",
+						type: "bool",
+					},
+				],
+				name: "PredictionPool_RoundResolved",
+				type: "event",
+			},
+			{
+				inputs: [{ internalType: "address", name: "", type: "address" }],
+				name: "allowedDataFeeds",
+				outputs: [{ internalType: "bool", name: "", type: "bool" }],
+				stateMutability: "view",
+				type: "function",
+			},
+			{
+				inputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+				name: "allowedDataFeedsList",
+				outputs: [{ internalType: "address", name: "", type: "address" }],
+				stateMutability: "view",
+				type: "function",
+			},
+			{
+				inputs: [
+					{ internalType: "uint256", name: "_roundId", type: "uint256" },
+					{
+						internalType: "enum PredictionPool.BetSide",
+						name: "_betSide",
+						type: "uint8",
+					},
+				],
+				name: "betOn",
+				outputs: [],
+				stateMutability: "payable",
+				type: "function",
+			},
+			{
+				inputs: [{ internalType: "bytes", name: "", type: "bytes" }],
+				name: "checkUpkeep",
+				outputs: [
+					{ internalType: "bool", name: "upkeepNeeded", type: "bool" },
+					{ internalType: "bytes", name: "performData", type: "bytes" },
+				],
+				stateMutability: "view",
+				type: "function",
+			},
+			{
+				inputs: [
+					{ internalType: "uint256", name: "_roundId", type: "uint256" },
+				],
+				name: "claimReward",
+				outputs: [],
+				stateMutability: "nonpayable",
+				type: "function",
+			},
+			{
+				inputs: [
+					{ internalType: "address", name: "_feed", type: "address" },
+					{ internalType: "uint256", name: "_target", type: "uint256" },
+					{
+						internalType: "enum PredictionPool.BetSide",
+						name: "_betSide",
+						type: "uint8",
+					},
+					{ internalType: "uint256", name: "_duration", type: "uint256" },
+				],
+				name: "createRound",
+				outputs: [],
+				stateMutability: "payable",
+				type: "function",
+			},
+			{
+				inputs: [
+					{ internalType: "address", name: "_dataFeed", type: "address" },
+				],
+				name: "getChainlinkDataFeedNormalizedPrice",
+				outputs: [
+					{ internalType: "uint256", name: "normalizedPrice", type: "uint256" },
+				],
+				stateMutability: "view",
+				type: "function",
+			},
+			{
+				inputs: [
+					{ internalType: "uint256", name: "_roundId", type: "uint256" },
+				],
+				name: "getRound",
+				outputs: [
+					{
+						components: [
+							{ internalType: "uint256", name: "id", type: "uint256" },
+							{ internalType: "address", name: "creator", type: "address" },
+							{
+								internalType: "enum PredictionPool.RoundStatus",
+								name: "status",
+								type: "uint8",
+							},
+							{ internalType: "uint256", name: "gteTotal", type: "uint256" },
+							{ internalType: "uint256", name: "ltTotal", type: "uint256" },
+							{ internalType: "address", name: "priceFeed", type: "address" },
+							{ internalType: "uint256", name: "target", type: "uint256" },
+							{ internalType: "uint256", name: "end", type: "uint256" },
+						],
+						internalType: "struct PredictionPool.Round",
+						name: "",
+						type: "tuple",
+					},
+				],
+				stateMutability: "view",
+				type: "function",
+			},
+			{
+				inputs: [
+					{ internalType: "uint256", name: "", type: "uint256" },
+					{ internalType: "address", name: "", type: "address" },
+				],
+				name: "isRoundWinner",
+				outputs: [{ internalType: "bool", name: "", type: "bool" }],
+				stateMutability: "view",
+				type: "function",
+			},
+			{
+				inputs: [],
+				name: "minRoundDuration",
+				outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+				stateMutability: "view",
+				type: "function",
+			},
+			{
+				inputs: [],
+				name: "nextRoundId",
+				outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+				stateMutability: "view",
+				type: "function",
+			},
+			{
+				inputs: [],
+				name: "owner",
+				outputs: [{ internalType: "address", name: "", type: "address" }],
+				stateMutability: "view",
+				type: "function",
+			},
+			{
+				inputs: [{ internalType: "bytes", name: "performData", type: "bytes" }],
+				name: "performUpkeep",
+				outputs: [],
+				stateMutability: "nonpayable",
+				type: "function",
+			},
+			{
+				inputs: [],
+				name: "renounceOwnership",
+				outputs: [],
+				stateMutability: "nonpayable",
+				type: "function",
+			},
+			{
+				inputs: [
+					{ internalType: "uint256", name: "_roundId", type: "uint256" },
+				],
+				name: "roundIsReadyForUpkeep",
+				outputs: [{ internalType: "bool", name: "", type: "bool" }],
+				stateMutability: "view",
+				type: "function",
+			},
+			{
+				inputs: [
+					{ internalType: "uint256", name: "", type: "uint256" },
+					{ internalType: "address", name: "", type: "address" },
+				],
+				name: "roundToPlayerBet",
+				outputs: [
+					{ internalType: "uint256", name: "amount", type: "uint256" },
+					{ internalType: "uint256", name: "time", type: "uint256" },
+					{ internalType: "bool", name: "claimed", type: "bool" },
+				],
+				stateMutability: "view",
+				type: "function",
+			},
+			{
+				inputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+				name: "rounds",
+				outputs: [
+					{ internalType: "uint256", name: "id", type: "uint256" },
+					{ internalType: "address", name: "creator", type: "address" },
+					{
+						internalType: "enum PredictionPool.RoundStatus",
+						name: "status",
+						type: "uint8",
+					},
+					{ internalType: "uint256", name: "gteTotal", type: "uint256" },
+					{ internalType: "uint256", name: "ltTotal", type: "uint256" },
+					{ internalType: "address", name: "priceFeed", type: "address" },
+					{ internalType: "uint256", name: "target", type: "uint256" },
+					{ internalType: "uint256", name: "end", type: "uint256" },
+				],
+				stateMutability: "view",
+				type: "function",
+			},
+			{
+				inputs: [
+					{ internalType: "uint256", name: "_duration", type: "uint256" },
+				],
+				name: "setRoundDuration",
+				outputs: [],
+				stateMutability: "nonpayable",
+				type: "function",
+			},
+			{
+				inputs: [
+					{ internalType: "address", name: "_dataFeed", type: "address" },
+				],
+				name: "toggleAllowPriceFeed",
+				outputs: [],
+				stateMutability: "nonpayable",
+				type: "function",
+			},
+			{
+				inputs: [
+					{ internalType: "address", name: "newOwner", type: "address" },
+				],
+				name: "transferOwnership",
+				outputs: [],
+				stateMutability: "nonpayable",
+				type: "function",
+			},
+		],
+	};
+};

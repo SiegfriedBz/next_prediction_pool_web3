@@ -6,7 +6,7 @@ import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol
 import {AggregatorV3Interface} from "./interfaces/AggregatorV3Interface.sol";
 import {AutomationCompatibleInterface} from "./interfaces/AutomationCompatibleInterface.sol";
 
-error PredictionPool_CanBidOnlyOncePerRound();
+error PredictionPool_CanBetOnlyOncePerRound();
 error PredictionPool_RoundIsNotActive();
 error PredictionPool_InvalidValue();
 error PredictionPool_InvalidFeed();
@@ -26,10 +26,10 @@ contract PredictionPool is Ownable, AutomationCompatibleInterface, ReentrancyGua
      * events
      */
     event PredictionPool_RoundCreated(
-        uint256 indexed roundId, address indexed player, uint256 indexed value, BidSide bidSide, uint256 end
+        uint256 indexed roundId, address indexed player, uint256 indexed value, BetSide betSide, uint256 end
     );
     event PredictionPool_NewBet(
-        uint256 indexed roundId, address indexed player, uint256 indexed value, BidSide bidSide, uint256 playTime
+        uint256 indexed roundId, address indexed player, uint256 indexed value, BetSide betSide, uint256 playTime
     );
     event PredictionPool_NewRoundStatus(uint256 indexed roundId, RoundStatus indexed status);
     event PredictionPool_RoundResolved(uint256 indexed roundId, address indexed creator, bool indexed creatorIsWinner);
@@ -43,7 +43,7 @@ contract PredictionPool is Ownable, AutomationCompatibleInterface, ReentrancyGua
     uint256 public minRoundDuration;
     uint256 public nextRoundId;
     mapping(uint256 => Round) public rounds;
-    mapping(uint256 => mapping(address => Bid)) public roundToPlayerBid;
+    mapping(uint256 => mapping(address => Bet)) public roundToPlayerBet;
     mapping(uint256 => address[]) roundToGtePlayers;
     mapping(uint256 => address[]) roundToLtPlayers;
     mapping(uint256 => mapping(address => bool)) public isRoundWinner;
@@ -64,13 +64,13 @@ contract PredictionPool is Ownable, AutomationCompatibleInterface, ReentrancyGua
         uint256 end; // timestamp when round ends
     }
 
-    struct Bid {
-        uint256 amount; // eth amount placed for this bid
-        uint256 time; // timestamp when user placed its bid on roundId
+    struct Bet {
+        uint256 amount; // eth amount placed for this bet
+        uint256 time; // timestamp when user placed its bet on roundId
         bool claimed;
     }
 
-    enum BidSide {
+    enum BetSide {
         Lt, // 0
         Gte // 1
     }
@@ -100,9 +100,9 @@ contract PredictionPool is Ownable, AutomationCompatibleInterface, ReentrancyGua
         _;
     }
 
-    modifier bidOnlyOncePerRound(uint256 _roundId) {
-        if (roundToPlayerBid[_roundId][msg.sender].time != 0) {
-            revert PredictionPool_CanBidOnlyOncePerRound();
+    modifier betOnlyOncePerRound(uint256 _roundId) {
+        if (roundToPlayerBet[_roundId][msg.sender].time != 0) {
+            revert PredictionPool_CanBetOnlyOncePerRound();
         }
         _;
     }
@@ -223,7 +223,7 @@ contract PredictionPool is Ownable, AutomationCompatibleInterface, ReentrancyGua
         }
     }
 
-    function createRound(address _feed, uint256 _target, BidSide _bidSide, uint256 _duration)
+    function createRound(address _feed, uint256 _target, BetSide _betSide, uint256 _duration)
         public
         payable
         isValidValue
@@ -241,7 +241,7 @@ contract PredictionPool is Ownable, AutomationCompatibleInterface, ReentrancyGua
         round.target = _target;
         round.end = end;
 
-        if (_bidSide == BidSide.Gte) {
+        if (_betSide == BetSide.Gte) {
             round.gteTotal = msg.value;
             roundToGtePlayers[nextRoundId].push(msg.sender);
         } else {
@@ -249,28 +249,28 @@ contract PredictionPool is Ownable, AutomationCompatibleInterface, ReentrancyGua
             roundToLtPlayers[nextRoundId].push(msg.sender);
         }
 
-        // attach msg.sender to a new bid for this round
-        Bid storage newBid = roundToPlayerBid[nextRoundId][msg.sender];
-        newBid.amount = msg.value;
-        // newBid.side = _bidSide;
-        newBid.time = block.timestamp;
+        // attach msg.sender to a new bet for this round
+        Bet storage newBet = roundToPlayerBet[nextRoundId][msg.sender];
+        newBet.amount = msg.value;
+        // newBet.side = _betSide;
+        newBet.time = block.timestamp;
 
-        emit PredictionPool_RoundCreated(nextRoundId, msg.sender, msg.value, _bidSide, end);
-        emit PredictionPool_NewBet(nextRoundId, msg.sender, msg.value, _bidSide, block.timestamp);
+        emit PredictionPool_RoundCreated(nextRoundId, msg.sender, msg.value, _betSide, end);
+        emit PredictionPool_NewBet(nextRoundId, msg.sender, msg.value, _betSide, block.timestamp);
 
         nextRoundId++;
     }
 
-    function bidOn(uint256 _roundId, BidSide _bidSide)
+    function betOn(uint256 _roundId, BetSide _betSide)
         public
         payable
         isValidValue
         roundIsActive(_roundId)
-        bidOnlyOncePerRound(_roundId)
+        betOnlyOncePerRound(_roundId)
     {
         Round storage round = rounds[_roundId];
 
-        if (_bidSide == BidSide.Gte) {
+        if (_betSide == BetSide.Gte) {
             round.gteTotal += msg.value;
             roundToGtePlayers[_roundId].push(msg.sender);
         } else {
@@ -278,12 +278,12 @@ contract PredictionPool is Ownable, AutomationCompatibleInterface, ReentrancyGua
             roundToLtPlayers[_roundId].push(msg.sender);
         }
 
-        Bid storage newBid = roundToPlayerBid[_roundId][msg.sender];
-        newBid.amount = msg.value;
-        // newBid.side = _bidSide;
-        newBid.time = block.timestamp;
+        Bet storage newBet = roundToPlayerBet[_roundId][msg.sender];
+        newBet.amount = msg.value;
+        // newBet.side = _betSide;
+        newBet.time = block.timestamp;
 
-        emit PredictionPool_NewBet(_roundId, msg.sender, msg.value, _bidSide, block.timestamp);
+        emit PredictionPool_NewBet(_roundId, msg.sender, msg.value, _betSide, block.timestamp);
     }
 
     /**
@@ -313,13 +313,13 @@ contract PredictionPool is Ownable, AutomationCompatibleInterface, ReentrancyGua
 
     function claimReward(uint256 _roundId) public nonReentrant {
         Round storage round = rounds[_roundId];
-        Bid storage bid = roundToPlayerBid[_roundId][msg.sender];
+        Bet storage bet = roundToPlayerBet[_roundId][msg.sender];
 
         if (round.status != RoundStatus.Resolved) {
             revert PredictionPool_RoundNotResolved();
         }
 
-        if (bid.claimed) {
+        if (bet.claimed) {
             revert PredictionPool_AlreadyClaimed();
         }
 
@@ -331,14 +331,14 @@ contract PredictionPool is Ownable, AutomationCompatibleInterface, ReentrancyGua
         }
 
         // Calculate payout
-        uint256 playerWeight = _getBidWeight(_roundId, msg.sender);
+        uint256 playerWeight = _getBetWeight(_roundId, msg.sender);
         uint256 totalWeight = _getTotalWeight(_roundId);
 
         uint256 rewardPool = round.gteTotal + round.ltTotal;
         uint256 payout = (rewardPool * playerWeight) / totalWeight;
 
         // Mark as claimed and send funds
-        bid.claimed = true;
+        bet.claimed = true;
 
         emit PredictionPool_RewardClaimed(_roundId, msg.sender, payout);
 
@@ -396,31 +396,31 @@ contract PredictionPool is Ownable, AutomationCompatibleInterface, ReentrancyGua
     }
 
     /**
-     * Returns the bid weight for a round - player
+     * Returns the bet weight for a round - player
      */
-    function _getBidWeight(uint256 _roundId, address player) internal view returns (uint256) {
-        Bid storage bid = roundToPlayerBid[_roundId][player];
+    function _getBetWeight(uint256 _roundId, address player) internal view returns (uint256) {
+        Bet storage bet = roundToPlayerBet[_roundId][player];
         Round storage round = rounds[_roundId];
 
-        // earlier bid = higher weight; linearly scaled
-        uint256 timeFactor = ((round.end - bid.time) * 1e18) / minRoundDuration; // normalized to 1e18
+        // earlier bet = higher weight; linearly scaled
+        uint256 timeFactor = ((round.end - bet.time) * 1e18) / minRoundDuration; // normalized to 1e18
 
-        return (bid.amount * timeFactor) / 1e18; // weight also normalized
+        return (bet.amount * timeFactor) / 1e18; // weight also normalized
     }
 
     /**
-     * Returns the total bid weight for a round
+     * Returns the total bet weight for a round
      */
     function _getTotalWeight(uint256 _roundId) internal view returns (uint256 totalWeight) {
         address[] memory gtePlayers = roundToGtePlayers[_roundId];
         address[] memory ltPlayers = roundToLtPlayers[_roundId];
 
         for (uint256 i = 0; i < gtePlayers.length; ++i) {
-            totalWeight += _getBidWeight(_roundId, gtePlayers[i]);
+            totalWeight += _getBetWeight(_roundId, gtePlayers[i]);
         }
 
         for (uint256 i = 0; i < ltPlayers.length; ++i) {
-            totalWeight += _getBidWeight(_roundId, ltPlayers[i]);
+            totalWeight += _getBetWeight(_roundId, ltPlayers[i]);
         }
     }
 

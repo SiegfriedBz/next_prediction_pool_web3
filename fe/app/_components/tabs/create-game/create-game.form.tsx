@@ -103,7 +103,7 @@ export const CreateGameForm = () => {
 			writeContract({
 				...contractConfig,
 				functionName: "createRound",
-				// payable createRound(address _feed, uint256 _target, BidSide _bidSide, uint256 _duration)
+				// payable createRound(address _feed, uint256 _target, BetSide _betSide, uint256 _duration)
 				args: [dataFeedAddress, targetPriceInWei, gteTargetPrice, duration],
 				value: ethValueInWei,
 			});
@@ -178,6 +178,7 @@ export const CreateGameForm = () => {
 
 						{currentPrice ? (
 							<Input
+								key={dataFeedAddress}
 								readOnly
 								defaultValue={formatEther(currentPrice)}
 								className="max-sm:w-full w-64"
@@ -240,7 +241,7 @@ export const CreateGameForm = () => {
 						<FormItem>
 							<FormLabel className="flex items-center font-semibold">
 								<CoinsIcon size={16} />
-								Your Bid (ETH)
+								Your Bet (ETH)
 							</FormLabel>
 							<FormControl>
 								<Input {...field} className="max-sm:w-full w-64" />
