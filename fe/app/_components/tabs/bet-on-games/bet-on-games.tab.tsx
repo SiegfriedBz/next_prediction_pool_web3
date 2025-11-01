@@ -1,3 +1,4 @@
+import { RoundDataProvider } from "@/app/_contexts/round-data-provider";
 import {
 	Card,
 	CardContent,
@@ -23,7 +24,9 @@ export const BetOnGamesTab = () => {
 					</CardDescription>
 				</CardHeader>
 				<CardContent>
-					<GamesTable />
+					<RoundDataProvider>
+						<GamesTable />
+					</RoundDataProvider>
 				</CardContent>
 			</Card>
 		</TabsContent>
