@@ -30,8 +30,10 @@ export default function RootLayout({
 				className={`${geistSans.variable} ${geistMono.variable} antialiased`}
 			>
 				<RootProviders>
-					<Header />
-					<main className="flex-1">{children}</main>
+					<div className="relative max-[480px]:h-54 h-64">
+						<Header />
+						<main className="flex-1">{children}</main>
+					</div>
 				</RootProviders>
 			</body>
 		</html>

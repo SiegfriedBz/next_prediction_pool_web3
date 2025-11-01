@@ -5,11 +5,12 @@ import {
 	ChartSplineIcon,
 	CoinsIcon,
 	DicesIcon,
+	LoaderIcon,
 	TargetIcon,
 	TimerIcon,
 } from "lucide-react";
 import { useCallback, useEffect, useMemo } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { formatEther, parseEther } from "viem";
 import {
 	type BaseError,
@@ -36,6 +37,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
+import { cn } from "@/lib/utils";
 import { FeedPairSelect } from "./feed-pair.select";
 import { SideCheckBox } from "./side.checkbox";
 
@@ -65,11 +67,13 @@ type FormSchemaT = z.infer<typeof formSchema>;
 export const CreateGameForm = () => {
 	const chainId = useChainId();
 
+	// Contract config for the current chain
 	const contractConfig: ContractConfigT = useMemo(
 		() => getPredictionPoolContractConfig(chainId),
 		[chainId],
 	);
 
+	// React-hook-form setup
 	const form = useForm<FormSchemaT>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
@@ -81,18 +85,32 @@ export const CreateGameForm = () => {
 		},
 	});
 
+	// Subscribe to the "targetPrice" field in the form.
+	// useWatch ensures that the component re-renders when this field changes
+	// without causing unnecessary re-renders for the entire form.
+	const targetPrice = useWatch({
+		control: form.control,
+		name: "targetPrice",
+	});
+
+	// Subscribe to the "dataFeedAddress" field in the form.
+	const dataFeedAddress = useWatch({
+		control: form.control,
+		name: "dataFeedAddress",
+	}) as HexAddress;
+
+	// Fetch the current price for the selected data feed
+	const currentPrice = useCurrentPrice({ dataFeedAddress });
+
+	// Wagmi write contract setup for creating a game
 	const {
 		data: createRoundHash,
 		error: createRoundError,
-		isPending: createRoundIsPending,
+		isPending: isCreatingRound,
 		writeContract,
 	} = useWriteContract();
 
-	const dataFeedAddress = form.watch("dataFeedAddress") as HexAddress;
-	const targetPrice = form.watch("targetPrice");
-
-	const currentPrice = useCurrentPrice({ dataFeedAddress });
-
+	// Submit handler
 	const onSubmit = useCallback(
 		async (values: FormSchemaT) => {
 			const { dataFeedAddress, isAboveTarget } = values;
@@ -111,25 +129,32 @@ export const CreateGameForm = () => {
 		[contractConfig, writeContract],
 	);
 
-	const {
-		isLoading: createRoundIsConfirming,
-		isSuccess: createRoundIsConfirmed,
-	} = useWaitForTransactionReceipt({
-		hash: createRoundHash,
-	});
+	// Wait for transaction confirmation
+	const { isLoading: isConfirming, isSuccess: isConfirmed } =
+		useWaitForTransactionReceipt({
+			hash: createRoundHash,
+		});
 
+	// Transaction toast notifications
 	useTransactionToast({
 		hash: createRoundHash,
-		isConfirming: createRoundIsConfirming,
-		isConfirmed: createRoundIsConfirmed,
+		isConfirming,
+		isConfirmed,
 		error: createRoundError as BaseError | null,
 	});
 
+	// Handle post create game transaction confirmation logic
 	useEffect(() => {
-		if (createRoundIsConfirmed) {
+		if (isConfirmed) {
+			// Reset form to defaults
 			form.reset();
 		}
-	}, [createRoundIsConfirmed, form]);
+	}, [isConfirmed, form]);
+
+	const isDisabled = useMemo(
+		() => isCreatingRound || isConfirming,
+		[isCreatingRound, isConfirming],
+	);
 
 	return (
 		<Form {...form}>
@@ -256,10 +281,27 @@ export const CreateGameForm = () => {
 
 				<Button
 					type="submit"
-					disabled={createRoundIsPending}
-					className="w-full"
+					disabled={isCreatingRound}
+					className={cn(
+						"w-full",
+						isDisabled ? "cursor-not-allowed" : "cursor-pointer",
+					)}
 				>
-					{createRoundIsPending ? "Confirming..." : "Submit"}
+					{isDisabled ? (
+						<span className="inline-flex gap-2 items-center">
+							<span className="animate-spin">
+								<LoaderIcon />
+							</span>
+							<span>Creating Game...</span>
+						</span>
+					) : (
+						<span className="inline-flex gap-2 items-center">
+							<span>
+								<DicesIcon />
+							</span>
+							<span>Create Game</span>
+						</span>
+					)}
 				</Button>
 			</form>
 		</Form>
