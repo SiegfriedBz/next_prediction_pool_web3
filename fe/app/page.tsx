@@ -10,7 +10,7 @@ export default function Home() {
 
 			<section
 				id={"tabs"}
-				className="min-h-screen scroll-mt-32 sm:scroll-mt-42"
+				className="min-h-screen scroll-mt-12 sm:scroll-mt-24"
 			>
 				<GameTabs />
 			</section>
