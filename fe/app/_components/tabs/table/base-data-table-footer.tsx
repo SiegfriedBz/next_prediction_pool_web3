@@ -6,47 +6,57 @@ import {
 	ChevronsRightIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+	ButtonGroup,
+	ButtonGroupSeparator,
+} from "@/components/ui/button-group";
 
 type Props<TData> = {
 	table: TanstackTable<TData>;
 };
 
 export function BaseTableFooter<TData>({ table }: Props<TData>) {
+	const canPreviousPage = table.getCanPreviousPage();
+	const canNextPage = table.getCanNextPage();
 	return (
 		<div className="mt-2 flex flex-col justify-center items-center gap-2 w-full">
-			<div className="flex justify-center items-center gap-2 w-full">
+			<ButtonGroup>
 				<Button
-					variant="ghost"
+					variant={"outline"}
 					onClick={() => table.firstPage()}
-					disabled={!table.getCanPreviousPage()}
+					disabled={!canPreviousPage}
+					className={canPreviousPage ? "cursor-pointer" : ""}
 				>
 					<ChevronsLeftIcon />
 				</Button>
-
+				<ButtonGroupSeparator />
 				<Button
-					variant="ghost"
+					variant={"outline"}
 					onClick={() => table.previousPage()}
-					disabled={!table.getCanPreviousPage()}
+					disabled={!canPreviousPage}
+					className={canPreviousPage ? "cursor-pointer" : ""}
 				>
 					<ChevronLeftIcon />
 				</Button>
-
+				<ButtonGroupSeparator />
 				<Button
-					variant="ghost"
+					variant={"outline"}
 					onClick={() => table.nextPage()}
-					disabled={!table.getCanNextPage()}
+					disabled={!canNextPage}
+					className={canNextPage ? "cursor-pointer" : ""}
 				>
 					<ChevronRightIcon />
 				</Button>
-
+				<ButtonGroupSeparator />
 				<Button
-					variant="ghost"
+					variant={"outline"}
 					onClick={() => table.lastPage()}
-					disabled={!table.getCanNextPage()}
+					disabled={!canNextPage}
+					className={canNextPage ? "cursor-pointer" : ""}
 				>
 					<ChevronsRightIcon />
 				</Button>
-			</div>
+			</ButtonGroup>
 
 			<div className="flex justify-center items-center gap-2 w-full">
 				<span className="flex items-center gap-1 text-sm text-muted-foreground">
