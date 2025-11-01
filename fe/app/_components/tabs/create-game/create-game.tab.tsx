@@ -12,7 +12,7 @@ import { CreateGameForm } from "./create-game.form";
 
 export const CreateGameTab = () => {
 	return (
-		<TabsContent value="create-game" className="mt-4 max-w-2xl mx-auto">
+		<TabsContent value="create-game" className="mt-4 max-w-2xl sm:mx-auto">
 			<Card>
 				<CardHeader>
 					<CardTitle>
