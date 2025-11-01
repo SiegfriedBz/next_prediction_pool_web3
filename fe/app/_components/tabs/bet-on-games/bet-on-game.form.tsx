@@ -1,6 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useQueryClient } from "@tanstack/react-query";
 import {
 	CoinsIcon,
 	DicesIcon,
@@ -9,9 +10,7 @@ import {
 	ThumbsUpIcon,
 } from "lucide-react";
 import {
-	type Dispatch,
 	type FC,
-	type SetStateAction,
 	startTransition,
 	useCallback,
 	useEffect,
@@ -28,6 +27,7 @@ import {
 import { z } from "zod";
 import { getPredictionPoolContractConfig } from "@/app/_contracts/prediction-pool";
 import type { ContractConfigT } from "@/app/_contracts/types";
+import { useRoundDataContext } from "@/app/_hooks/use-round-data-context";
 import { useTransactionToast } from "@/app/_hooks/use-tx-toast";
 import {
 	AlertDialogCancel,
@@ -69,18 +69,23 @@ export const BetOnGameForm: FC<Props> = ({
 }) => {
 	const chainId = useChainId();
 
+	const queryClient = useQueryClient();
+
+	const { refetchAllRoundsData } = useRoundDataContext();
+
+	// Contract config for the current chain
 	const contractConfig: ContractConfigT = useMemo(
 		() => getPredictionPoolContractConfig(chainId),
 		[chainId],
 	);
 
+	// React-hook-form setup
 	const form = useForm<FormSchemaT>({
 		resolver: zodResolver(formSchema),
-		defaultValues: {
-			ethValue: "0.1",
-		},
+		defaultValues: { ethValue: "0.1" },
 	});
 
+	// Wagmi write contract setup for placing a bet
 	const {
 		data: betHash,
 		error: betError,
@@ -88,6 +93,7 @@ export const BetOnGameForm: FC<Props> = ({
 		writeContract,
 	} = useWriteContract();
 
+	// Submit handler
 	const onSubmit = useCallback(
 		async (values: FormSchemaT) => {
 			const ethValueInWei = parseEther(values.ethValue);
@@ -103,11 +109,13 @@ export const BetOnGameForm: FC<Props> = ({
 		[contractConfig, writeContract, roundId, isAboveTarget],
 	);
 
+	// Wait for transaction confirmation
 	const { isLoading: isConfirming, isSuccess: isConfirmed } =
 		useWaitForTransactionReceipt({
 			hash: betHash,
 		});
 
+	// Transaction toast notifications
 	useTransactionToast({
 		hash: betHash,
 		isConfirming,
@@ -115,12 +123,30 @@ export const BetOnGameForm: FC<Props> = ({
 		error: betError as BaseError | null,
 	});
 
+	// Handle post betOn transaction confirmation logic
 	useEffect(() => {
 		if (isConfirmed) {
+			// invalidate stale round data
+			queryClient.invalidateQueries({
+				queryKey: ["round", roundId.toString()],
+			});
+
+			// Refetch updated round data
+			refetchAllRoundsData();
+
+			// Reset form to defaults
 			form.reset();
+			// Close dialog in a non-blocking way
 			startTransition(onCloseDialog);
 		}
-	}, [isConfirmed, form, onCloseDialog]);
+	}, [
+		isConfirmed,
+		form,
+		onCloseDialog,
+		queryClient,
+		roundId,
+		refetchAllRoundsData,
+	]);
 
 	const isDisabled = useMemo(
 		() => isPlacingBet || isConfirming,
