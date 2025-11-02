@@ -1,4 +1,4 @@
-import { RoundsProvider } from "@/app/_contexts/rounds-provider";
+import { ActiveRoundsWithPlayerBetsProvider } from "@/app/_contexts/active-rounds-with-player-bets-provider";
 import {
 	Card,
 	CardContent,
@@ -15,7 +15,7 @@ import { GamesTable } from "./games-table";
 export const BetOnGamesTab = () => {
 	return (
 		<TabsContent value="bet-on-games" className="mt-4">
-			<RoundsProvider>
+			<ActiveRoundsWithPlayerBetsProvider>
 				<Card>
 					<CardHeader className="flex items-center sm:justify-between">
 						<div className="flex flex-col w-full">
@@ -33,7 +33,7 @@ export const BetOnGamesTab = () => {
 						<GamesTable />
 					</CardContent>
 				</Card>
-			</RoundsProvider>
+			</ActiveRoundsWithPlayerBetsProvider>
 		</TabsContent>
 	);
 };
