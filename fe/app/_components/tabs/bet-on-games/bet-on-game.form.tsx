@@ -20,6 +20,7 @@ import { useForm } from "react-hook-form";
 import { formatEther, parseEther } from "viem";
 import {
 	type BaseError,
+	useAccount,
 	useChainId,
 	useWaitForTransactionReceipt,
 	useWriteContract,
@@ -27,7 +28,7 @@ import {
 import { z } from "zod";
 import { getPredictionPoolContractConfig } from "@/app/_contracts/prediction-pool";
 import type { ContractConfigT } from "@/app/_contracts/types";
-import { useRoundsContext } from "@/app/_hooks/use-rounds-context";
+import { useActiveRoundsWithPlayerBetsContext } from "@/app/_hooks/use-active-rounds-with-player-bets-context";
 import { useTransactionToast } from "@/app/_hooks/use-tx-toast";
 import {
 	AlertDialogCancel,
@@ -68,10 +69,20 @@ export const BetOnGameForm: FC<Props> = ({
 	onCloseDialog,
 }) => {
 	const chainId = useChainId();
+	const { address } = useAccount();
 
 	const queryClient = useQueryClient();
 
-	const { refetchRounds } = useRoundsContext();
+	// Context provides refetch helpers:
+	// - refetchRounds(): refetch the global rounds dataset (all statuses).
+	//   We intentionally invalidate the single "round" query below so that
+	//   only that round is requested fresh; other rounds will keep using the
+	//   React Query cached values.
+	// - refetchActiveRoundsWithPlayerBets(): refetch the user's *active rounds with bets*
+	//   dataset. This hook is implemented to use per-round player query keys so we can
+	//   selectively update only affected player-round entries.
+	const { refetchRounds, refetchActiveRoundsWithPlayerBets } =
+		useActiveRoundsWithPlayerBetsContext();
 
 	// Contract config for the current chain
 	const contractConfig: ContractConfigT = useMemo(
@@ -126,20 +137,40 @@ export const BetOnGameForm: FC<Props> = ({
 	// Handle post betOn transaction confirmation logic
 	useEffect(() => {
 		if (isConfirmed) {
-			// invalidate stale round data
+			// Invalidate the single round query so that this specific round's data
+			// (totals, status, etc.) is refetched from the network.
+			// This ensures the UI shows the updated bet totals for this round.
 			queryClient.invalidateQueries({
 				queryKey: ["round", roundId.toString()],
 			});
 
-			// Refetch updated round data
+			// Invalidate the player's bet for this specific round.
+			// This causes a network refetch of the player's bet for this round.
+			queryClient.invalidateQueries({
+				queryKey: ["round-to-player-bet", `${roundId.toString()}-${address}`],
+			});
+
+			// Refetch the global rounds dataset (all statuses): required to refresh all bets amounts on betOnGames Table.
 			refetchRounds();
+
+			// Refetch the user's active rounds with bets dataset: required to refresh betOnGames RowActions.
+			refetchActiveRoundsWithPlayerBets();
 
 			// Reset form to defaults
 			form.reset();
 			// Close dialog in a non-blocking way
 			startTransition(onCloseDialog);
 		}
-	}, [isConfirmed, form, onCloseDialog, queryClient, roundId, refetchRounds]);
+	}, [
+		isConfirmed,
+		form,
+		onCloseDialog,
+		queryClient,
+		roundId,
+		refetchRounds,
+		refetchActiveRoundsWithPlayerBets,
+		address,
+	]);
 
 	const isDisabled = useMemo(
 		() => isPlacingBet || isConfirming,

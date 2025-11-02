@@ -1,13 +1,19 @@
 "use client";
 
 import { type FC, type PropsWithChildren, useMemo } from "react";
-import { useResolvedRoundsWithPlayerData } from "../_hooks/use-resolved-rounds-with-player-data";
-import { ResolvedRoundsWithPlayerDataContext } from "../_hooks/use-resolved-rounds-with-player-data-context";
+import { useResolvedRoundsWithPlayerBetsAndWins } from "../_hooks/use-resolved-rounds-with-player-bets-and-wins";
+import { ResolvedRoundsWithPlayerBetsAndWinsContext } from "../_hooks/use-resolved-rounds-with-player-bets-and-wins-context";
+import { useRounds } from "../_hooks/use-rounds";
 
-export const ResolvedRoundsWithPlayerDataProvider: FC<PropsWithChildren> = (
-	props,
-) => {
+export const ResolvedRoundsWithPlayerBetsAndWinsProvider: FC<
+	PropsWithChildren
+> = (props) => {
 	const { children } = props;
+
+	// fetch all rounds
+	const { rounds, isLoadingRounds, errorFetchingRounds } = useRounds();
+
+	// fetch and extend rounds with player Bets And Wins
 	const {
 		// Data layers
 		resolvedRounds,
@@ -15,8 +21,6 @@ export const ResolvedRoundsWithPlayerDataProvider: FC<PropsWithChildren> = (
 		resolvedRoundsWithPlayerBetsAndWins,
 
 		// Individual loading & error states
-		isLoadingRounds,
-		errorFetchingRounds,
 		isLoadingResolvedRoundsWithPlayerBets,
 		errorFetchingResolvedRoundsWithPlayerBets,
 		isLoadingResolvedRoundsWithPlayerBetsAndWins,
@@ -28,11 +32,16 @@ export const ResolvedRoundsWithPlayerDataProvider: FC<PropsWithChildren> = (
 
 		// Refetch
 		refetchResolvedRoundsWithPlayerBets,
-	} = useResolvedRoundsWithPlayerData();
+	} = useResolvedRoundsWithPlayerBetsAndWins({
+		rounds,
+		isLoadingRounds,
+		errorFetchingRounds,
+	});
 
 	const value = useMemo(() => {
 		return {
 			// Data layers
+			rounds,
 			resolvedRounds,
 			resolvedRoundsWithPlayerBets,
 			resolvedRoundsWithPlayerBetsAndWins,
@@ -53,6 +62,7 @@ export const ResolvedRoundsWithPlayerDataProvider: FC<PropsWithChildren> = (
 			refetchResolvedRoundsWithPlayerBets,
 		};
 	}, [
+		rounds,
 		resolvedRounds,
 		resolvedRoundsWithPlayerBets,
 		resolvedRoundsWithPlayerBetsAndWins,
@@ -71,8 +81,8 @@ export const ResolvedRoundsWithPlayerDataProvider: FC<PropsWithChildren> = (
 	]);
 
 	return (
-		<ResolvedRoundsWithPlayerDataContext.Provider value={value}>
+		<ResolvedRoundsWithPlayerBetsAndWinsContext.Provider value={value}>
 			{children}
-		</ResolvedRoundsWithPlayerDataContext.Provider>
+		</ResolvedRoundsWithPlayerBetsAndWinsContext.Provider>
 	);
 };

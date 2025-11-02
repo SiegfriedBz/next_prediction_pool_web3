@@ -8,22 +8,22 @@ type Params = {
 };
 
 type ReturnType = {
-	resolvedRounds: Round[];
+	activeRounds: Round[];
 };
 
-export const useResolvedRounds = (params: Params): ReturnType => {
+export const useActiveRounds = (params: Params): ReturnType => {
 	const { rounds } = params;
 
-	// filter resolved rounds
-	const resolvedRounds = useMemo(() => {
+	// filter active rounds
+	const activeRounds = useMemo(() => {
 		return (
 			rounds
-				?.filter((round) => round.status === RoundStatus.Resolved)
+				?.filter((round) => round.status === RoundStatus.Active)
 				.map((round) => round as Round) ?? []
 		);
 	}, [rounds]);
 
 	return {
-		resolvedRounds,
+		activeRounds,
 	};
 };

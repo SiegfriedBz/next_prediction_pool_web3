@@ -1,9 +1,15 @@
 "use client";
 
 import { AlertDialogDescription } from "@radix-ui/react-alert-dialog";
-import { DicesIcon, ThumbsDownIcon, ThumbsUpIcon } from "lucide-react";
+import {
+	CircleCheckBigIcon,
+	DicesIcon,
+	ThumbsDownIcon,
+	ThumbsUpIcon,
+} from "lucide-react";
 import { type FC, useCallback, useMemo, useState } from "react";
 import { useChainId } from "wagmi";
+import { useActiveRoundsWithPlayerBetsContext } from "@/app/_hooks/use-active-rounds-with-player-bets-context";
 import type { Round } from "@/app/_types";
 import { ReverseFeedMap } from "@/app/_utils/feed-maps";
 import {
@@ -17,6 +23,11 @@ import {
 	ButtonGroup,
 	ButtonGroupSeparator,
 } from "@/components/ui/button-group";
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { FeedIcon } from "../../feed-icon";
 import { BetOnGameForm } from "./bet-on-game.form";
 
@@ -28,6 +39,20 @@ export const RowActions: FC<Props> = (props) => {
 	const { round } = props;
 
 	const chainId = useChainId();
+
+	const { activeRoundsWithPlayerBets } = useActiveRoundsWithPlayerBetsContext();
+
+	const userHasAlreadyBetOnThisRound = useMemo(
+		() =>
+			activeRoundsWithPlayerBets.some((r) => {
+				return (
+					r.id === round.id &&
+					r.playerBet?.amount &&
+					Number(r.playerBet?.amount) > 0
+				);
+			}),
+		[round, activeRoundsWithPlayerBets],
+	);
 
 	const currentReverseFeedMap = useMemo(
 		() => ReverseFeedMap.get(chainId),
@@ -46,6 +71,19 @@ export const RowActions: FC<Props> = (props) => {
 	const onCloseDialog = useCallback(() => setSide(null), []);
 	const onBetAboveTarget = useCallback(() => setSide("gte"), []);
 	const onBetBelowTarget = useCallback(() => setSide("lt"), []);
+
+	if (userHasAlreadyBetOnThisRound) {
+		return (
+			<Tooltip>
+				<TooltipTrigger>
+					<CircleCheckBigIcon className="h-4 w-4 text-chart-2" />
+				</TooltipTrigger>
+				<TooltipContent>
+					<p>You already bet on this game.</p>
+				</TooltipContent>
+			</Tooltip>
+		);
+	}
 
 	return (
 		<>

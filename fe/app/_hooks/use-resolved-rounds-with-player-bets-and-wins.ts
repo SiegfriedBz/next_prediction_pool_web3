@@ -1,29 +1,60 @@
 "use client";
 
+import type { ReadContractsErrorType } from "@wagmi/core";
 import { useMemo } from "react";
+import type {
+	Round,
+	RoundWithPlayerBet,
+	RoundWithPlayerBetAndWins,
+} from "../_types";
+import type { RefetchType } from "./type";
 import { usePlayerBetsAndWinsOnResolvedRounds } from "./use-player-bets-and-wins-on-resolved-rounds";
-import { usePlayerBetsOnResolvedRounds } from "./use-player-bets-on-resolved-rounds";
+import { usePlayerBetsOnRounds } from "./use-player-bets-on-rounds";
 import { useResolvedRounds } from "./use-resolved-rounds";
-import type { ResolvedRoundsWithPlayerDataContextT } from "./use-resolved-rounds-with-player-data-context";
 
-type ReturnType = ResolvedRoundsWithPlayerDataContextT;
+type Params = {
+	rounds: Round[];
+	isLoadingRounds: boolean;
+	errorFetchingRounds: ReadContractsErrorType | null;
+};
 
-export const useResolvedRoundsWithPlayerData = (): ReturnType => {
-	// 1. Fetch all rounds data & filter resolved rounds
-	const { resolvedRounds, isLoadingRounds, errorFetchingRounds } =
-		useResolvedRounds();
+type ReturnType = {
+	// Data layers
+	resolvedRounds: Round[];
+	resolvedRoundsWithPlayerBets: RoundWithPlayerBet[];
+	resolvedRoundsWithPlayerBetsAndWins: RoundWithPlayerBetAndWins[];
+
+	// Individual loading & error states
+	isLoadingResolvedRoundsWithPlayerBets: boolean;
+	errorFetchingResolvedRoundsWithPlayerBets: ReadContractsErrorType | null;
+	isLoadingResolvedRoundsWithPlayerBetsAndWins: boolean;
+	errorFetchingResolvedRoundsWithPlayerBetsAndWins: ReadContractsErrorType | null;
+
+	// Combined loading & error states
+	isLoadingResolvedRoundsWithPlayerData: boolean;
+	errorFetchingResolvedRoundsWithPlayerData: ReadContractsErrorType | null;
+
+	// Refetch
+	refetchResolvedRoundsWithPlayerBets: RefetchType<ReadContractsErrorType>;
+};
+
+export const useResolvedRoundsWithPlayerBetsAndWins = (
+	params: Params,
+): ReturnType => {
+	const { rounds, isLoadingRounds, errorFetchingRounds } = params;
+
+	// 1. filter resolved rounds
+	const { resolvedRounds } = useResolvedRounds({ rounds });
 
 	// 2. Fetch all player's bets on all resolved rounds & Combine rounds with player's bet
 	const {
-		resolvedRoundsWithPlayerBets,
-		isLoadingResolvedRoundsWithPlayerBets,
-		errorFetchingResolvedRoundsWithPlayerBets,
-		refetchResolvedRoundsWithPlayerBets,
-	} = usePlayerBetsOnResolvedRounds({
-		resolvedRounds,
-	});
+		roundsWithPlayerBets: resolvedRoundsWithPlayerBets,
+		isLoading: isLoadingResolvedRoundsWithPlayerBets,
+		error: errorFetchingResolvedRoundsWithPlayerBets,
+		refetch: refetchResolvedRoundsWithPlayerBets,
+	} = usePlayerBetsOnRounds({ rounds: resolvedRounds });
 
-	// 3. Fetch
+	// 3. Fetch user win status and extend resolvedRoundsWithPlayerBets
 	const {
 		resolvedRoundsWithPlayerBetsAndWins,
 		isLoadingResolvedRoundsWithPlayerBetsAndWins,
@@ -62,8 +93,6 @@ export const useResolvedRoundsWithPlayerData = (): ReturnType => {
 		resolvedRoundsWithPlayerBetsAndWins,
 
 		// Individual loading & error states
-		isLoadingRounds,
-		errorFetchingRounds,
 		isLoadingResolvedRoundsWithPlayerBets,
 		errorFetchingResolvedRoundsWithPlayerBets,
 		isLoadingResolvedRoundsWithPlayerBetsAndWins,

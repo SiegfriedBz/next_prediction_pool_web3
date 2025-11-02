@@ -9,13 +9,12 @@ import type { Round } from "../_types";
 import type { RefetchType } from "./type";
 
 export type UseRoundsReturnType = {
-	/** Array of Round objects (empty if not loaded) */
+	// Data layers
 	rounds: Round[];
-	/** Boolean indicating whether the data is currently loading */
+	// Loading & error states
 	isLoadingRounds: boolean;
-	/** Normalized error object if the fetch failed, or null */
 	errorFetchingRounds: ReadContractsErrorType | null;
-	/** Function to manually refetch all rounds data */
+	// Refetch
 	refetchRounds: RefetchType<ReadContractsErrorType>;
 };
 
