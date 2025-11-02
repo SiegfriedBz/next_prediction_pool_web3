@@ -27,7 +27,7 @@ import {
 import { z } from "zod";
 import { getPredictionPoolContractConfig } from "@/app/_contracts/prediction-pool";
 import type { ContractConfigT } from "@/app/_contracts/types";
-import { useRoundDataContext } from "@/app/_hooks/use-round-data-context";
+import { useRoundsContext } from "@/app/_hooks/use-rounds-context";
 import { useTransactionToast } from "@/app/_hooks/use-tx-toast";
 import {
 	AlertDialogCancel,
@@ -71,7 +71,7 @@ export const BetOnGameForm: FC<Props> = ({
 
 	const queryClient = useQueryClient();
 
-	const { refetchAllRoundsData } = useRoundDataContext();
+	const { refetchRounds } = useRoundsContext();
 
 	// Contract config for the current chain
 	const contractConfig: ContractConfigT = useMemo(
@@ -132,21 +132,14 @@ export const BetOnGameForm: FC<Props> = ({
 			});
 
 			// Refetch updated round data
-			refetchAllRoundsData();
+			refetchRounds();
 
 			// Reset form to defaults
 			form.reset();
 			// Close dialog in a non-blocking way
 			startTransition(onCloseDialog);
 		}
-	}, [
-		isConfirmed,
-		form,
-		onCloseDialog,
-		queryClient,
-		roundId,
-		refetchAllRoundsData,
-	]);
+	}, [isConfirmed, form, onCloseDialog, queryClient, roundId, refetchRounds]);
 
 	const isDisabled = useMemo(
 		() => isPlacingBet || isConfirming,
@@ -184,10 +177,12 @@ export const BetOnGameForm: FC<Props> = ({
 				<AlertDialogFooter>
 					<AlertDialogCancel
 						onClick={onCloseDialog}
+						disabled={isDisabled}
 						className={isDisabled ? "cursor-not-allowed" : "cursor-pointer"}
 					>
 						Cancel
 					</AlertDialogCancel>
+
 					<Button
 						type="submit"
 						disabled={isDisabled}

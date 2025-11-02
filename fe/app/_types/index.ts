@@ -37,5 +37,8 @@ export type Bet = {
 
 export type RoundWithPlayerBet = Round & {
 	playerBet: Bet | null;
+};
+
+export type RoundWithPlayerBetAndWins = RoundWithPlayerBet & {
 	playerIsWinner: boolean | null;
 };
