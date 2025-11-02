@@ -4,22 +4,23 @@ import type { ReadContractsErrorType } from "@wagmi/core";
 import { useMemo } from "react";
 import { useAccount, useChainId, useReadContracts } from "wagmi";
 import { getPredictionPoolContractConfig } from "@/app/_contracts/prediction-pool";
-import type { Bet, RawBet, Round, RoundWithPlayerBet } from "@/app/_types";
+import type { RawBet, Round, RoundWithPlayerBet } from "@/app/_types";
 import type { RefetchType } from "./type";
+import { parseBet } from "./utils/parse-bet";
 
 type Params = {
-	resolvedRounds: Round[];
+	rounds: Round[];
 };
 
 type ReturnType = {
-	resolvedRoundsWithPlayerBets: RoundWithPlayerBet[];
-	isLoadingResolvedRoundsWithPlayerBets: boolean;
-	errorFetchingResolvedRoundsWithPlayerBets: ReadContractsErrorType | null;
-	refetchResolvedRoundsWithPlayerBets: RefetchType<ReadContractsErrorType>;
+	roundsWithPlayerBets: RoundWithPlayerBet[];
+	isLoading: boolean;
+	error: ReadContractsErrorType | null;
+	refetch: RefetchType<ReadContractsErrorType>;
 };
 
-export const usePlayerBetsOnResolvedRounds = (params: Params): ReturnType => {
-	const { resolvedRounds } = params;
+export const usePlayerBetsOnRounds = (params: Params): ReturnType => {
+	const { rounds } = params;
 
 	const { address } = useAccount();
 	const chainId = useChainId();
@@ -31,9 +32,9 @@ export const usePlayerBetsOnResolvedRounds = (params: Params): ReturnType => {
 
 	// prepare contract calls
 	const roundToPlayerBetCalls = useMemo(() => {
-		if (!address || resolvedRounds.length === 0) return [];
+		if (!address || rounds.length === 0) return [];
 
-		return resolvedRounds.map((round) => ({
+		return rounds.map((round) => ({
 			...contractConfig,
 			functionName: "roundToPlayerBet",
 			args: [round.id, address],
@@ -41,9 +42,9 @@ export const usePlayerBetsOnResolvedRounds = (params: Params): ReturnType => {
 				queryKey: ["round-to-player-bet", `${round.id}-${address}`], // unique per round / user
 			},
 		}));
-	}, [address, resolvedRounds, contractConfig]);
+	}, [address, rounds, contractConfig]);
 
-	// execute contract calls : get all player's bets on all resolved rounds concurrently
+	// execute contract calls : get all player's bets on all rounds concurrently
 	const { data, isLoading, error, refetch } = useReadContracts({
 		contracts: roundToPlayerBetCalls,
 		query: { enabled: roundToPlayerBetCalls.length > 0 && !!address },
@@ -51,28 +52,19 @@ export const usePlayerBetsOnResolvedRounds = (params: Params): ReturnType => {
 
 	// compute rounds With Player Bets
 	const roundsWithPlayerBets = useMemo(() => {
-		if (!resolvedRounds || !data) return [];
+		if (!rounds || !data) return [];
 
-		return resolvedRounds.map((round, i) => {
+		return rounds.map((round, i) => {
 			const raw = data[i]?.result;
 			const playerBet = Array.isArray(raw) ? parseBet(raw as RawBet) : null;
 			return { ...round, playerBet };
 		});
-	}, [resolvedRounds, data]);
+	}, [rounds, data]);
 
 	return {
-		resolvedRoundsWithPlayerBets: roundsWithPlayerBets,
-		isLoadingResolvedRoundsWithPlayerBets: isLoading,
-		errorFetchingResolvedRoundsWithPlayerBets: error,
-		refetchResolvedRoundsWithPlayerBets: refetch,
-	};
-};
-
-// helper
-const parseBet = (betArray: RawBet): Bet => {
-	return {
-		amount: betArray[0],
-		time: betArray[1],
-		claimed: betArray[2],
+		roundsWithPlayerBets,
+		isLoading,
+		error,
+		refetch,
 	};
 };

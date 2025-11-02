@@ -1,4 +1,4 @@
-import { ResolvedRoundsWithPlayerDataProvider } from "@/app/_contexts/resolved-rounds-with-player-data-provider";
+import { ResolvedRoundsWithPlayerBetsAndWinsProvider } from "@/app/_contexts/resolved-rounds-with-player-bets-and-wins-provider";
 import {
 	Card,
 	CardContent,
@@ -15,7 +15,7 @@ import { ClaimsStatsCard } from "./claims-stats-card";
 export const ClaimRewardsTab = () => {
 	return (
 		<TabsContent value="claim-rewards" className="mt-4">
-			<ResolvedRoundsWithPlayerDataProvider>
+			<ResolvedRoundsWithPlayerBetsAndWinsProvider>
 				<Card>
 					<CardHeader className="flex items-center sm:justify-between">
 						<div className="flex flex-col w-full">
@@ -35,7 +35,7 @@ export const ClaimRewardsTab = () => {
 						<ClaimRewardsTable />
 					</CardContent>
 				</Card>
-			</ResolvedRoundsWithPlayerDataProvider>
+			</ResolvedRoundsWithPlayerBetsAndWinsProvider>
 		</TabsContent>
 	);
 };

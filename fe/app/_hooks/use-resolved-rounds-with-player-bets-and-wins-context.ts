@@ -9,8 +9,9 @@ import type {
 } from "../_types";
 import type { RefetchType } from "./type";
 
-export type ResolvedRoundsWithPlayerDataContextT = {
+export type ResolvedRoundsWithPlayerBetsAndWinsContextT = {
 	// Data layers
+	rounds: Round[];
 	resolvedRounds: Round[];
 	resolvedRoundsWithPlayerBets: RoundWithPlayerBet[];
 	resolvedRoundsWithPlayerBetsAndWins: RoundWithPlayerBetAndWins[];
@@ -31,14 +32,14 @@ export type ResolvedRoundsWithPlayerDataContextT = {
 	refetchResolvedRoundsWithPlayerBets: RefetchType<ReadContractsErrorType>;
 };
 
-export const ResolvedRoundsWithPlayerDataContext =
-	createContext<ResolvedRoundsWithPlayerDataContextT | null>(null);
+export const ResolvedRoundsWithPlayerBetsAndWinsContext =
+	createContext<ResolvedRoundsWithPlayerBetsAndWinsContextT | null>(null);
 
-export const useResolvedRoundsWithPlayerDataContext = () => {
-	const ctx = useContext(ResolvedRoundsWithPlayerDataContext);
+export const useResolvedRoundsWithPlayerBetsAndWinsContext = () => {
+	const ctx = useContext(ResolvedRoundsWithPlayerBetsAndWinsContext);
 	if (!ctx)
 		throw new Error(
-			"useResolvedRoundsWithPlayerDataContext must be used inside ResolvedRoundsWithPlayerDataProvider",
+			"useResolvedRoundsWithPlayerBetsAndWinsContext must be used inside ResolvedRoundsWithPlayerBetsAndWinsProvider",
 		);
 	return ctx;
 };

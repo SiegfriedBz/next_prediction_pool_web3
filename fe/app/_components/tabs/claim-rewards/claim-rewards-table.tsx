@@ -1,13 +1,13 @@
 "use client";
 
-import { useResolvedRoundsWithPlayerDataContext } from "@/app/_hooks/use-resolved-rounds-with-player-data-context";
+import { useResolvedRoundsWithPlayerBetsAndWinsContext } from "@/app/_hooks/use-resolved-rounds-with-player-bets-and-wins-context";
 import { DataTable } from "../bet-on-games/data-table";
 import { useColumns } from "./use-columns";
 
 export const ClaimRewardsTable = () => {
 	// Fetch resolved rounds with player bets & wins - data
 	const { resolvedRoundsWithPlayerBetsAndWins } =
-		useResolvedRoundsWithPlayerDataContext();
+		useResolvedRoundsWithPlayerBetsAndWinsContext();
 
 	// get tanstack-table columns
 	const columns = useColumns();
