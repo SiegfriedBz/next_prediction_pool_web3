@@ -18,7 +18,7 @@ import {
 } from "wagmi";
 import { getPredictionPoolContractConfig } from "@/app/_contracts/prediction-pool";
 import type { ContractConfigT } from "@/app/_contracts/types";
-import { useResolvedRoundsWithPlayerDataContext } from "@/app/_hooks/use-resolved-rounds-with-player-data-context";
+import { useResolvedRoundsWithPlayerBetsAndWinsContext } from "@/app/_hooks/use-resolved-rounds-with-player-bets-and-wins-context";
 import { useTransactionToast } from "@/app/_hooks/use-tx-toast";
 import {
 	AlertDialogCancel,
@@ -39,7 +39,7 @@ export const ClaimRewardsConfirm: FC<Props> = (props) => {
 	const queryClient = useQueryClient();
 
 	const { refetchResolvedRoundsWithPlayerBets } =
-		useResolvedRoundsWithPlayerDataContext();
+		useResolvedRoundsWithPlayerBetsAndWinsContext();
 
 	const contractConfig: ContractConfigT = useMemo(
 		() => getPredictionPoolContractConfig(chainId),
