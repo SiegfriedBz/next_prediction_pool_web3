@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 import { usePlayerBetsAndWinsOnResolvedRounds } from "./use-player-bets-and-wins-on-resolved-rounds";
-import { usePlayerBetsOnResolvedRounds } from "./use-player-bets-on-resolved-rounds";
+import { usePlayerBetsOnRounds } from "./use-player-bets-on-rounds";
 import { useResolvedRounds } from "./use-resolved-rounds";
 import type { ResolvedRoundsWithPlayerDataContextT } from "./use-resolved-rounds-with-player-data-context";
 
@@ -15,15 +15,13 @@ export const useResolvedRoundsWithPlayerData = (): ReturnType => {
 
 	// 2. Fetch all player's bets on all resolved rounds & Combine rounds with player's bet
 	const {
-		resolvedRoundsWithPlayerBets,
-		isLoadingResolvedRoundsWithPlayerBets,
-		errorFetchingResolvedRoundsWithPlayerBets,
-		refetchResolvedRoundsWithPlayerBets,
-	} = usePlayerBetsOnResolvedRounds({
-		resolvedRounds,
-	});
+		roundsWithPlayerBets: resolvedRoundsWithPlayerBets,
+		isLoading: isLoadingResolvedRoundsWithPlayerBets,
+		error: errorFetchingResolvedRoundsWithPlayerBets,
+		refetch: refetchResolvedRoundsWithPlayerBets,
+	} = usePlayerBetsOnRounds({ rounds: resolvedRounds });
 
-	// 3. Fetch
+	// 3. Fetch user win status and extend resolvedRoundsWithPlayerBets
 	const {
 		resolvedRoundsWithPlayerBetsAndWins,
 		isLoadingResolvedRoundsWithPlayerBetsAndWins,
