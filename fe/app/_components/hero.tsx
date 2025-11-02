@@ -5,6 +5,7 @@ import Link from "next/link";
 import type { FC } from "react";
 import { Button } from "@/components/ui/button";
 import { TypographyH1 } from "./typography/h1";
+import { TypographyH4 } from "./typography/h4";
 import { TypographyLead } from "./typography/lead";
 
 export const Hero: FC = () => {
@@ -25,19 +26,26 @@ export const Hero: FC = () => {
 			</motion.div>
 
 			{/* Subtitle */}
-			<motion.p
-				className="mt-6 text-lg md:text-2xl text-slate-400 max-w-2xl leading-relaxed"
+			<motion.div
+				className="mt-6 text-lg md:text-2xl max-w-2xl leading-relaxed"
 				initial={{ opacity: 0, y: 20 }}
 				animate={{ opacity: 1, y: 0 }}
 				transition={{ delay: 0.15, duration: 0.8 }}
 			>
-				<TypographyLead>
+				<TypographyH4>
 					Predict. Bet. Win —{" "}
 					<span className="text-blue-400 font-semibold">Together</span>.
 					<br />
-					<span>Powered by Chainlink and Ethereum.</span>
+					{/* <span>Powered by Chainlink and Ethereum.</span> */}
+				</TypographyH4>
+
+				<TypographyLead className="inline-block">
+					Create or join prediction games on crypto asset prices — powered by{" "}
+					<span className="text-accent-foreground italic">Chainlink</span>,{" "}
+					<span className="text-accent-foreground italic">Ethereum</span>, and{" "}
+					<span className="text-accent-foreground italic">Tenderly</span>.
 				</TypographyLead>
-			</motion.p>
+			</motion.div>
 
 			{/* CTA */}
 			<motion.div
