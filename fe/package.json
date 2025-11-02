@@ -21,6 +21,8 @@
     "@rainbow-me/rainbowkit": "^2.2.9",
     "@tanstack/react-query": "^5.90.5",
     "@tanstack/react-table": "^8.21.3",
+    "@vercel/analytics": "^1.5.0",
+    "@vercel/speed-insights": "^1.2.0",
     "@wagmi/core": "^2.22.1",
     "@web3icons/react": "^4.0.27",
     "class-variance-authority": "^0.7.1",
