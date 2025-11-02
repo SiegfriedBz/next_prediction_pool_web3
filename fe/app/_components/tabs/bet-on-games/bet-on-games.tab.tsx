@@ -1,4 +1,4 @@
-import { RoundDataProvider } from "@/app/_contexts/round-data-provider";
+import { RoundsProvider } from "@/app/_contexts/rounds-provider";
 import {
 	Card,
 	CardContent,
@@ -9,26 +9,31 @@ import {
 import { TabsContent } from "@/components/ui/tabs";
 import { TypographyH2 } from "../../typography/h2";
 import { TypographyLead } from "../../typography/lead";
+import { GamesStatsCard } from "./games-stats-card";
 import { GamesTable } from "./games-table";
 
 export const BetOnGamesTab = () => {
 	return (
 		<TabsContent value="bet-on-games" className="mt-4">
-			<Card>
-				<CardHeader>
-					<CardTitle>
-						<TypographyH2>Bet on Games</TypographyH2>
-					</CardTitle>
-					<CardDescription>
-						<TypographyLead>Select Games on which to bet</TypographyLead>
-					</CardDescription>
-				</CardHeader>
-				<CardContent>
-					<RoundDataProvider>
+			<RoundsProvider>
+				<Card>
+					<CardHeader className="flex items-center sm:justify-between">
+						<div className="flex flex-col w-full">
+							<CardTitle>
+								<TypographyH2>Bet on Games</TypographyH2>
+							</CardTitle>
+							<CardDescription>
+								<GamesStatsCard className="max-sm:w-full max-sm:mb-4 sm:hidden " />
+								<TypographyLead>Select Games on which to bet</TypographyLead>
+							</CardDescription>
+						</div>
+						<GamesStatsCard className="max-sm:hidden sm:min-w-1/3 md:min-w-1/2 lg:min-w-1/4" />
+					</CardHeader>
+					<CardContent>
 						<GamesTable />
-					</RoundDataProvider>
-				</CardContent>
-			</Card>
+					</CardContent>
+				</Card>
+			</RoundsProvider>
 		</TabsContent>
 	);
 };

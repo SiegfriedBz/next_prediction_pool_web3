@@ -51,7 +51,9 @@ export const useTransactionToast = ({
 		if (hash) {
 			toast.info(<div>Transaction Hash: {hash}</div>);
 		}
+	}, [hash]);
 
+	useEffect(() => {
 		if (isConfirming) {
 			toast.info(
 				<span className="inline-flex gap-2 items-center">
@@ -62,13 +64,17 @@ export const useTransactionToast = ({
 				</span>,
 			);
 		}
+	}, [isConfirming]);
 
+	useEffect(() => {
 		if (isConfirmed) {
 			toast.success(<div>Transaction confirmed.</div>);
 		}
+	}, [isConfirmed]);
 
+	useEffect(() => {
 		if (error) {
 			toast.error(<div>Error: {error.shortMessage || error.message}</div>);
 		}
-	}, [hash, isConfirming, isConfirmed, error]);
+	}, [error]);
 };
