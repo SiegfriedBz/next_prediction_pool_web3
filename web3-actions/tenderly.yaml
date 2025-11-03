@@ -1,0 +1,22 @@
+account_id: ""
+actions:
+  siegfriedbz/predictionpoolv4:
+    runtime: v2
+    sources: actions
+    specs:
+      PredictionPool_RoundResolved:
+        description: Transaction that produced PredictionPool_RoundResolved on Web3Actions contract.
+        function: predictionPoolActions:onNewRoundResolved
+        trigger:
+          type: transaction
+          transaction:
+            filters:
+            - eventEmitted:
+                contract:
+                  address: 0x1A3D6f547ce55463B03151cBC17f323501FC9170
+                name: PredictionPool_RoundResolved
+              network: 11155111
+            status:
+            - mined
+        execution_type: ""
+project_slug: ""
