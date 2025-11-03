@@ -6,6 +6,7 @@ import { CircleQuestionMarkIcon, CircleSlash2Icon } from "lucide-react";
 import { type ReactElement, useMemo } from "react";
 import { formatEther } from "viem";
 import { useAccount, useChainId } from "wagmi";
+import { useActiveRoundsWithPlayerBetsContext } from "@/app/_hooks/use-active-rounds-with-player-bets-context";
 import { type Round, RoundStatus } from "@/app/_types";
 import { ReverseFeedMap } from "@/app/_utils/feed-maps";
 import { Badge } from "@/components/ui/badge";
