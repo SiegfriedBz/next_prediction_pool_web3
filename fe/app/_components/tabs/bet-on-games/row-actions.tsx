@@ -75,8 +75,10 @@ export const RowActions: FC<Props> = (props) => {
 	if (userHasAlreadyBetOnThisRound) {
 		return (
 			<Tooltip>
-				<TooltipTrigger>
-					<CircleCheckBigIcon className="h-4 w-4 text-chart-2" />
+				<TooltipTrigger asChild>
+					<span className="inline-flex justify-start items-center h-9 w-16">
+						<CircleCheckBigIcon size={14} className="text-chart-2" />
+					</span>
 				</TooltipTrigger>
 				<TooltipContent>
 					<p>You already bet on this game.</p>

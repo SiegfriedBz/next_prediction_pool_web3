@@ -2,12 +2,7 @@
 
 import type { ColumnDef } from "@tanstack/react-table";
 import { formatDistanceToNow } from "date-fns";
-import {
-	CircleQuestionMarkIcon,
-	CircleSlash2Icon,
-	ThumbsDownIcon,
-	ThumbsUpIcon,
-} from "lucide-react";
+import { CircleQuestionMarkIcon, CircleSlash2Icon } from "lucide-react";
 import { type ReactElement, useMemo } from "react";
 import { formatEther } from "viem";
 import { useAccount, useChainId } from "wagmi";
@@ -21,6 +16,10 @@ import {
 	TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { FeedIcon } from "../../feed-icon";
+import { AboveTargetTableHeader } from "../table/above-target-table-header";
+import { BelowTargetTableHeader } from "../table/below-target-table-header";
+import { CreatorTableCell } from "../table/creator-table-cell";
+import { TargetPriceTableHeader } from "../table/target-price-table-header";
 import { sortEndFn } from "./data-table";
 import { RowActions } from "./row-actions";
 
@@ -59,22 +58,7 @@ export const useColumns = () => {
 		},
 		{
 			accessorKey: "target",
-			header: () => (
-				<Tooltip>
-					<TooltipTrigger>
-						<div className="text-semibold relative">
-							Target (USD)
-							<CircleQuestionMarkIcon
-								size={8}
-								className="absolute -top-2 -right-2"
-							/>
-						</div>
-					</TooltipTrigger>
-					<TooltipContent>
-						<p>Target Price (USD) on Games</p>
-					</TooltipContent>
-				</Tooltip>
-			),
+			header: () => <TargetPriceTableHeader />,
 			cell: ({ row }) => {
 				const price = formatEther(row.getValue("target"));
 
@@ -108,7 +92,11 @@ export const useColumns = () => {
 				const currentUserIsCreator = rawCreator === account.address;
 
 				if (endDateHasPassed || !rawCreator || currentUserIsCreator) {
-					return <CircleSlash2Icon size={12} />;
+					return (
+						<span className="inline-flex justify-start items-center h-9 w-16">
+							<CircleSlash2Icon size={12} />
+						</span>
+					);
 				}
 
 				return <RowActions round={row.original} />;
@@ -116,25 +104,7 @@ export const useColumns = () => {
 		},
 		{
 			accessorKey: "ltTotal",
-			header: () => (
-				<Tooltip>
-					<TooltipTrigger>
-						<div className="flex items-center gap-x-2 text-semibold relative">
-							<ThumbsDownIcon color="var(--destructive)" size={12} />
-							<span>LT Total Bets (ETH)</span>
-							<CircleQuestionMarkIcon
-								size={8}
-								className="absolute -top-2 -right-2"
-							/>
-						</div>
-					</TooltipTrigger>
-					<TooltipContent>
-						<p>
-							<strong>Less Than</strong> Side - Total Sum Bets on Games
-						</p>
-					</TooltipContent>
-				</Tooltip>
-			),
+			header: () => <BelowTargetTableHeader />,
 			cell: ({ row }) => {
 				const wei: bigint = row.getValue("ltTotal");
 
@@ -147,25 +117,7 @@ export const useColumns = () => {
 		},
 		{
 			accessorKey: "gteTotal",
-			header: () => (
-				<Tooltip>
-					<TooltipTrigger>
-						<div className="flex items-center gap-x-2 text-semibold relative">
-							<ThumbsUpIcon color="var(--chart-2)" size={12} />
-							<span>GTE Total Bets (ETH)</span>
-							<CircleQuestionMarkIcon
-								size={8}
-								className="absolute -top-2 -right-2"
-							/>
-						</div>
-					</TooltipTrigger>
-					<TooltipContent>
-						<p>
-							<strong>Greater Than</strong> Side - Total Sum Bets on Games
-						</p>
-					</TooltipContent>
-				</Tooltip>
-			),
+			header: () => <AboveTargetTableHeader />,
 			cell: ({ row }) => {
 				const wei: bigint = row.getValue("gteTotal");
 
@@ -213,18 +165,12 @@ export const useColumns = () => {
 			accessorKey: "creator",
 			header: () => <div className="text-semibold">Creator</div>,
 			cell: ({ row }) => {
-				const rawCreator: string | null = row.getValue("creator") ?? null;
-
-				if (!rawCreator) {
-					return <CircleSlash2Icon size={12} />;
-				}
-
-				const currentUserIsCreator = rawCreator === account.address;
-				const shortRawCreator = `${rawCreator.slice(0, 5)}...${rawCreator.slice(37, 42)}`;
-
-				const creator = currentUserIsCreator ? "You" : shortRawCreator;
-
-				return <div className="font-medium">{creator}</div>;
+				return (
+					<CreatorTableCell
+						rawCreator={row.getValue("creator")}
+						address={account.address}
+					/>
+				);
 			},
 		},
 	];

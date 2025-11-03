@@ -47,7 +47,7 @@ export const RowActions: FC<Props> = (props) => {
 					</Button>
 				</TooltipTrigger>
 				<TooltipContent>
-					<p>Claim rewards</p>
+					<p>You won, claim your rewards!</p>
 				</TooltipContent>
 			</Tooltip>
 
