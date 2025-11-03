@@ -1,5 +1,6 @@
 "use client";
 
+import { TrendingDownIcon, TrendingUpIcon } from "lucide-react";
 import type { FC } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -19,9 +20,13 @@ export const SideCheckBox: FC<Props> = (props) => {
 			<Badge
 				variant={!checked ? "destructive" : "outline"}
 				onClick={() => onChange(false)}
-				className="cursor-pointer font-bold h-[2.35rem] max-sm:w-full w-32"
+				className="cursor-pointer font-bold h-[2.35rem] max-sm:w-full w-32 flex items-center gap-x-2"
 			>
-				Less than
+				<TrendingDownIcon
+					size={32}
+					className={!checked ? "text-accent-foreground" : "text-destructive"}
+				/>
+				Below Target
 			</Badge>
 
 			{targetPrice ? (
@@ -37,9 +42,13 @@ export const SideCheckBox: FC<Props> = (props) => {
 			<Badge
 				variant={checked ? "chartTwo" : "outline"}
 				onClick={() => onChange(true)}
-				className="cursor-pointer font-bold h-[2.35rem] max-sm:w-full w-32"
+				className="cursor-pointer font-bold h-[2.35rem] max-sm:w-full w-32 flex items-center gap-x-2"
 			>
-				Greater or equal
+				<TrendingUpIcon
+					size={32}
+					className={checked ? "text-accent-foreground" : "text-chart-2"}
+				/>
+				Above Target
 			</Badge>
 		</div>
 	);

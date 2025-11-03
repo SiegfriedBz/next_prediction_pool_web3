@@ -6,8 +6,6 @@ import {
 	CircleQuestionMarkIcon,
 	CircleSlash2Icon,
 	CoinsIcon,
-	ThumbsDownIcon,
-	ThumbsUpIcon,
 	TrophyIcon,
 } from "lucide-react";
 import { useMemo } from "react";
@@ -21,6 +19,10 @@ import {
 	TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { FeedIcon } from "../../feed-icon";
+import { AboveTargetTableHeader } from "../table/above-target-table-header";
+import { BelowTargetTableHeader } from "../table/below-target-table-header";
+import { CreatorTableCell } from "../table/creator-table-cell";
+import { TargetPriceTableHeader } from "../table/target-price-table-header";
 import { RowActions } from "./row-actions";
 
 export const useColumns = () => {
@@ -52,22 +54,7 @@ export const useColumns = () => {
 		},
 		{
 			accessorKey: "target",
-			header: () => (
-				<Tooltip>
-					<TooltipTrigger>
-						<div className="text-semibold relative">
-							Target (USD)
-							<CircleQuestionMarkIcon
-								size={8}
-								className="absolute -top-2 -right-2"
-							/>
-						</div>
-					</TooltipTrigger>
-					<TooltipContent>
-						<p>Target Price (USD) on Games</p>
-					</TooltipContent>
-				</Tooltip>
-			),
+			header: () => <TargetPriceTableHeader />,
 			cell: ({ row }) => {
 				const price = formatEther(row.getValue("target"));
 
@@ -100,7 +87,6 @@ export const useColumns = () => {
 				<Tooltip>
 					<TooltipTrigger>
 						<div className="flex items-center gap-x-2 text-semibold relative">
-							<TrophyIcon size={12} color="var(--chart-2)" />
 							<span>Claim</span>
 							<CircleQuestionMarkIcon
 								size={8}
@@ -109,7 +95,7 @@ export const useColumns = () => {
 						</div>
 					</TooltipTrigger>
 					<TooltipContent>
-						<p>Claim your rewards on this game</p>
+						<p>Claim your rewards</p>
 					</TooltipContent>
 				</Tooltip>
 			),
@@ -117,7 +103,11 @@ export const useColumns = () => {
 				const playerBet = row.getValue("playerBet");
 
 				if (!playerBet) {
-					return <CircleSlash2Icon size={12} />;
+					return (
+						<span className="inline-flex justify-start items-center size-9">
+							<CircleSlash2Icon size={12} />
+						</span>
+					);
 				}
 
 				const playerHasClaimed = (playerBet as Bet).claimed;
@@ -126,11 +116,13 @@ export const useColumns = () => {
 					return (
 						<div className="flex items-center">
 							<Tooltip>
-								<TooltipTrigger>
-									<CoinsIcon className="h-4 w-4 text-chart-2/50 cursor-not-allowed" />
+								<TooltipTrigger asChild>
+									<span className="inline-flex justify-start items-center size-9">
+										<CoinsIcon className="h-4 w-4 text-chart-2/50 cursor-not-allowed" />
+									</span>
 								</TooltipTrigger>
 								<TooltipContent>
-									<p>Already claimed</p>
+									<p>You already claimed this reward.</p>
 								</TooltipContent>
 							</Tooltip>
 						</div>
@@ -173,25 +165,7 @@ export const useColumns = () => {
 		},
 		{
 			accessorKey: "ltTotal",
-			header: () => (
-				<Tooltip>
-					<TooltipTrigger>
-						<div className="flex items-center gap-x-2 text-semibold relative">
-							<ThumbsDownIcon color="var(--destructive)" size={12} />
-							<span>LT Total Bets (ETH)</span>
-							<CircleQuestionMarkIcon
-								size={8}
-								className="absolute -top-2 -right-2"
-							/>
-						</div>
-					</TooltipTrigger>
-					<TooltipContent>
-						<p>
-							<strong>Less Than</strong> Side - Total Sum Bets on Games
-						</p>
-					</TooltipContent>
-				</Tooltip>
-			),
+			header: () => <BelowTargetTableHeader />,
 			cell: ({ row }) => {
 				const wei: bigint = row.getValue("ltTotal");
 
@@ -205,25 +179,7 @@ export const useColumns = () => {
 		},
 		{
 			accessorKey: "gteTotal",
-			header: () => (
-				<Tooltip>
-					<TooltipTrigger>
-						<div className="flex items-center gap-x-2 text-semibold relative">
-							<ThumbsUpIcon color="var(--chart-2)" size={12} />
-							<span>GTE Total Bets (ETH)</span>
-							<CircleQuestionMarkIcon
-								size={8}
-								className="absolute -top-2 -right-2"
-							/>
-						</div>
-					</TooltipTrigger>
-					<TooltipContent>
-						<p>
-							<strong>Greater Than</strong> Side - Total Sum Bets on Games
-						</p>
-					</TooltipContent>
-				</Tooltip>
-			),
+			header: () => <AboveTargetTableHeader />,
 			cell: ({ row }) => {
 				const wei: bigint = row.getValue("gteTotal");
 
@@ -239,18 +195,12 @@ export const useColumns = () => {
 			accessorKey: "creator",
 			header: () => <div className="text-semibold">Creator</div>,
 			cell: ({ row }) => {
-				const rawCreator: string | null = row.getValue("creator") ?? null;
-
-				if (!rawCreator) {
-					return <CircleSlash2Icon size={12} />;
-				}
-
-				const currentUserIsCreator = rawCreator === account.address;
-				const shortRawCreator = `${rawCreator.slice(0, 5)}...${rawCreator.slice(37, 42)}`;
-
-				const creator = currentUserIsCreator ? "Me" : shortRawCreator;
-
-				return <div className="font-medium">{creator}</div>;
+				return (
+					<CreatorTableCell
+						rawCreator={row.getValue("creator")}
+						address={account.address}
+					/>
+				);
 			},
 		},
 	];
