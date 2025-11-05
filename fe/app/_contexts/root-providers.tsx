@@ -23,7 +23,7 @@ export const RootProviders: FC<PropsWithChildren> = ({ children }) => {
 				<QueryClientProvider client={queryClient}>
 					<RainbowKitProvider>
 						{children}
-						<Toaster />
+						<Toaster position="bottom-right" />
 					</RainbowKitProvider>
 				</QueryClientProvider>
 			</WagmiProvider>

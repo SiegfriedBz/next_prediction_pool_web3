@@ -41,8 +41,11 @@ export const Hero: FC = () => {
 
 				<TypographyLead className="inline-block">
 					Create or join prediction games on crypto asset prices — powered by{" "}
-					<span className="text-accent-foreground italic">Chainlink</span>,{" "}
-					<span className="text-accent-foreground italic">Ethereum</span>, and{" "}
+					<span className="text-accent-foreground italic">
+						Ethereum <span className="text-sm">(Sepolia)</span>
+					</span>
+					, <span className="text-accent-foreground italic">Alchemy</span>,{" "}
+					<span className="text-accent-foreground italic">Chainlink</span> and{" "}
 					<span className="text-accent-foreground italic">Tenderly</span>.
 				</TypographyLead>
 			</motion.div>
