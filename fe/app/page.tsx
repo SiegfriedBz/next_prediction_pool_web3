@@ -1,5 +1,7 @@
+import { GameListenerSwitch } from "./_components/game-listener-switch";
 import { Hero } from "./_components/hero";
 import { GameTabs } from "./_components/tabs/game-tabs";
+import { TokenImage } from "./_components/token-image";
 
 export default function Home() {
 	return (
@@ -12,6 +14,10 @@ export default function Home() {
 				id={"tabs"}
 				className="min-h-screen scroll-mt-12 sm:scroll-mt-24"
 			>
+				<div className="flex justify-center mb-8">
+					<GameListenerSwitch />
+				</div>
+
 				<GameTabs />
 			</section>
 			{/* Background gradient glow */}
