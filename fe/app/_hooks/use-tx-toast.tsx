@@ -55,7 +55,7 @@ export const useTransactionToast = ({
 
 	useEffect(() => {
 		if (isConfirming) {
-			toast.info(
+			toast(
 				<span className="inline-flex gap-2 items-center">
 					<span className="animate-spin">
 						<LoaderIcon size={16} />

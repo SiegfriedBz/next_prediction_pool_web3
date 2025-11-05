@@ -1,0 +1,728 @@
+import { type HexAddress, Network, type NetworkT } from "../_types";
+import type { ContractConfigT } from "./types";
+
+const predictionPoolTokenAddressMap = new Map<NetworkT, HexAddress>([
+	[Network.SEPOLIA, "0x0670019FCD39520ACB9C907fEBd944BFEB567b35"],
+	// [Network.MUMBAI, ""]
+]);
+
+export const getPredictionPoolTokenContractConfig = (
+	chainId: number,
+): ContractConfigT => {
+	const address = predictionPoolTokenAddressMap.get(chainId);
+
+	return {
+		address: address as `0x${string}`,
+		abi: [
+			{
+				inputs: [
+					{ internalType: "string", name: "uri_", type: "string" },
+					{ internalType: "uint256", name: "_maxTokenId", type: "uint256" },
+					{ internalType: "address", name: "_defaultAdmin", type: "address" },
+					{ internalType: "address", name: "_minter", type: "address" },
+					{ internalType: "address", name: "_linkToken", type: "address" },
+					{ internalType: "address", name: "_vrfCoordinator", type: "address" },
+					{ internalType: "uint256", name: "_vrf_subId", type: "uint256" },
+					{ internalType: "bytes32", name: "_vrf_keyHash", type: "bytes32" },
+				],
+				stateMutability: "nonpayable",
+				type: "constructor",
+			},
+			{ inputs: [], name: "AccessControlBadConfirmation", type: "error" },
+			{
+				inputs: [
+					{ internalType: "address", name: "account", type: "address" },
+					{ internalType: "bytes32", name: "neededRole", type: "bytes32" },
+				],
+				name: "AccessControlUnauthorizedAccount",
+				type: "error",
+			},
+			{
+				inputs: [
+					{ internalType: "address", name: "sender", type: "address" },
+					{ internalType: "uint256", name: "balance", type: "uint256" },
+					{ internalType: "uint256", name: "needed", type: "uint256" },
+					{ internalType: "uint256", name: "tokenId", type: "uint256" },
+				],
+				name: "ERC1155InsufficientBalance",
+				type: "error",
+			},
+			{
+				inputs: [
+					{ internalType: "address", name: "approver", type: "address" },
+				],
+				name: "ERC1155InvalidApprover",
+				type: "error",
+			},
+			{
+				inputs: [
+					{ internalType: "uint256", name: "idsLength", type: "uint256" },
+					{ internalType: "uint256", name: "valuesLength", type: "uint256" },
+				],
+				name: "ERC1155InvalidArrayLength",
+				type: "error",
+			},
+			{
+				inputs: [
+					{ internalType: "address", name: "operator", type: "address" },
+				],
+				name: "ERC1155InvalidOperator",
+				type: "error",
+			},
+			{
+				inputs: [
+					{ internalType: "address", name: "receiver", type: "address" },
+				],
+				name: "ERC1155InvalidReceiver",
+				type: "error",
+			},
+			{
+				inputs: [{ internalType: "address", name: "sender", type: "address" }],
+				name: "ERC1155InvalidSender",
+				type: "error",
+			},
+			{
+				inputs: [
+					{ internalType: "address", name: "operator", type: "address" },
+					{ internalType: "address", name: "owner", type: "address" },
+				],
+				name: "ERC1155MissingApprovalForAll",
+				type: "error",
+			},
+			{
+				inputs: [
+					{ internalType: "address", name: "have", type: "address" },
+					{ internalType: "address", name: "want", type: "address" },
+				],
+				name: "OnlyCoordinatorCanFulfill",
+				type: "error",
+			},
+			{
+				inputs: [
+					{ internalType: "address", name: "have", type: "address" },
+					{ internalType: "address", name: "owner", type: "address" },
+					{ internalType: "address", name: "coordinator", type: "address" },
+				],
+				name: "OnlyOwnerOrCoordinator",
+				type: "error",
+			},
+			{
+				inputs: [],
+				name: "PredictionPoolToken_MinTwoTokensToMint",
+				type: "error",
+			},
+			{ inputs: [], name: "PredictionPoolToken_NoZeroAddress", type: "error" },
+			{
+				inputs: [
+					{ internalType: "uint256", name: "requestId", type: "uint256" },
+				],
+				name: "PredictionPoolToken_RequestAlreadyFulfilled",
+				type: "error",
+			},
+			{
+				inputs: [
+					{ internalType: "uint256", name: "requestId", type: "uint256" },
+				],
+				name: "PredictionPoolToken_RequestNotFound",
+				type: "error",
+			},
+			{ inputs: [], name: "ZeroAddress", type: "error" },
+			{
+				anonymous: false,
+				inputs: [
+					{
+						indexed: true,
+						internalType: "address",
+						name: "account",
+						type: "address",
+					},
+					{
+						indexed: true,
+						internalType: "address",
+						name: "operator",
+						type: "address",
+					},
+					{
+						indexed: false,
+						internalType: "bool",
+						name: "approved",
+						type: "bool",
+					},
+				],
+				name: "ApprovalForAll",
+				type: "event",
+			},
+			{
+				anonymous: false,
+				inputs: [
+					{
+						indexed: false,
+						internalType: "address",
+						name: "vrfCoordinator",
+						type: "address",
+					},
+				],
+				name: "CoordinatorSet",
+				type: "event",
+			},
+			{
+				anonymous: false,
+				inputs: [
+					{
+						indexed: true,
+						internalType: "address",
+						name: "from",
+						type: "address",
+					},
+					{
+						indexed: true,
+						internalType: "address",
+						name: "to",
+						type: "address",
+					},
+				],
+				name: "OwnershipTransferRequested",
+				type: "event",
+			},
+			{
+				anonymous: false,
+				inputs: [
+					{
+						indexed: true,
+						internalType: "address",
+						name: "from",
+						type: "address",
+					},
+					{
+						indexed: true,
+						internalType: "address",
+						name: "to",
+						type: "address",
+					},
+				],
+				name: "OwnershipTransferred",
+				type: "event",
+			},
+			{
+				anonymous: false,
+				inputs: [
+					{
+						indexed: true,
+						internalType: "address",
+						name: "winner",
+						type: "address",
+					},
+					{
+						indexed: true,
+						internalType: "uint256",
+						name: "tokenId",
+						type: "uint256",
+					},
+				],
+				name: "PredictionPoolToken_Mint",
+				type: "event",
+			},
+			{
+				anonymous: false,
+				inputs: [
+					{
+						indexed: true,
+						internalType: "address",
+						name: "winner",
+						type: "address",
+					},
+					{
+						indexed: true,
+						internalType: "uint256",
+						name: "requestId",
+						type: "uint256",
+					},
+				],
+				name: "PredictionPoolToken_RequestFulfilled",
+				type: "event",
+			},
+			{
+				anonymous: false,
+				inputs: [
+					{
+						indexed: true,
+						internalType: "address",
+						name: "winner",
+						type: "address",
+					},
+					{
+						indexed: true,
+						internalType: "uint256",
+						name: "requestId",
+						type: "uint256",
+					},
+				],
+				name: "PredictionPoolToken_RequestSent",
+				type: "event",
+			},
+			{
+				anonymous: false,
+				inputs: [
+					{
+						indexed: true,
+						internalType: "uint256",
+						name: "subId",
+						type: "uint256",
+					},
+				],
+				name: "PredictionPoolToken_SetVrfSubId",
+				type: "event",
+			},
+			{
+				anonymous: false,
+				inputs: [
+					{
+						indexed: true,
+						internalType: "uint16",
+						name: "requestConfirmations",
+						type: "uint16",
+					},
+					{
+						indexed: true,
+						internalType: "uint32",
+						name: "callbackGasLimit",
+						type: "uint32",
+					},
+				],
+				name: "PredictionPoolToken_UpdateVrfSettings",
+				type: "event",
+			},
+			{
+				anonymous: false,
+				inputs: [
+					{
+						indexed: true,
+						internalType: "bytes32",
+						name: "role",
+						type: "bytes32",
+					},
+					{
+						indexed: true,
+						internalType: "bytes32",
+						name: "previousAdminRole",
+						type: "bytes32",
+					},
+					{
+						indexed: true,
+						internalType: "bytes32",
+						name: "newAdminRole",
+						type: "bytes32",
+					},
+				],
+				name: "RoleAdminChanged",
+				type: "event",
+			},
+			{
+				anonymous: false,
+				inputs: [
+					{
+						indexed: true,
+						internalType: "bytes32",
+						name: "role",
+						type: "bytes32",
+					},
+					{
+						indexed: true,
+						internalType: "address",
+						name: "account",
+						type: "address",
+					},
+					{
+						indexed: true,
+						internalType: "address",
+						name: "sender",
+						type: "address",
+					},
+				],
+				name: "RoleGranted",
+				type: "event",
+			},
+			{
+				anonymous: false,
+				inputs: [
+					{
+						indexed: true,
+						internalType: "bytes32",
+						name: "role",
+						type: "bytes32",
+					},
+					{
+						indexed: true,
+						internalType: "address",
+						name: "account",
+						type: "address",
+					},
+					{
+						indexed: true,
+						internalType: "address",
+						name: "sender",
+						type: "address",
+					},
+				],
+				name: "RoleRevoked",
+				type: "event",
+			},
+			{
+				anonymous: false,
+				inputs: [
+					{
+						indexed: true,
+						internalType: "address",
+						name: "operator",
+						type: "address",
+					},
+					{
+						indexed: true,
+						internalType: "address",
+						name: "from",
+						type: "address",
+					},
+					{
+						indexed: true,
+						internalType: "address",
+						name: "to",
+						type: "address",
+					},
+					{
+						indexed: false,
+						internalType: "uint256[]",
+						name: "ids",
+						type: "uint256[]",
+					},
+					{
+						indexed: false,
+						internalType: "uint256[]",
+						name: "values",
+						type: "uint256[]",
+					},
+				],
+				name: "TransferBatch",
+				type: "event",
+			},
+			{
+				anonymous: false,
+				inputs: [
+					{
+						indexed: true,
+						internalType: "address",
+						name: "operator",
+						type: "address",
+					},
+					{
+						indexed: true,
+						internalType: "address",
+						name: "from",
+						type: "address",
+					},
+					{
+						indexed: true,
+						internalType: "address",
+						name: "to",
+						type: "address",
+					},
+					{
+						indexed: false,
+						internalType: "uint256",
+						name: "id",
+						type: "uint256",
+					},
+					{
+						indexed: false,
+						internalType: "uint256",
+						name: "value",
+						type: "uint256",
+					},
+				],
+				name: "TransferSingle",
+				type: "event",
+			},
+			{
+				anonymous: false,
+				inputs: [
+					{
+						indexed: false,
+						internalType: "string",
+						name: "value",
+						type: "string",
+					},
+					{
+						indexed: true,
+						internalType: "uint256",
+						name: "id",
+						type: "uint256",
+					},
+				],
+				name: "URI",
+				type: "event",
+			},
+			{
+				inputs: [],
+				name: "DEFAULT_ADMIN_ROLE",
+				outputs: [{ internalType: "bytes32", name: "", type: "bytes32" }],
+				stateMutability: "view",
+				type: "function",
+			},
+			{
+				inputs: [],
+				name: "MINTER_ROLE",
+				outputs: [{ internalType: "bytes32", name: "", type: "bytes32" }],
+				stateMutability: "view",
+				type: "function",
+			},
+			{
+				inputs: [],
+				name: "acceptOwnership",
+				outputs: [],
+				stateMutability: "nonpayable",
+				type: "function",
+			},
+			{
+				inputs: [
+					{ internalType: "address", name: "account", type: "address" },
+					{ internalType: "uint256", name: "id", type: "uint256" },
+				],
+				name: "balanceOf",
+				outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+				stateMutability: "view",
+				type: "function",
+			},
+			{
+				inputs: [
+					{ internalType: "address[]", name: "accounts", type: "address[]" },
+					{ internalType: "uint256[]", name: "ids", type: "uint256[]" },
+				],
+				name: "balanceOfBatch",
+				outputs: [{ internalType: "uint256[]", name: "", type: "uint256[]" }],
+				stateMutability: "view",
+				type: "function",
+			},
+			{
+				inputs: [{ internalType: "bytes32", name: "role", type: "bytes32" }],
+				name: "getRoleAdmin",
+				outputs: [{ internalType: "bytes32", name: "", type: "bytes32" }],
+				stateMutability: "view",
+				type: "function",
+			},
+			{
+				inputs: [
+					{ internalType: "bytes32", name: "role", type: "bytes32" },
+					{ internalType: "address", name: "account", type: "address" },
+				],
+				name: "grantRole",
+				outputs: [],
+				stateMutability: "nonpayable",
+				type: "function",
+			},
+			{
+				inputs: [
+					{ internalType: "bytes32", name: "role", type: "bytes32" },
+					{ internalType: "address", name: "account", type: "address" },
+				],
+				name: "hasRole",
+				outputs: [{ internalType: "bool", name: "", type: "bool" }],
+				stateMutability: "view",
+				type: "function",
+			},
+			{
+				inputs: [],
+				name: "i_linkToken",
+				outputs: [{ internalType: "address", name: "", type: "address" }],
+				stateMutability: "view",
+				type: "function",
+			},
+			{
+				inputs: [],
+				name: "i_maxTokenId",
+				outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+				stateMutability: "view",
+				type: "function",
+			},
+			{
+				inputs: [],
+				name: "i_vrf_keyHash",
+				outputs: [{ internalType: "bytes32", name: "", type: "bytes32" }],
+				stateMutability: "view",
+				type: "function",
+			},
+			{
+				inputs: [
+					{ internalType: "address", name: "account", type: "address" },
+					{ internalType: "address", name: "operator", type: "address" },
+				],
+				name: "isApprovedForAll",
+				outputs: [{ internalType: "bool", name: "", type: "bool" }],
+				stateMutability: "view",
+				type: "function",
+			},
+			{
+				inputs: [{ internalType: "address", name: "_to", type: "address" }],
+				name: "mint",
+				outputs: [],
+				stateMutability: "nonpayable",
+				type: "function",
+			},
+			{
+				inputs: [],
+				name: "owner",
+				outputs: [{ internalType: "address", name: "", type: "address" }],
+				stateMutability: "view",
+				type: "function",
+			},
+			{
+				inputs: [
+					{ internalType: "uint256", name: "requestId", type: "uint256" },
+					{ internalType: "uint256[]", name: "randomWords", type: "uint256[]" },
+				],
+				name: "rawFulfillRandomWords",
+				outputs: [],
+				stateMutability: "nonpayable",
+				type: "function",
+			},
+			{
+				inputs: [
+					{ internalType: "bytes32", name: "role", type: "bytes32" },
+					{
+						internalType: "address",
+						name: "callerConfirmation",
+						type: "address",
+					},
+				],
+				name: "renounceRole",
+				outputs: [],
+				stateMutability: "nonpayable",
+				type: "function",
+			},
+			{
+				inputs: [
+					{ internalType: "bytes32", name: "role", type: "bytes32" },
+					{ internalType: "address", name: "account", type: "address" },
+				],
+				name: "revokeRole",
+				outputs: [],
+				stateMutability: "nonpayable",
+				type: "function",
+			},
+			{
+				inputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+				name: "s_requests",
+				outputs: [
+					{ internalType: "address", name: "to", type: "address" },
+					{ internalType: "bool", name: "fulfilled", type: "bool" },
+					{ internalType: "bool", name: "exists", type: "bool" },
+				],
+				stateMutability: "view",
+				type: "function",
+			},
+			{
+				inputs: [],
+				name: "s_vrfCoordinator",
+				outputs: [
+					{
+						internalType: "contract IVRFCoordinatorV2Plus",
+						name: "",
+						type: "address",
+					},
+				],
+				stateMutability: "view",
+				type: "function",
+			},
+			{
+				inputs: [
+					{ internalType: "address", name: "", type: "address" },
+					{ internalType: "uint256", name: "", type: "uint256" },
+				],
+				name: "s_winnerToMintedTokenIds",
+				outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+				stateMutability: "view",
+				type: "function",
+			},
+			{
+				inputs: [
+					{ internalType: "address", name: "from", type: "address" },
+					{ internalType: "address", name: "to", type: "address" },
+					{ internalType: "uint256[]", name: "ids", type: "uint256[]" },
+					{ internalType: "uint256[]", name: "values", type: "uint256[]" },
+					{ internalType: "bytes", name: "data", type: "bytes" },
+				],
+				name: "safeBatchTransferFrom",
+				outputs: [],
+				stateMutability: "nonpayable",
+				type: "function",
+			},
+			{
+				inputs: [
+					{ internalType: "address", name: "from", type: "address" },
+					{ internalType: "address", name: "to", type: "address" },
+					{ internalType: "uint256", name: "id", type: "uint256" },
+					{ internalType: "uint256", name: "value", type: "uint256" },
+					{ internalType: "bytes", name: "data", type: "bytes" },
+				],
+				name: "safeTransferFrom",
+				outputs: [],
+				stateMutability: "nonpayable",
+				type: "function",
+			},
+			{
+				inputs: [
+					{ internalType: "address", name: "operator", type: "address" },
+					{ internalType: "bool", name: "approved", type: "bool" },
+				],
+				name: "setApprovalForAll",
+				outputs: [],
+				stateMutability: "nonpayable",
+				type: "function",
+			},
+			{
+				inputs: [
+					{ internalType: "address", name: "_vrfCoordinator", type: "address" },
+				],
+				name: "setCoordinator",
+				outputs: [],
+				stateMutability: "nonpayable",
+				type: "function",
+			},
+			{
+				inputs: [
+					{ internalType: "bytes4", name: "interfaceId", type: "bytes4" },
+				],
+				name: "supportsInterface",
+				outputs: [{ internalType: "bool", name: "", type: "bool" }],
+				stateMutability: "view",
+				type: "function",
+			},
+			{
+				inputs: [{ internalType: "address", name: "to", type: "address" }],
+				name: "transferOwnership",
+				outputs: [],
+				stateMutability: "nonpayable",
+				type: "function",
+			},
+			{
+				inputs: [
+					{
+						internalType: "uint16",
+						name: "_requestConfirmations",
+						type: "uint16",
+					},
+					{ internalType: "uint32", name: "_callbackGasLimit", type: "uint32" },
+				],
+				name: "updateVrfSettings",
+				outputs: [],
+				stateMutability: "nonpayable",
+				type: "function",
+			},
+			{
+				inputs: [{ internalType: "uint256", name: "id", type: "uint256" }],
+				name: "uri",
+				outputs: [{ internalType: "string", name: "", type: "string" }],
+				stateMutability: "view",
+				type: "function",
+			},
+		],
+	};
+};
