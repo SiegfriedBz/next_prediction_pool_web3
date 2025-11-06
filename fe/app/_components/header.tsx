@@ -3,6 +3,7 @@ import { ConnectButton } from "./connect-button";
 import { Logo } from "./logo";
 import { ToggleThemeButton } from "./toggle-theme-button";
 import { TypographyH2 } from "./typography/h2";
+import Link from "next/link";
 
 export const Header: FC = () => {
 	return (
@@ -13,14 +14,14 @@ export const Header: FC = () => {
 				px-4 sm:px-16
 			`}
 		>
-			<div className="flex items-center gap-x-2 sm:gap-x-3">
+			<Link href="/" className="flex items-center gap-x-2 sm:gap-x-3">
 				<Logo />
 				<TypographyH2 className="p-0 m-0">
 					Bet
 					<span className="text-blue-500">2</span>
 					Gether
 				</TypographyH2>
-			</div>
+			</Link>
 
 			<div className="flex ms-auto items-center gap-x-8">
 				<span className="max-[480px]:hidden">
