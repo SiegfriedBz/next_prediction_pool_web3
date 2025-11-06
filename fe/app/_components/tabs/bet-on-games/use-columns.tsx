@@ -1,12 +1,11 @@
 "use client";
 
-import type { ColumnDef } from "@tanstack/react-table";
+import type { ColumnDef, SortingFn } from "@tanstack/react-table";
 import { formatDistanceToNow } from "date-fns";
 import { CircleQuestionMarkIcon, CircleSlash2Icon } from "lucide-react";
 import { type ReactElement, useMemo } from "react";
 import { formatEther } from "viem";
 import { useAccount, useChainId } from "wagmi";
-import { useActiveRoundsWithPlayerBetsContext } from "@/app/_hooks/use-active-rounds-with-player-bets-context";
 import { type Round, RoundStatus } from "@/app/_types";
 import { ReverseFeedMap } from "@/app/_utils/feed-maps";
 import { Badge } from "@/components/ui/badge";
@@ -20,7 +19,6 @@ import { AboveTargetTableHeader } from "../table/above-target-table-header";
 import { BelowTargetTableHeader } from "../table/below-target-table-header";
 import { CreatorTableCell } from "../table/creator-table-cell";
 import { TargetPriceTableHeader } from "../table/target-price-table-header";
-import { sortEndFn } from "./data-table";
 import { RowActions } from "./row-actions";
 
 const StatusToText: Record<RoundStatus, ReactElement> = {
@@ -28,6 +26,13 @@ const StatusToText: Record<RoundStatus, ReactElement> = {
 	[RoundStatus.Active]: <Badge variant="chartTwo">Active</Badge>,
 	[RoundStatus.Ended]: <Badge variant="destructive">Ended</Badge>,
 	[RoundStatus.Resolved]: <Badge>Resolved</Badge>,
+};
+
+//custom sorting logic for end column (soonest → latest)
+export const sortEndFn: SortingFn<Round> = (rowA, rowB) => {
+	const endA = rowA.original.end;
+	const endB = rowB.original.end;
+	return Number(endA) - Number(endB);
 };
 
 export const useColumns = () => {
