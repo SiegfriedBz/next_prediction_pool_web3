@@ -1,3 +1,5 @@
+"use client";
+
 import { getDefaultConfig } from "@rainbow-me/rainbowkit";
 import { cookieStorage, createStorage, http, webSocket } from "wagmi";
 import { sepolia } from "wagmi/chains";
@@ -16,7 +18,10 @@ export const wagmiHttpConfig = getDefaultConfig({
 	ssr: true,
 	storage: createStorage({ storage: cookieStorage }),
 	transports: {
-		[sepolia.id]: http(ETH_SEPOLIA_ALCHEMY_HTTP_URL),
+		[sepolia.id]: http(ETH_SEPOLIA_ALCHEMY_HTTP_URL, {
+			key: "Alchemy",
+			name: "Alchemy RPC Provider",
+		}),
 	},
 });
 
@@ -26,6 +31,9 @@ export const wagmiWsConfig = getDefaultConfig({
 	chains: [sepolia],
 	ssr: true,
 	transports: {
-		[sepolia.id]: webSocket(ETH_SEPOLIA_ALCHEMY_WS_URL),
+		[sepolia.id]: webSocket(ETH_SEPOLIA_ALCHEMY_WS_URL, {
+			key: "Alchemy",
+			name: "Alchemy WebSocket Provider",
+		}),
 	},
 });
