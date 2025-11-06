@@ -7,11 +7,11 @@ export const TypographyH6: FC<PropsWithChildren<Props>> = (props) => {
   const { className, children, ...rest } = props;
 
   return (
-    <h5
+    <h6
       {...rest}
       className={cn("text-sm font-light tracking-tight", className)}
     >
       {children}
-    </h5>
+    </h6>
   );
 };
