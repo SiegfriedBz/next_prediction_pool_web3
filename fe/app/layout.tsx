@@ -8,6 +8,7 @@ import { cookieToInitialState } from "wagmi";
 import { Header } from "./_components/header";
 import { wagmiHttpConfig } from "./_config/wagmi";
 import { RootProviders } from "./_contexts/root-providers";
+import { Footer } from "./_components/footer";
 
 const geistSans = Geist({
 	variable: "--font-geist-sans",
@@ -44,6 +45,7 @@ export default async function RootLayout({
 					<div className="relative max-[480px]:h-54 h-64">
 						<Header />
 						<main className="flex-1">{children}</main>
+						<Footer />
 					</div>
 				</RootProviders>
 
