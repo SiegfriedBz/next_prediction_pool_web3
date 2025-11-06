@@ -3,7 +3,10 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { headers } from "next/headers";
+import { cookieToInitialState } from "wagmi";
 import { Header } from "./_components/header";
+import { wagmiHttpConfig } from "./_config/wagmi";
 import { RootProviders } from "./_contexts/root-providers";
 
 const geistSans = Geist({
@@ -22,17 +25,22 @@ export const metadata: Metadata = {
 		"Bet2Gether is a decentralized prediction game powered by Chainlink, Ethereum, and Tenderly. Create games to bet on asset prices, join others' games, and earn rewards based on your predictions.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
 	children,
 }: Readonly<{
 	children: React.ReactNode;
 }>) {
+	const initialWagmiState = cookieToInitialState(
+		wagmiHttpConfig,
+		(await headers()).get("cookie"),
+	);
+
 	return (
 		<html lang="en" suppressHydrationWarning>
 			<body
 				className={`${geistSans.variable} ${geistMono.variable} antialiased`}
 			>
-				<RootProviders>
+				<RootProviders initialWagmiState={initialWagmiState}>
 					<div className="relative max-[480px]:h-54 h-64">
 						<Header />
 						<main className="flex-1">{children}</main>
