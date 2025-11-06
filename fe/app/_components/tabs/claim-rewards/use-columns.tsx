@@ -1,6 +1,7 @@
 "use client";
 
-import type { ColumnDef } from "@tanstack/react-table";
+import type { ColumnDef, SortingFn } from "@tanstack/react-table";
+import { formatDistanceToNow } from "date-fns";
 import {
 	BanIcon,
 	CircleQuestionMarkIcon,
@@ -24,6 +25,13 @@ import { BelowTargetTableHeader } from "../table/below-target-table-header";
 import { CreatorTableCell } from "../table/creator-table-cell";
 import { TargetPriceTableHeader } from "../table/target-price-table-header";
 import { RowActions } from "./row-actions";
+
+//custom sorting logic for end column (soonest → latest)
+export const sortEndFn: SortingFn<RoundWithPlayerBet> = (rowA, rowB) => {
+	const endA = rowA.original.end;
+	const endB = rowB.original.end;
+	return Number(endA) - Number(endB);
+};
 
 export const useColumns = () => {
 	const account = useAccount();
@@ -147,7 +155,7 @@ export const useColumns = () => {
 
 		{
 			accessorKey: "playerBet",
-			header: () => <div className="text-semibold">Your bid (ETH)</div>,
+			header: () => <div className="text-semibold">Your bet (ETH)</div>,
 			cell: ({ row }) => {
 				const playerBet = row.getValue("playerBet");
 
@@ -190,6 +198,17 @@ export const useColumns = () => {
 				);
 			},
 			enableSorting: false,
+		},
+		{
+			accessorKey: "end",
+			header: () => <div className="text-semibold">End</div>,
+			cell: ({ row }) => {
+				const endDate = new Date(Number(row.getValue("end")) * 1000);
+				const relative = formatDistanceToNow(endDate, { addSuffix: true });
+
+				return <div className="font-medium">{relative}</div>;
+			},
+			sortingFn: sortEndFn,
 		},
 		{
 			accessorKey: "creator",
