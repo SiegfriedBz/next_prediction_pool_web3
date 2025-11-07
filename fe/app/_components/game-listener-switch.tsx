@@ -16,14 +16,14 @@ export const GameListenerSwitch = () => {
 			if (newVal) {
 				toast(
 					<div className="flex items-center gap-2">
-						<RadioIcon className="w-5 h-5 text-chart-2" />
+						<RadioIcon className="w-5 h-5 text-primary" />
 						<span>Game Event listeners started</span>
 					</div>,
 				);
 			} else {
 				toast(
 					<div className="flex items-center gap-2">
-						<RadioIcon className="w-5 h-5 text-amber-500" />
+						<RadioIcon className="w-5 h-5 text-destructive" />
 						<span>Game Event listeners stopped</span>
 					</div>,
 				);
@@ -39,7 +39,7 @@ export const GameListenerSwitch = () => {
 					id={"isListening-mode"}
 					checked={isListening}
 					onCheckedChange={onChange}
-					className="data-[state=checked]:bg-chart-2"
+					className="data-[state=checked]:bg-primary"
 				/>
 				<Label htmlFor="isListening-mode">Listen for Game events</Label>
 			</div>

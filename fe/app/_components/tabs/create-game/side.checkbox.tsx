@@ -18,15 +18,16 @@ export const SideCheckBox: FC<Props> = (props) => {
 	return (
 		<div className="flex sm:items-center gap-4 max-sm:flex-col-reverse max-sm:gap-2">
 			<Badge
-				variant={!checked ? "destructive" : "outline"}
+				variant={checked ? "outline" : "secondary"}
 				onClick={() => onChange(false)}
 				className="cursor-pointer font-bold h-[2.35rem] max-sm:w-full w-32 flex items-center gap-x-2"
 			>
 				<TrendingDownIcon
 					size={32}
-					className={!checked ? "text-accent-foreground" : "text-destructive"}
+					className={checked ? "text-secondary": ""}
 				/>
-				Below Target
+				<span>Below Target</span>
+				
 			</Badge>
 
 			{targetPrice ? (
@@ -36,19 +37,19 @@ export const SideCheckBox: FC<Props> = (props) => {
 					value={targetPrice}
 				/>
 			) : (
-				<Skeleton className="h-[2.35rem] max-sm:w-full w-60 rounded-lg border-border bg-blue-100/10" />
+				<Skeleton className="h-[2.35rem] max-sm:w-full w-60 rounded-lg border-border bg-primary/10" />
 			)}
 
 			<Badge
-				variant={checked ? "chartTwo" : "outline"}
+				variant={checked ? "default" : "outline"}
 				onClick={() => onChange(true)}
 				className="cursor-pointer font-bold h-[2.35rem] max-sm:w-full w-32 flex items-center gap-x-2"
 			>
 				<TrendingUpIcon
 					size={32}
-					className={checked ? "text-accent-foreground" : "text-chart-2"}
+					className={checked ? "" : "text-primary"}
 				/>
-				Above Target
+				<span>Above Target</span>
 			</Badge>
 		</div>
 	);

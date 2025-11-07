@@ -1,7 +1,6 @@
 import { GameListenerSwitch } from "./_components/game-listener-switch";
 import { Hero } from "./_components/hero";
 import { GameTabs } from "./_components/tabs/game-tabs";
-import { TokenImage } from "./_components/token-image";
 
 export default function Home() {
 	return (
@@ -20,8 +19,6 @@ export default function Home() {
 
 				<GameTabs />
 			</section>
-			{/* Background gradient glow */}
-			<div className="absolute inset-0 bg-linear-to-b from-blue-900/30 via-transparent to-transparent blur-3xl pointer-events-none" />
 		</main>
 	);
 }

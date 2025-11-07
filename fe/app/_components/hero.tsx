@@ -10,7 +10,7 @@ export const Hero: FC = () => {
 		<section className="flex flex-col items-center justify-center text-center py-28 px-6 overflow-hidden min-h-[calc(100svh-8rem)] sm:min-h-[calc(100svh-12rem)] animate-fade-in">
 			<TypographyH1>
 				Bet
-				<span className="text-blue-500">2</span>
+				<span className="text-primary font-extrabold">2</span>
 				Gether
 			</TypographyH1>
 
@@ -19,7 +19,7 @@ export const Hero: FC = () => {
 			>
 				<TypographyH4>
 					Predict. Bet. Win —{" "}
-					<span className="text-blue-400 font-semibold">Together</span>.
+					<span className="text-primary font-semibold">Together</span>.
 					<br />
 				</TypographyH4>
 

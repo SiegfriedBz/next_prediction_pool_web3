@@ -94,11 +94,10 @@ export const useColumns = () => {
 			header: () => (
 				<Tooltip>
 					<TooltipTrigger>
-						<div className="flex items-center gap-x-2 text-semibold relative">
+						<div className="flex items-center gap-x-2 text-semibold">
 							<span>Claim</span>
 							<CircleQuestionMarkIcon
-								size={8}
-								className="absolute -top-2 -right-2"
+								size={14}
 							/>
 						</div>
 					</TooltipTrigger>

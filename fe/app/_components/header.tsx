@@ -18,7 +18,7 @@ export const Header: FC = () => {
 				<Logo />
 				<TypographyH2 className="p-0 m-0">
 					Bet
-					<span className="text-blue-500">2</span>
+					<span className="text-primary font-extrabold">2</span>
 					Gether
 				</TypographyH2>
 			</Link>
