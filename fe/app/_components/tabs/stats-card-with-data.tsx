@@ -24,14 +24,14 @@ export const StatsCardWithData: FC<Props> = (props) => {
 				<div>
 					<CardTitle>
 						{count != null ? (
-							<TypographyH3 className="text-blue-500">{count}</TypographyH3>
+							<TypographyH3 className="text-primary">{count}</TypographyH3>
 						) : (
-							<Skeleton className="h-6 w-8 bg-blue-500 mb-1" />
+							<Skeleton className="h-6 w-8 bg-primary/10 mb-1" />
 						)}
 					</CardTitle>
 					<TypographyH5>{label}</TypographyH5>
 				</div>
-				<DicesIcon size={32} />
+				<DicesIcon size={32} className="text-primary"/>
 			</CardContent>
 		</Card>
 	);

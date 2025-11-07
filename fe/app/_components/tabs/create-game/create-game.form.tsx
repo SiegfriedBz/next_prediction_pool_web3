@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
 	ChartSplineIcon,
+	CircleQuestionMarkIcon,
 	CoinsIcon,
 	DicesIcon,
 	LoaderIcon,
@@ -40,6 +41,11 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { FeedPairSelect } from "./feed-pair.select";
 import { SideCheckBox } from "./side.checkbox";
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 const formSchema = z.object({
 	ethValue: z
@@ -169,12 +175,12 @@ export const CreateGameForm = () => {
 						<FormItem>
 							<FormLabel className="flex items-center font-semibold">
 								<DicesIcon size={16} />
-								Select Pair
+								Market Pair
 							</FormLabel>
 							<FormControl>
 								<FeedPairSelect {...field} onValueChange={field.onChange} />
 							</FormControl>
-							<FormDescription>Select a pair to bet on.</FormDescription>
+							<FormDescription>Select a price feed to base your prediction on.</FormDescription>
 							<FormMessage />
 						</FormItem>
 					)}
@@ -193,23 +199,36 @@ export const CreateGameForm = () => {
 								<FormControl>
 									<Input {...field} className="max-sm:w-full w-64" />
 								</FormControl>
-								<FormDescription>Set a targetPrice.</FormDescription>
+								<FormDescription>Reference price used to determine the bet outcome.</FormDescription>
 								<FormMessage />
 							</FormItem>
 						)}
 					/>
 					<div className="flex flex-col gap-y-2.5 text-3xl">
-						<Label>Current Price (USD)</Label>
+						<Tooltip>
+								<TooltipTrigger asChild>
+									<Label className="flex w-fit items-center gap-x-2 text-semibold">
+										<TargetIcon size={16} />
+										Current Price (USD)
+										<CircleQuestionMarkIcon size={14}
+										/>
+									</Label>
+								</TooltipTrigger>
+								<TooltipContent className="max-w-64 text-sm">
+									<p>Price data provided by <span className="font-bold italic">Chainlink Price Feeds</span>, aggregated 
+									from multiple exchanges for reliable on-chain market information.</p>
+								</TooltipContent>
+							</Tooltip>
 
 						{currentPrice ? (
 							<Input
 								key={dataFeedAddress}
 								readOnly
 								defaultValue={formatEther(currentPrice)}
-								className="max-sm:w-full w-64"
+								className="max-sm:w-full w-64 ring-2 ring-primary bg-primary/10"
 							/>
 						) : (
-							<Skeleton className="h-[2.35rem] max-sm:w-full w-64 rounded-lg border-border bg-blue-100/10" />
+							<Skeleton className="h-[2.35rem] max-sm:w-full w-64 rounded-lg border-border bg-primary/10" />
 						)}
 					</div>
 				</div>
@@ -231,8 +250,7 @@ export const CreateGameForm = () => {
 								/>
 							</FormControl>
 							<FormDescription>
-								Set on which Side of the Target Price you bet on.
-							</FormDescription>
+								Select whether you predict the final price will end above or below your target.							</FormDescription>
 							<FormMessage />
 						</FormItem>
 					)}
@@ -253,7 +271,7 @@ export const CreateGameForm = () => {
 									className="max-sm:w-full w-64"
 								/>
 							</FormControl>
-							<FormDescription>Set a game duration.</FormDescription>
+							<FormDescription>Set how long the game will last.</FormDescription>
 							<FormMessage />
 						</FormItem>
 					)}
@@ -266,13 +284,13 @@ export const CreateGameForm = () => {
 						<FormItem>
 							<FormLabel className="flex items-center font-semibold">
 								<CoinsIcon size={16} />
-								Your Bet (ETH)
+								Bet Amount (ETH)
 							</FormLabel>
 							<FormControl>
 								<Input {...field} className="max-sm:w-full w-64" />
 							</FormControl>
 
-							<FormDescription>Amount You Want to Bet (ETH).</FormDescription>
+							<FormDescription>Enter the amount of ETH you want to stake.</FormDescription>
 
 							<FormMessage />
 						</FormItem>
@@ -281,6 +299,7 @@ export const CreateGameForm = () => {
 
 				<Button
 					type="submit"
+					size={"lg"}
 					disabled={isCreatingRound}
 					className={cn(
 						"w-full",

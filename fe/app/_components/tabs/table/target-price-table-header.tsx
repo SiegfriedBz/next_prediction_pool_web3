@@ -12,11 +12,10 @@ export const TargetPriceTableHeader: FC = () => {
 	return (
 		<Tooltip>
 			<TooltipTrigger>
-				<div className="text-semibold relative">
+					<div className="text-semibold flex items-center gap-x-2">
 					Target (USD)
 					<CircleQuestionMarkIcon
-						size={8}
-						className="absolute -top-2 -right-2"
+						size={14}
 					/>
 				</div>
 			</TooltipTrigger>
