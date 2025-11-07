@@ -19,12 +19,11 @@ export const TargetSideTableHeader: FC<PropsWithChildren<Props>> = (props) => {
 	return (
 		<Tooltip>
 			<TooltipTrigger>
-				<div className="flex items-center gap-x-2 text-semibold relative">
+				<div className="flex items-center gap-x-2 text-semibold">
 					{icon}
 					<span>{label}</span>
 					<CircleQuestionMarkIcon
-						size={8}
-						className="absolute -top-2 -right-2"
+						size={14}
 					/>
 				</div>
 			</TooltipTrigger>

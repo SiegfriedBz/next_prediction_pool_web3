@@ -76,11 +76,10 @@ export const useColumns = () => {
 			header: () => (
 				<Tooltip>
 					<TooltipTrigger>
-						<div className="text-semibold relative">
+						<div className="text-semibold flex items-center gap-x-2">
 							Bet
 							<CircleQuestionMarkIcon
-								size={8}
-								className="absolute -top-2 -right-2"
+								size={14}
 							/>
 						</div>
 					</TooltipTrigger>

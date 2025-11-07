@@ -7,13 +7,13 @@ const ADMIN_LINK = process.env.ADMIN_LINK ?? "https://github.com/SiegfriedBz";
 
 export const Footer: FC = () => {
   return (
-    <footer className="flex py-4 sm:py-8 gap-2 sm:gap-4 flex-wrap items-center justify-center">
+    <footer className="flex py-8 sm:pb-12 gap-2 sm:gap-4 flex-wrap items-center justify-center">
       <TypographyH6>© {new Date().getFullYear()}</TypographyH6>
       
       <Link href={"/"} scroll>
         <TypographyH6 className="font-semibold"> 
             Bet
-            <span className="text-blue-500 ">2</span>
+            <span className="text-primary font-extrabold">2</span>
             Gether
         </TypographyH6>
       </Link>
@@ -23,7 +23,7 @@ export const Footer: FC = () => {
           <TypographyH6>Made with</TypographyH6>
           <HeartIcon className="text-red-400 size-4" />
           <TypographyH6>by</TypographyH6>
-          <TypographyH6 className="-mb-0.5 font-semibold border-transparent border-b group-hover:border-blue-500 transition duration-300">Siegfried</TypographyH6>
+          <TypographyH6 className="-mb-0.5 font-semibold border-transparent border-b group-hover:border-primary transition duration-300">Siegfried</TypographyH6>
         </span>
       </a>
     </footer>
