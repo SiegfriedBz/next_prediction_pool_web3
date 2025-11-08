@@ -1,9 +1,9 @@
 "use client";
 
 import { type FC, type PropsWithChildren, useMemo } from "react";
-import { useResolvedRoundsWithPlayerBetsAndWins } from "../_hooks/use-resolved-rounds-with-player-bets-and-wins";
-import { ResolvedRoundsWithPlayerBetsAndWinsContext } from "../_hooks/use-resolved-rounds-with-player-bets-and-wins-context";
-import { useRounds } from "../_hooks/use-rounds";
+import { useResolvedRoundsWithPlayerBetsAndWins } from "../_hooks/rounds/use-resolved-rounds-with-player-bets-and-wins";
+import { ResolvedRoundsWithPlayerBetsAndWinsContext } from "../_hooks/rounds/use-resolved-rounds-with-player-bets-and-wins-context";
+import { useRoundsContext } from "../_hooks/rounds/use-rounds-context";
 
 export const ResolvedRoundsWithPlayerBetsAndWinsProvider: FC<
 	PropsWithChildren
@@ -11,7 +11,7 @@ export const ResolvedRoundsWithPlayerBetsAndWinsProvider: FC<
 	const { children } = props;
 
 	// fetch all rounds
-	const { rounds, isLoadingRounds, errorFetchingRounds } = useRounds();
+	const { rounds, isLoadingRounds, errorFetchingRounds } = useRoundsContext();
 
 	// fetch and extend rounds with player Bets And Wins
 	const {
@@ -41,14 +41,11 @@ export const ResolvedRoundsWithPlayerBetsAndWinsProvider: FC<
 	const value = useMemo(() => {
 		return {
 			// Data layers
-			rounds,
 			resolvedRounds,
 			resolvedRoundsWithPlayerBets,
 			resolvedRoundsWithPlayerBetsAndWins,
 
 			// Individual loading & error states
-			isLoadingRounds,
-			errorFetchingRounds,
 			isLoadingResolvedRoundsWithPlayerBets,
 			errorFetchingResolvedRoundsWithPlayerBets,
 			isLoadingResolvedRoundsWithPlayerBetsAndWins,
@@ -62,13 +59,10 @@ export const ResolvedRoundsWithPlayerBetsAndWinsProvider: FC<
 			refetchResolvedRoundsWithPlayerBets,
 		};
 	}, [
-		rounds,
 		resolvedRounds,
 		resolvedRoundsWithPlayerBets,
 		resolvedRoundsWithPlayerBetsAndWins,
 
-		isLoadingRounds,
-		errorFetchingRounds,
 		isLoadingResolvedRoundsWithPlayerBets,
 		errorFetchingResolvedRoundsWithPlayerBets,
 		isLoadingResolvedRoundsWithPlayerBetsAndWins,
