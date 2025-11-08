@@ -5,8 +5,8 @@ import { useMemo } from "react";
 import { useAccount, useChainId, useReadContracts } from "wagmi";
 import { getPredictionPoolContractConfig } from "@/app/_contracts/prediction-pool";
 import type { RawBet, Round, RoundWithPlayerBet } from "@/app/_types";
-import type { RefetchType } from "./type";
-import { parseBet } from "./utils/parse-bet";
+import type { RefetchType } from "../type";
+import { parseBet } from "../utils/parse-bet";
 
 type Params = {
 	rounds: Round[];

@@ -3,10 +3,10 @@
 import type { ReadContractsErrorType } from "@wagmi/core";
 import { useMemo } from "react";
 import { useChainId, useReadContract, useReadContracts } from "wagmi";
-import { getPredictionPoolContractConfig } from "../_contracts/prediction-pool";
-import type { ContractConfigT } from "../_contracts/types";
-import type { Round } from "../_types";
-import type { RefetchType } from "./type";
+import { getPredictionPoolContractConfig } from "../../_contracts/prediction-pool";
+import type { ContractConfigT } from "../../_contracts/types";
+import type { Round } from "../../_types";
+import type { RefetchType } from "../type";
 
 export type UseRoundsReturnType = {
 	// Data layers

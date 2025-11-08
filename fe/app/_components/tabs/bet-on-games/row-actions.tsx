@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 import { type FC, useCallback, useMemo, useState } from "react";
 import { useChainId } from "wagmi";
-import { useActiveRoundsWithPlayerBetsContext } from "@/app/_hooks/use-active-rounds-with-player-bets-context";
+import { useActiveRoundsWithPlayerBetsContext } from "@/app/_hooks/rounds/use-active-rounds-with-player-bets-context";
 import type { Round } from "@/app/_types";
 import { ReverseFeedMap } from "@/app/_utils/feed-maps";
 import {

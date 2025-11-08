@@ -28,7 +28,6 @@ import {
 import { z } from "zod";
 import { getPredictionPoolContractConfig } from "@/app/_contracts/prediction-pool";
 import type { ContractConfigT } from "@/app/_contracts/types";
-import { useActiveRoundsWithPlayerBetsContext } from "@/app/_hooks/use-active-rounds-with-player-bets-context";
 import { useTransactionToast } from "@/app/_hooks/use-tx-toast";
 import {
 	AlertDialogCancel,
@@ -45,6 +44,8 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useRoundsContext } from "@/app/_hooks/rounds/use-rounds-context";
+import { useActiveRoundsWithPlayerBetsContext } from "@/app/_hooks/rounds/use-active-rounds-with-player-bets-context";
 
 const formSchema = z.object({
 	ethValue: z
@@ -73,15 +74,18 @@ export const BetOnGameForm: FC<Props> = ({
 
 	const queryClient = useQueryClient();
 
-	// Context provides refetch helpers:
+	// Wrapped in RoundsProvider - Context provides refetch helper:
 	// - refetchRounds(): refetch the global rounds dataset (all statuses).
 	//   We intentionally invalidate the single "round" query below so that
 	//   only that round is requested fresh; other rounds will keep using the
 	//   React Query cached values.
+	const { refetchRounds } = useRoundsContext();
+
+	// Wrapped in ActiveRoundsWithPlayerBetsProvider - Context provides refetch helper:
 	// - refetchActiveRoundsWithPlayerBets(): refetch the user's *active rounds with bets*
 	//   dataset. This hook is implemented to use per-round player query keys so we can
 	//   selectively update only affected player-round entries.
-	const { refetchRounds, refetchActiveRoundsWithPlayerBets } =
+	const { refetchActiveRoundsWithPlayerBets } =
 		useActiveRoundsWithPlayerBetsContext();
 
 	// Contract config for the current chain

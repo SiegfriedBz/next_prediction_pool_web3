@@ -1,4 +1,4 @@
-import { GameListenerSwitch } from "./_components/game-listener-switch";
+import { GameListenerToastsSwitch } from "./_components/game-listener-toasts-switch";
 import { Hero } from "./_components/hero";
 import { GameTabs } from "./_components/tabs/game-tabs";
 
@@ -14,7 +14,7 @@ export default function Home() {
 				className="min-h-screen scroll-mt-12 sm:scroll-mt-24"
 			>
 				<div className="flex justify-center mb-8">
-					<GameListenerSwitch />
+					<GameListenerToastsSwitch />
 				</div>
 
 				<GameTabs />

@@ -1,16 +1,16 @@
 "use client";
 
 import { type FC, type PropsWithChildren, useMemo } from "react";
-import { useActiveRoundsWithPlayerBets } from "../_hooks/use-active-rounds-with-player-bets";
-import { ActiveRoundsWithPlayerBetsContext } from "../_hooks/use-active-rounds-with-player-bets-context";
-import { useRounds } from "../_hooks/use-rounds";
+import { useActiveRoundsWithPlayerBets } from "../_hooks/rounds/use-active-rounds-with-player-bets";
+import { ActiveRoundsWithPlayerBetsContext } from "../_hooks/rounds/use-active-rounds-with-player-bets-context";
+import { useRoundsContext } from "../_hooks/rounds/use-rounds-context";
 
 export const ActiveRoundsWithPlayerBetsProvider: FC<PropsWithChildren> = (
 	props,
 ) => {
 	const { children } = props;
-	const { rounds, isLoadingRounds, errorFetchingRounds, refetchRounds } =
-		useRounds();
+	const { rounds, isLoadingRounds, errorFetchingRounds } =
+		useRoundsContext();
 
 	const {
 		// Data layers
@@ -36,13 +36,10 @@ export const ActiveRoundsWithPlayerBetsProvider: FC<PropsWithChildren> = (
 	const value = useMemo(() => {
 		return {
 			// Data layers
-			rounds,
 			activeRounds,
 			activeRoundsWithPlayerBets,
 
 			// Individual loading & error states
-			isLoadingRounds,
-			errorFetchingRounds,
 			isLoadingActiveRoundsWithPlayerBets,
 			errorFetchingActiveRoundsWithPlayerBets,
 
@@ -51,23 +48,18 @@ export const ActiveRoundsWithPlayerBetsProvider: FC<PropsWithChildren> = (
 			errorFetchingActiveRoundsWithPlayerData,
 
 			// Refetch
-			refetchRounds,
 			refetchActiveRoundsWithPlayerBets,
 		};
 	}, [
-		rounds,
 		activeRounds,
 		activeRoundsWithPlayerBets,
 
-		isLoadingRounds,
-		errorFetchingRounds,
 		isLoadingActiveRoundsWithPlayerBets,
 		errorFetchingActiveRoundsWithPlayerBets,
 
 		isLoadingActiveRoundsWithPlayerData,
 		errorFetchingActiveRoundsWithPlayerData,
 
-		refetchRounds,
 		refetchActiveRoundsWithPlayerBets,
 	]);
 
