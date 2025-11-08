@@ -8,24 +8,6 @@ import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "./theme-provider";
 import { CustomWagmiProvider } from "./custom-wagmi-provider";
 
-const rainbowLightTheme = {
-	accentColor: '#c9317f',
-	accentColorForeground: '#fff',
-}
-const rainbowDarkTheme = {
-	accentColor: '#ff8ca2',
-	accentColorForeground: '#000',
-}
-
-const rainbowLightTheme = {
-	accentColor: '#c9317f',
-	accentColorForeground: '#fff',
-}
-const rainbowDarkTheme = {
-	accentColor: '#ff8ca2',
-	accentColorForeground: '#000',
-}
-
 type Props = {
 	initialWagmiState: WagmiState | undefined;
 };
