@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReadContractsErrorType } from "@wagmi/core";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { useAccount, useChainId, useReadContracts } from "wagmi";
 import { getPredictionPoolContractConfig } from "@/app/_contracts/prediction-pool";
 import type { RawBet, Round, RoundWithPlayerBet } from "@/app/_types";
@@ -60,6 +60,10 @@ export const usePlayerBetsOnRounds = (params: Params): ReturnType => {
 			return { ...round, playerBet };
 		});
 	}, [rounds, data]);
+	
+	useEffect(() => {
+		(async() => await refetch())()
+	}, [refetch])
 
 	return {
 		roundsWithPlayerBets,
