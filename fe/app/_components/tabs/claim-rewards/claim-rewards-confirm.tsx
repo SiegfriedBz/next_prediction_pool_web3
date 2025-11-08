@@ -18,7 +18,7 @@ import {
 } from "wagmi";
 import { getPredictionPoolContractConfig } from "@/app/_contracts/prediction-pool";
 import type { ContractConfigT } from "@/app/_contracts/types";
-import { useResolvedRoundsWithPlayerBetsAndWinsContext } from "@/app/_hooks/use-resolved-rounds-with-player-bets-and-wins-context";
+import { useResolvedRoundsWithPlayerBetsAndWinsContext } from "@/app/_hooks/rounds/use-resolved-rounds-with-player-bets-and-wins-context";
 import { useTransactionToast } from "@/app/_hooks/use-tx-toast";
 import {
 	AlertDialogCancel,
