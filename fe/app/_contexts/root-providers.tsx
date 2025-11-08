@@ -24,8 +24,9 @@ export const RootProviders: FC<PropsWithChildren<Props>> = (props) => {
 		>
 			<CustomWagmiProvider initialWagmiState={initialWagmiState}>
 				{children}
+				{/* Toaster must be wrapped in WagmiProvider */}
+				<Toaster position="bottom-right" />
 			</CustomWagmiProvider>
-			<Toaster position="bottom-right" />
 		</ThemeProvider>
 	);
 };
