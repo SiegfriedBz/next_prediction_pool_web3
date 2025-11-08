@@ -5,14 +5,16 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { useEvents } from "../_hooks/use-events";
+import { usePPoolTokenEventsToasts } from "../_hooks/events/toasts/use-ppool-token-events-toasts";
+import { usePPoolEventsToasts } from "../_hooks/events/toasts/use-ppool-events-toasts";
 
-export const GameListenerSwitch = () => {
-	const [isListening, setIsListening] = useState(false);
+export const GameListenerToastsSwitch = () => {
+	const [isListening, setIsListening] = useState<boolean>(false);
 
 	const onChange = () => {
 		setIsListening((prev) => {
 			const newVal = !prev;
+
 			if (newVal) {
 				toast(
 					<div className="flex items-center gap-2">
@@ -44,15 +46,18 @@ export const GameListenerSwitch = () => {
 				<Label htmlFor="isListening-mode">Listen for Game events</Label>
 			</div>
 
-			{isListening && <EventListeners />}
+			{isListening && <EventListenersToasts />}
 		</>
 	);
 };
 
-const EventListeners = () => {
-	useEvents({ key: "RoundCreated" });
-	useEvents({ key: "NewBet" });
-	useEvents({ key: "NewNFTMinted" });
+const EventListenersToasts = () => {
+	// PPool Contract event listener - toasts
+	usePPoolEventsToasts({ key: "RoundCreated" })
+	usePPoolEventsToasts({ key: "NewBet" })
+
+	// PPoolToken Contract event listener - toasts
+	usePPoolTokenEventsToasts({ key: "NewNFTMinted" })
 
 	return null;
 };
