@@ -9,6 +9,10 @@ type Params = {
 	tokenId: string;
 };
 
+/**
+ * Requires WagmiProvider context.
+ * Throws WagmiProviderNotFoundError if called outside.
+ */
 export const useTokenUri = (params: Params): string | undefined => {
 	const { tokenId } = params;
 
