@@ -11,11 +11,12 @@ import { TypographyH2 } from "../../typography/h2";
 import { TypographyLead } from "../../typography/lead";
 import { GamesStatsCard } from "./games-stats-card";
 import { GamesTable } from "./games-table";
+import { RoundsProvider } from "@/app/_contexts/rounds-provider";
 
 export const BetOnGamesTab = () => {
 	return (
 		<TabsContent value="bet-on-games" className="mt-4">
-			<ActiveRoundsWithPlayerBetsProvider>
+			<RoundsProvider>
 				<Card>
 					<CardHeader className="flex items-center sm:justify-between">
 						<div className="flex flex-col w-full">
@@ -30,10 +31,12 @@ export const BetOnGamesTab = () => {
 						<GamesStatsCard className="max-sm:hidden sm:min-w-1/3 md:min-w-1/2 lg:min-w-1/4" />
 					</CardHeader>
 					<CardContent>
-						<GamesTable />
+						<ActiveRoundsWithPlayerBetsProvider>
+							<GamesTable />
+						</ActiveRoundsWithPlayerBetsProvider>
 					</CardContent>
 				</Card>
-			</ActiveRoundsWithPlayerBetsProvider>
+			</RoundsProvider>
 		</TabsContent>
 	);
 };
