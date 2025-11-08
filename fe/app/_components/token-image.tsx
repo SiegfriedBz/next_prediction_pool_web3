@@ -9,6 +9,10 @@ type Props = {
 	size?: number; // in pixels
 };
 
+/**
+ * Requires WagmiProvider context for useTokenUri.
+ * Throws WagmiProviderNotFoundError if called outside.
+ */
 export const TokenImage: FC<Props> = (props) => {
 	const { tokenId, size = 64 } = props;
 
