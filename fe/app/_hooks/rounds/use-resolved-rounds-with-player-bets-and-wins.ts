@@ -6,8 +6,8 @@ import type {
 	Round,
 	RoundWithPlayerBet,
 	RoundWithPlayerBetAndWins,
-} from "../_types";
-import type { RefetchType } from "./type";
+} from "../../_types";
+import type { RefetchType } from "../type";
 import { usePlayerBetsAndWinsOnResolvedRounds } from "./use-player-bets-and-wins-on-resolved-rounds";
 import { usePlayerBetsOnRounds } from "./use-player-bets-on-rounds";
 import { useResolvedRounds } from "./use-resolved-rounds";

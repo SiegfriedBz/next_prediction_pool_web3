@@ -6,19 +6,16 @@ import type {
 	Round,
 	RoundWithPlayerBet,
 	RoundWithPlayerBetAndWins,
-} from "../_types";
-import type { RefetchType } from "./type";
+} from "../../_types";
+import type { RefetchType } from "../type";
 
 export type ResolvedRoundsWithPlayerBetsAndWinsContextT = {
 	// Data layers
-	rounds: Round[];
 	resolvedRounds: Round[];
 	resolvedRoundsWithPlayerBets: RoundWithPlayerBet[];
 	resolvedRoundsWithPlayerBetsAndWins: RoundWithPlayerBetAndWins[];
 
 	// Individual loading & error states
-	isLoadingRounds: boolean;
-	errorFetchingRounds: ReadContractsErrorType | null;
 	isLoadingResolvedRoundsWithPlayerBets: boolean;
 	errorFetchingResolvedRoundsWithPlayerBets: ReadContractsErrorType | null;
 	isLoadingResolvedRoundsWithPlayerBetsAndWins: boolean;

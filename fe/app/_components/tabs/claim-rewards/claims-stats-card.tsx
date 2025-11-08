@@ -1,7 +1,7 @@
 "use client";
 
 import type { ComponentProps, FC } from "react";
-import { useResolvedRoundsWithPlayerBetsAndWinsContext } from "@/app/_hooks/use-resolved-rounds-with-player-bets-and-wins-context";
+import { useResolvedRoundsWithPlayerBetsAndWinsContext } from "@/app/_hooks/rounds/use-resolved-rounds-with-player-bets-and-wins-context";
 import type { Card } from "@/components/ui/card";
 import { StatsCardWithData } from "../stats-card-with-data";
 

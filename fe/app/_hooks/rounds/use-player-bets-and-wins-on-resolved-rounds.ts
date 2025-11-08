@@ -9,7 +9,7 @@ import type {
 	RoundWithPlayerBet,
 	RoundWithPlayerBetAndWins,
 } from "@/app/_types";
-import type { RefetchType } from "./type";
+import type { RefetchType } from "../type";
 
 type Params = {
 	resolvedRoundsWithPlayerBets: RoundWithPlayerBet[];

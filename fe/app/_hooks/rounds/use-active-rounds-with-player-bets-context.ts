@@ -2,17 +2,14 @@
 
 import type { ReadContractsErrorType } from "@wagmi/core";
 import { createContext, useContext } from "react";
-import type { Round, RoundWithPlayerBet } from "../_types";
-import type { RefetchType } from "./type";
+import type {  RoundWithPlayerBet } from "../../_types";
+import type { RefetchType } from "../type";
 
 export type ActiveRoundsWithPlayerBetsContextT = {
 	// Data layers
-	rounds: Round[];
 	activeRoundsWithPlayerBets: RoundWithPlayerBet[];
 
 	// Individual loading & error states
-	isLoadingRounds: boolean;
-	errorFetchingRounds: ReadContractsErrorType | null;
 	isLoadingActiveRoundsWithPlayerBets: boolean;
 	errorFetchingActiveRoundsWithPlayerBets: ReadContractsErrorType | null;
 
@@ -21,7 +18,6 @@ export type ActiveRoundsWithPlayerBetsContextT = {
 	errorFetchingActiveRoundsWithPlayerData: ReadContractsErrorType | null;
 
 	// Refetch
-	refetchRounds: RefetchType<ReadContractsErrorType>;
 	refetchActiveRoundsWithPlayerBets: RefetchType<ReadContractsErrorType>;
 };
 

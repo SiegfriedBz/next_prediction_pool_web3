@@ -2,8 +2,8 @@
 
 import type { ReadContractsErrorType } from "@wagmi/core";
 import { useMemo } from "react";
-import type { Round, RoundWithPlayerBet } from "../_types";
-import type { RefetchType } from "./type";
+import type { Round, RoundWithPlayerBet } from "../../_types";
+import type { RefetchType } from "../type";
 import { useActiveRounds } from "./use-active-rounds";
 import { usePlayerBetsOnRounds } from "./use-player-bets-on-rounds";
 
