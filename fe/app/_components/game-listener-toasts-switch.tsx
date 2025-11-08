@@ -1,12 +1,13 @@
 "use client";
 
-import { RadioIcon } from "lucide-react";
+import { CircleQuestionMarkIcon, RadioIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { usePPoolTokenEventsToasts } from "../_hooks/events/toasts/use-ppool-token-events-toasts";
 import { usePPoolEventsToasts } from "../_hooks/events/toasts/use-ppool-events-toasts";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 export const GameListenerToastsSwitch = () => {
 	const [isListening, setIsListening] = useState<boolean>(false);
@@ -43,7 +44,24 @@ export const GameListenerToastsSwitch = () => {
 					onCheckedChange={onChange}
 					className="data-[state=checked]:bg-primary"
 				/>
-				<Label htmlFor="isListening-mode">Listen for Game events</Label>
+					<Tooltip>
+						<TooltipTrigger>
+							<Label htmlFor="isListening-mode" className="text-semibold flex items-center gap-x-2">
+								Display Real-Time <span className="max-[424px]:hidden">On-Chain</span> Events
+								<CircleQuestionMarkIcon
+									size={14}
+								/>
+							</Label>
+						</TooltipTrigger>
+						<TooltipContent>
+							<p className="max-w-xs text-center">
+								<span className="font-extrabold">Get notified </span> 
+								in
+								<span className="font-extrabold"> Real-Time </span> 
+								when a <span className="font-extrabold"> new Game </span>is created,
+								a <span className="font-extrabold"> new Bet </span>is placed, and when a <span className="font-extrabold"> new NFT is minted</span>.</p>
+						</TooltipContent>
+					</Tooltip>
 			</div>
 
 			{isListening && <EventListenersToasts />}
