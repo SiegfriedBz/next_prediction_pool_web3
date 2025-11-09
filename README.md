@@ -140,7 +140,7 @@ Workflow Overview
   
 Example Tenderly Action Log:
 
-![Tenderly Web3 Action Log](./fe/public/tenderly-action-logs.png)
+![Tenderly Web3 Action Log](./assets/tenderly-action-logs.png)
 
 Note:
 Tenderly Web3 Actions are used as an experiment to handle off-chain logic based on on-chain events.
