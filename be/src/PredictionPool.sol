@@ -1,6 +1,11 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.13;
 
+/**
+ * @title PredictionPool Game - Chainlink Price Feeds & Chainlink Automation
+ * @author Siegfried Bozza
+ */
+
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import {AggregatorV3Interface} from "./interfaces/AggregatorV3Interface.sol";
@@ -336,8 +341,8 @@ contract PredictionPool is Ownable, AutomationCompatibleInterface, ReentrancyGua
         }
 
         // Calculate payout
-        uint256 playerWeight = _getBetWeight(_roundId, msg.sender);
-        uint256 totalWeight = _getTotalWeight(_roundId);
+        uint256 playerWeight = getBetWeight(_roundId, msg.sender);
+        uint256 totalWeight = getTotalWeight(_roundId);
 
         uint256 rewardPool = round.gteTotal + round.ltTotal;
         uint256 payout = (rewardPool * playerWeight) / totalWeight;
@@ -403,7 +408,7 @@ contract PredictionPool is Ownable, AutomationCompatibleInterface, ReentrancyGua
     /**
      * Returns the bet weight for a round - player
      */
-    function _getBetWeight(uint256 _roundId, address player) internal view returns (uint256) {
+    function getBetWeight(uint256 _roundId, address player) public view returns (uint256) {
         Bet storage bet = roundToPlayerBet[_roundId][player];
         Round storage round = rounds[_roundId];
 
@@ -416,16 +421,16 @@ contract PredictionPool is Ownable, AutomationCompatibleInterface, ReentrancyGua
     /**
      * Returns the total bet weight for a round
      */
-    function _getTotalWeight(uint256 _roundId) internal view returns (uint256 totalWeight) {
+    function getTotalWeight(uint256 _roundId) public view returns (uint256 totalWeight) {
         address[] memory gtePlayers = roundToGtePlayers[_roundId];
         address[] memory ltPlayers = roundToLtPlayers[_roundId];
 
         for (uint256 i = 0; i < gtePlayers.length; ++i) {
-            totalWeight += _getBetWeight(_roundId, gtePlayers[i]);
+            totalWeight += getBetWeight(_roundId, gtePlayers[i]);
         }
 
         for (uint256 i = 0; i < ltPlayers.length; ++i) {
-            totalWeight += _getBetWeight(_roundId, ltPlayers[i]);
+            totalWeight += getBetWeight(_roundId, ltPlayers[i]);
         }
     }
 
