@@ -3,9 +3,6 @@ src = "src"
 out = "out"
 libs = ["lib"]
 
-[metadata]
-author = "Siegfried Bozza (https://github.com/SiegfriedBz)"
-
 # See more config options https://github.com/foundry-rs/foundry/blob/master/crates/config/README.md#all-options
 etherscan_api_key = "${ETHERSCAN_API_KEY}"
 
