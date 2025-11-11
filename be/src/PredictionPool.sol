@@ -38,6 +38,11 @@ contract PredictionPool is Ownable, AutomationCompatibleInterface, ReentrancyGua
     event PredictionPool_NewMinRoundDuration(uint256 indexed duration);
 
     /**
+     *  constants
+     */
+    uint256 public constant STRICT_MIN_ROUND_DURATION = 2 minutes;
+
+    /**
      *  storage
      */
     uint256 public minRoundDuration;
@@ -141,7 +146,7 @@ contract PredictionPool is Ownable, AutomationCompatibleInterface, ReentrancyGua
             allowedDataFeedsList.push(_dataFeed);
         }
 
-        if (_minRoundDuration < 10 seconds) {
+        if (_minRoundDuration < STRICT_MIN_ROUND_DURATION) {
             revert PredictionPool_InvalidDuration();
         }
         minRoundDuration = _minRoundDuration;
@@ -459,7 +464,7 @@ contract PredictionPool is Ownable, AutomationCompatibleInterface, ReentrancyGua
      * Note centralization issue
      */
     function setRoundDuration(uint256 _duration) public onlyOwner {
-        if (_duration < 10 seconds) {
+        if (_duration < STRICT_MIN_ROUND_DURATION) {
             revert PredictionPool_InvalidDuration();
         }
         minRoundDuration = _duration;
