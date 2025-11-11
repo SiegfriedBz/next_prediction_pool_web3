@@ -166,9 +166,11 @@ These files centralize constants for reproducible deployments and environment co
 
 ### Repo Structure
 
+```bash
 fe/             # Next.js frontend
 be/             # Foundry project (smart contracts & deployment scripts)
 web3-actions/   # Tenderly Web3 Actions
+```
 
 ### **Frontend (`fe/`)**
 
@@ -179,8 +181,6 @@ NEXT_PUBLIC_ETH_SEPOLIA_ALCHEMY_HTTP_URL=  # Alchemy Sepolia RPC URL
 NEXT_PUBLIC_ETH_SEPOLIA_ALCHEMY_WS_URL=    # Alchemy Sepolia WebSocket endpoint
 NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID=      # WalletConnect Project ID
 ```
-
-#### install dependencies
 
 ```bash
 cd fe
