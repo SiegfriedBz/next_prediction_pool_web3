@@ -6,13 +6,13 @@ import {PredictionPoolToken} from "../src/PredictionPoolToken.sol";
 import {Constants_PredictionPoolToken} from "./Constants_PredictionPoolToken.sol";
 
 contract PredictionPoolTokenScript is Script, Constants_PredictionPoolToken {
-    PredictionPoolToken public token;
-
     address MY_ADDRESS = address(uint160(uint256(vm.envUint("MY_ADDRESS"))));
 
     function setUp() public {}
 
-    function run() public {
+    function run() public returns (PredictionPoolToken token) {
+        console.log("Deploying PredictionPoolToken...");
+
         vm.startBroadcast(vm.envUint("PRIVATE_KEY"));
         // constructor(
         // string memory uri_,
@@ -37,6 +37,6 @@ contract PredictionPoolTokenScript is Script, Constants_PredictionPoolToken {
 
         vm.stopBroadcast();
 
-        console.log("PredictionPoolToken address", address(token));
+        console.log("PredictionPoolToken deployed address", address(token));
     }
 }

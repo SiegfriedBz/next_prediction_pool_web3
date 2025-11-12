@@ -1,10 +1,15 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.13;
 
+/**
+ * @title PredictionPool Game - Chainlink Price Feeds & Chainlink Automation
+ * @author Siegfried Bozza
+ */
+
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
-import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
-import {AggregatorV3Interface} from "./interfaces/AggregatorV3Interface.sol";
-import {AutomationCompatibleInterface} from "./interfaces/AutomationCompatibleInterface.sol";
+import {ReentrancyGuard} from "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import {AggregatorV3Interface} from "@chainlink/interfaces/AggregatorV3Interface.sol";
+import {AutomationCompatibleInterface} from "@chainlink/interfaces/AutomationCompatibleInterface.sol";
 
 error PredictionPool_CanBetOnlyOncePerRound();
 error PredictionPool_RoundIsNotActive();
@@ -36,6 +41,11 @@ contract PredictionPool is Ownable, AutomationCompatibleInterface, ReentrancyGua
     event PredictionPool_PriceFeedToggled(address indexed feed, bool indexed enabled);
     event PredictionPool_RewardClaimed(uint256 indexed roundId, address indexed player, uint256 indexed value);
     event PredictionPool_NewMinRoundDuration(uint256 indexed duration);
+
+    /**
+     *  constants
+     */
+    uint256 public constant STRICT_MIN_ROUND_DURATION = 2 minutes;
 
     /**
      *  storage
@@ -131,7 +141,7 @@ contract PredictionPool is Ownable, AutomationCompatibleInterface, ReentrancyGua
     /**
      * @param _allowedDataFeeds the allowed chainlink price feeds (i.e. allowed pairs on which to play)
      */
-    constructor(address[] memory _allowedDataFeeds, uint256 _minRoundDuration) Ownable(msg.sender) {
+    constructor(address[] memory _allowedDataFeeds, uint256 _minRoundDuration) Ownable() {
         for (uint256 i = 0; i < _allowedDataFeeds.length; i++) {
             address _dataFeed = _allowedDataFeeds[i];
             if (_dataFeed == address(0)) {
@@ -141,7 +151,7 @@ contract PredictionPool is Ownable, AutomationCompatibleInterface, ReentrancyGua
             allowedDataFeedsList.push(_dataFeed);
         }
 
-        if (_minRoundDuration < 10 seconds) {
+        if (_minRoundDuration < STRICT_MIN_ROUND_DURATION) {
             revert PredictionPool_InvalidDuration();
         }
         minRoundDuration = _minRoundDuration;
@@ -331,8 +341,8 @@ contract PredictionPool is Ownable, AutomationCompatibleInterface, ReentrancyGua
         }
 
         // Calculate payout
-        uint256 playerWeight = _getBetWeight(_roundId, msg.sender);
-        uint256 totalWeight = _getTotalWeight(_roundId);
+        uint256 playerWeight = getBetWeight(_roundId, msg.sender);
+        uint256 totalWeight = getTotalWeight(_roundId);
 
         uint256 rewardPool = round.gteTotal + round.ltTotal;
         uint256 payout = (rewardPool * playerWeight) / totalWeight;
@@ -398,7 +408,7 @@ contract PredictionPool is Ownable, AutomationCompatibleInterface, ReentrancyGua
     /**
      * Returns the bet weight for a round - player
      */
-    function _getBetWeight(uint256 _roundId, address player) internal view returns (uint256) {
+    function getBetWeight(uint256 _roundId, address player) public view returns (uint256) {
         Bet storage bet = roundToPlayerBet[_roundId][player];
         Round storage round = rounds[_roundId];
 
@@ -411,16 +421,16 @@ contract PredictionPool is Ownable, AutomationCompatibleInterface, ReentrancyGua
     /**
      * Returns the total bet weight for a round
      */
-    function _getTotalWeight(uint256 _roundId) internal view returns (uint256 totalWeight) {
+    function getTotalWeight(uint256 _roundId) public view returns (uint256 totalWeight) {
         address[] memory gtePlayers = roundToGtePlayers[_roundId];
         address[] memory ltPlayers = roundToLtPlayers[_roundId];
 
         for (uint256 i = 0; i < gtePlayers.length; ++i) {
-            totalWeight += _getBetWeight(_roundId, gtePlayers[i]);
+            totalWeight += getBetWeight(_roundId, gtePlayers[i]);
         }
 
         for (uint256 i = 0; i < ltPlayers.length; ++i) {
-            totalWeight += _getBetWeight(_roundId, ltPlayers[i]);
+            totalWeight += getBetWeight(_roundId, ltPlayers[i]);
         }
     }
 
@@ -459,7 +469,7 @@ contract PredictionPool is Ownable, AutomationCompatibleInterface, ReentrancyGua
      * Note centralization issue
      */
     function setRoundDuration(uint256 _duration) public onlyOwner {
-        if (_duration < 10 seconds) {
+        if (_duration < STRICT_MIN_ROUND_DURATION) {
             revert PredictionPool_InvalidDuration();
         }
         minRoundDuration = _duration;

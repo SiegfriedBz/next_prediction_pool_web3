@@ -1,26 +1,24 @@
 //SPDX-License-Identifier: MIT
 pragma solidity ^0.8.13;
 
-import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
-import "@openzeppelin/contracts/utils/Strings.sol";
-import {AccessControl} from "@openzeppelin/contracts/access/AccessControl.sol";
-import {VRFConsumerBaseV2Plus} from "./VRFConsumerBaseV2Plus.sol";
-import {VRFV2PlusClient} from "./libraries/VRFV2PlusClient.sol";
 /**
  * @title PredictionPool ERC1155 Token - Chainlink VRF
  * @author Siegfried Bozza
  */
 
+import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
+import "@openzeppelin/contracts/utils/Strings.sol";
+import {AccessControl} from "@openzeppelin/contracts/access/AccessControl.sol";
+import {VRFConsumerBaseV2Plus} from "@chainlink/VRFConsumerBaseV2Plus.sol";
+import {VRFV2PlusClient} from "@chainlink/VRFV2PlusClient.sol";
+
+error PredictionPoolToken_MinTwoTokensToMint();
+error PredictionPoolToken_NoZeroAddress();
+error PredictionPoolToken_RequestNotFound(uint256 requestId);
+error PredictionPoolToken_RequestAlreadyFulfilled(uint256 requestId);
+
 contract PredictionPoolToken is ERC1155, AccessControl, VRFConsumerBaseV2Plus {
     using Strings for uint256;
-
-    /**
-     * errors
-     */
-    error PredictionPoolToken_MinTwoTokensToMint();
-    error PredictionPoolToken_NoZeroAddress();
-    error PredictionPoolToken_RequestNotFound(uint256 requestId);
-    error PredictionPoolToken_RequestAlreadyFulfilled(uint256 requestId);
 
     /**
      * events
@@ -36,11 +34,11 @@ contract PredictionPoolToken is ERC1155, AccessControl, VRFConsumerBaseV2Plus {
 
     // immutable
     uint256 public immutable i_maxTokenId;
-    uint256 private immutable i_vrf_subId;
     bytes32 public immutable i_vrf_keyHash;
     address public immutable i_linkToken;
 
     // storage
+    uint256 public s_vrf_subId;
     uint16 private s_vrf_requestConfirmations = 3;
     uint32 private s_vrf_callbackGasLimit = 150000;
 
@@ -71,8 +69,8 @@ contract PredictionPoolToken is ERC1155, AccessControl, VRFConsumerBaseV2Plus {
         _grantRole(MINTER_ROLE, _minter);
         i_maxTokenId = _maxTokenId;
         i_linkToken = _linkToken;
-        i_vrf_subId = _vrf_subId;
         i_vrf_keyHash = _vrf_keyHash;
+        s_vrf_subId = _vrf_subId;
     }
 
     /**
@@ -110,7 +108,7 @@ contract PredictionPoolToken is ERC1155, AccessControl, VRFConsumerBaseV2Plus {
         uint256 requestId = s_vrfCoordinator.requestRandomWords(
             VRFV2PlusClient.RandomWordsRequest({
                 keyHash: i_vrf_keyHash,
-                subId: i_vrf_subId,
+                subId: s_vrf_subId,
                 requestConfirmations: s_vrf_requestConfirmations,
                 callbackGasLimit: s_vrf_callbackGasLimit,
                 numWords: 1,
@@ -161,5 +159,9 @@ contract PredictionPoolToken is ERC1155, AccessControl, VRFConsumerBaseV2Plus {
 
         s_vrf_requestConfirmations = _requestConfirmations;
         s_vrf_callbackGasLimit = _callbackGasLimit;
+    }
+
+    function setVrfSubscriptionId(uint256 _subId) external onlyRole(DEFAULT_ADMIN_ROLE) {
+        s_vrf_subId = _subId;
     }
 }
