@@ -7,9 +7,9 @@ pragma solidity ^0.8.13;
  */
 
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
-import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
-import {AggregatorV3Interface} from "./interfaces/AggregatorV3Interface.sol";
-import {AutomationCompatibleInterface} from "./interfaces/AutomationCompatibleInterface.sol";
+import {ReentrancyGuard} from "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import {AggregatorV3Interface} from "@chainlink/interfaces/AggregatorV3Interface.sol";
+import {AutomationCompatibleInterface} from "@chainlink//interfaces/AutomationCompatibleInterface.sol";
 
 error PredictionPool_CanBetOnlyOncePerRound();
 error PredictionPool_RoundIsNotActive();
@@ -141,7 +141,7 @@ contract PredictionPool is Ownable, AutomationCompatibleInterface, ReentrancyGua
     /**
      * @param _allowedDataFeeds the allowed chainlink price feeds (i.e. allowed pairs on which to play)
      */
-    constructor(address[] memory _allowedDataFeeds, uint256 _minRoundDuration) Ownable(msg.sender) {
+    constructor(address[] memory _allowedDataFeeds, uint256 _minRoundDuration) Ownable() {
         for (uint256 i = 0; i < _allowedDataFeeds.length; i++) {
             address _dataFeed = _allowedDataFeeds[i];
             if (_dataFeed == address(0)) {
