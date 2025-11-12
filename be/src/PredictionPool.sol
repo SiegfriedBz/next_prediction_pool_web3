@@ -9,7 +9,7 @@ pragma solidity ^0.8.13;
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {ReentrancyGuard} from "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import {AggregatorV3Interface} from "@chainlink/interfaces/AggregatorV3Interface.sol";
-import {AutomationCompatibleInterface} from "@chainlink//interfaces/AutomationCompatibleInterface.sol";
+import {AutomationCompatibleInterface} from "@chainlink/interfaces/AutomationCompatibleInterface.sol";
 
 error PredictionPool_CanBetOnlyOncePerRound();
 error PredictionPool_RoundIsNotActive();

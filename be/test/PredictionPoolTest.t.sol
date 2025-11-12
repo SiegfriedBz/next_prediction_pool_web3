@@ -1,10 +1,9 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.13;
 
-import {Test, console} from "forge-std/Test.sol";
+import {Test} from "forge-std/Test.sol";
 import {
     PredictionPool,
-    Ownable,
 
     // errors
     PredictionPool_InvalidValue,
@@ -19,7 +18,7 @@ import {
 } from "../src/PredictionPool.sol";
 import {PredictionPoolScript} from "../script/PredictionPoolScript.s.sol";
 import {Constants_PredictionPool} from "../script/Constants_PredictionPool.sol";
-import {MockOffchainAggregator} from "./mocks/MockOffchainAggregator.sol";
+import {MockOffchainAggregator} from "./mocks/price-feeds/MockOffchainAggregator.sol";
 
 contract PredictionPoolTest is Test, Constants_PredictionPool {
     PredictionPool public pPool;
@@ -664,7 +663,7 @@ contract PredictionPoolTest is Test, Constants_PredictionPool {
     function test_toggleAllowPriceFeed_RevertWhen_NotOwner() public {
         // Not-Owner tries to toggle Allow PriceFeed
         vm.prank(PLAYER_01);
-        vm.expectRevert(abi.encodeWithSelector(Ownable.OwnableUnauthorizedAccount.selector, PLAYER_01));
+        vm.expectRevert(abi.encode("Ownable: caller is not the owner"));
         pPool.toggleAllowPriceFeed(SEPOLIA_LINK_USD);
     }
 
@@ -706,7 +705,7 @@ contract PredictionPoolTest is Test, Constants_PredictionPool {
         // Not-Owner tries to change minRoundDuration
         uint256 newDuration = 10 minutes;
         vm.prank(PLAYER_01);
-        vm.expectRevert(abi.encodeWithSelector(Ownable.OwnableUnauthorizedAccount.selector, PLAYER_01));
+        vm.expectRevert(abi.encode("Ownable: caller is not the owner"));
         pPool.setRoundDuration(newDuration);
     }
 
