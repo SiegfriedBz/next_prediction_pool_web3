@@ -1,0 +1,22 @@
+name: Foundry Tests
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    name: Run Foundry Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: stable
+
+      - name: Run Foundry Tests
+        run: |
+          cd be
+          forge test -vvv
