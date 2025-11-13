@@ -2,7 +2,7 @@ import { type HexAddress, Network, type NetworkT } from "../_types";
 import type { ContractConfigT } from "./types";
 
 const predictionPoolTokenAddressMap = new Map<NetworkT, HexAddress>([
-	[Network.SEPOLIA, "0x0670019FCD39520ACB9C907fEBd944BFEB567b35"],
+	[Network.SEPOLIA, "0xf49beA8f5D5bf8e276CF4c4174E92ADc9f3C3eB6"],
 	// [Network.MUMBAI, ""]
 ]);
 
@@ -27,67 +27,6 @@ export const getPredictionPoolTokenContractConfig = (
 				],
 				stateMutability: "nonpayable",
 				type: "constructor",
-			},
-			{ inputs: [], name: "AccessControlBadConfirmation", type: "error" },
-			{
-				inputs: [
-					{ internalType: "address", name: "account", type: "address" },
-					{ internalType: "bytes32", name: "neededRole", type: "bytes32" },
-				],
-				name: "AccessControlUnauthorizedAccount",
-				type: "error",
-			},
-			{
-				inputs: [
-					{ internalType: "address", name: "sender", type: "address" },
-					{ internalType: "uint256", name: "balance", type: "uint256" },
-					{ internalType: "uint256", name: "needed", type: "uint256" },
-					{ internalType: "uint256", name: "tokenId", type: "uint256" },
-				],
-				name: "ERC1155InsufficientBalance",
-				type: "error",
-			},
-			{
-				inputs: [
-					{ internalType: "address", name: "approver", type: "address" },
-				],
-				name: "ERC1155InvalidApprover",
-				type: "error",
-			},
-			{
-				inputs: [
-					{ internalType: "uint256", name: "idsLength", type: "uint256" },
-					{ internalType: "uint256", name: "valuesLength", type: "uint256" },
-				],
-				name: "ERC1155InvalidArrayLength",
-				type: "error",
-			},
-			{
-				inputs: [
-					{ internalType: "address", name: "operator", type: "address" },
-				],
-				name: "ERC1155InvalidOperator",
-				type: "error",
-			},
-			{
-				inputs: [
-					{ internalType: "address", name: "receiver", type: "address" },
-				],
-				name: "ERC1155InvalidReceiver",
-				type: "error",
-			},
-			{
-				inputs: [{ internalType: "address", name: "sender", type: "address" }],
-				name: "ERC1155InvalidSender",
-				type: "error",
-			},
-			{
-				inputs: [
-					{ internalType: "address", name: "operator", type: "address" },
-					{ internalType: "address", name: "owner", type: "address" },
-				],
-				name: "ERC1155MissingApprovalForAll",
-				type: "error",
 			},
 			{
 				inputs: [
@@ -586,11 +525,7 @@ export const getPredictionPoolTokenContractConfig = (
 			{
 				inputs: [
 					{ internalType: "bytes32", name: "role", type: "bytes32" },
-					{
-						internalType: "address",
-						name: "callerConfirmation",
-						type: "address",
-					},
+					{ internalType: "address", name: "account", type: "address" },
 				],
 				name: "renounceRole",
 				outputs: [],
@@ -632,6 +567,13 @@ export const getPredictionPoolTokenContractConfig = (
 				type: "function",
 			},
 			{
+				inputs: [],
+				name: "s_vrf_subId",
+				outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+				stateMutability: "view",
+				type: "function",
+			},
+			{
 				inputs: [
 					{ internalType: "address", name: "", type: "address" },
 					{ internalType: "uint256", name: "", type: "uint256" },
@@ -646,7 +588,7 @@ export const getPredictionPoolTokenContractConfig = (
 					{ internalType: "address", name: "from", type: "address" },
 					{ internalType: "address", name: "to", type: "address" },
 					{ internalType: "uint256[]", name: "ids", type: "uint256[]" },
-					{ internalType: "uint256[]", name: "values", type: "uint256[]" },
+					{ internalType: "uint256[]", name: "amounts", type: "uint256[]" },
 					{ internalType: "bytes", name: "data", type: "bytes" },
 				],
 				name: "safeBatchTransferFrom",
@@ -659,7 +601,7 @@ export const getPredictionPoolTokenContractConfig = (
 					{ internalType: "address", name: "from", type: "address" },
 					{ internalType: "address", name: "to", type: "address" },
 					{ internalType: "uint256", name: "id", type: "uint256" },
-					{ internalType: "uint256", name: "value", type: "uint256" },
+					{ internalType: "uint256", name: "amount", type: "uint256" },
 					{ internalType: "bytes", name: "data", type: "bytes" },
 				],
 				name: "safeTransferFrom",
@@ -682,6 +624,13 @@ export const getPredictionPoolTokenContractConfig = (
 					{ internalType: "address", name: "_vrfCoordinator", type: "address" },
 				],
 				name: "setCoordinator",
+				outputs: [],
+				stateMutability: "nonpayable",
+				type: "function",
+			},
+			{
+				inputs: [{ internalType: "uint256", name: "_subId", type: "uint256" }],
+				name: "setVrfSubscriptionId",
 				outputs: [],
 				stateMutability: "nonpayable",
 				type: "function",

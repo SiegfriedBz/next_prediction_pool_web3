@@ -42,6 +42,7 @@ This DApp runs on the **Ethereum _Sepolia_ testnet**, leveraging smart contracts
 | Blockchain Access | Alchemy HTTP + WebSocket           |
 | Off-chain Logic   | Tenderly Web3 Actions              |
 | Package Manager   | forge                              |
+| **Testing**       | Foundry                            |
 
 ## 🧩 Architecture Overview
 
@@ -79,7 +80,7 @@ Core logic includes:
 - Security: reentrancy protection, strict validation, gas-optimized custom errors
 
 **PredictionPool Contract on Sepolia**  
-[View on Etherscan](https://sepolia.etherscan.io/address/0x1a3d6f547ce55463b03151cbc17f323501fc9170#code)
+[View on Etherscan](https://sepolia.etherscan.io/address/0x833d9fE4773690427A01F1C72896000C38aFE2AD#code)
 
 #### Chainlink Price Feeds
 
@@ -114,7 +115,7 @@ Key mechanics:
 - NFT metadata + assets: stored on IPFS
 
 **PredictionPoolToken Contract on Sepolia**  
-[View on Etherscan](https://sepolia.etherscan.io/address/0x0670019fcd39520acb9c907febd944bfeb567b35#code)
+[View on Etherscan](https://sepolia.etherscan.io/address/0xf49beA8f5D5bf8e276CF4c4174E92ADc9f3C3eB6#code)
 
 #### Chainlink VRF
 
@@ -238,6 +239,26 @@ forge script script/PredictionPoolTokenScript.s.sol --rpc-url $RPC_URL --broadca
 
 > 💡 Etherscan API: [Verify with Foundry](https://docs.etherscan.io/contract-verification/verify-with-foundry
 )
+
+### 🧪 Testing
+
+Both `PredictionPool` and `PredictionPoolToken` contracts include **comprehensive Foundry tests** covering:
+
+- **PredictionPool**:
+  - Deployment, round creation, betting, reward claiming, and edge cases.
+  - Tests for `getRound`, `createRound`, `betOn`, `claimReward`, `getBetWeight`, `getTotalWeight`, `toggleAllowPriceFeed`, and `setRoundDuration`.
+  - Edge cases for invalid inputs, zero addresses, and access control.
+- **PredictionPoolToken**:
+  - Deployment, minting, VRF fulfillment, and edge cases.
+  - Tests for `mint`, `setVrfSubscriptionId`, `grantRole`, and `uri`.
+  - Edge cases for token IDs (`0`, `UINT256_MAX`) and invalid requests.
+
+**Run all tests locally**:
+
+```bash
+cd be
+forge test
+```
 
 ## 🧩 Architecture & Flow
 
