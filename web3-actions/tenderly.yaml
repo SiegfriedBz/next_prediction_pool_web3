@@ -1,6 +1,6 @@
 account_id: ""
 actions:
-  siegfriedbz/predictionpoolv4:
+  siegfriedbz/predictionpool-vlast:
     runtime: v2
     sources: actions
     specs:
@@ -13,7 +13,7 @@ actions:
             filters:
             - eventEmitted:
                 contract:
-                  address: 0x1A3D6f547ce55463B03151cBC17f323501FC9170
+                  address: 0x833d9fE4773690427A01F1C72896000C38aFE2AD
                 name: PredictionPool_RoundResolved
               network: 11155111
             status:
