@@ -1,6 +1,6 @@
 account_id: ""
 actions:
-  siegfriedbz/predictionpool-vlast:
+  siegfriedbz/bet2gether:
     runtime: v2
     sources: actions
     specs:
