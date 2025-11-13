@@ -2,7 +2,7 @@ import { type HexAddress, Network, type NetworkT } from "../_types";
 import type { ContractConfigT } from "./types";
 
 const predictionPoolAddressMap = new Map<NetworkT, HexAddress>([
-	[Network.SEPOLIA, "0x1A3D6f547ce55463B03151cBC17f323501FC9170"],
+	[Network.SEPOLIA, "0x833d9fE4773690427A01F1C72896000C38aFE2AD"],
 	// [Network.MUMBAI, ""]
 ]);
 
@@ -29,16 +29,6 @@ export const getPredictionPoolContractConfig = (
 				],
 				stateMutability: "nonpayable",
 				type: "constructor",
-			},
-			{
-				inputs: [{ internalType: "address", name: "owner", type: "address" }],
-				name: "OwnableInvalidOwner",
-				type: "error",
-			},
-			{
-				inputs: [{ internalType: "address", name: "account", type: "address" }],
-				name: "OwnableUnauthorizedAccount",
-				type: "error",
 			},
 			{ inputs: [], name: "PredictionPool_AlreadyClaimed", type: "error" },
 			{
@@ -72,7 +62,6 @@ export const getPredictionPoolContractConfig = (
 				name: "PredictionPool_ZeroAddressNotAllowed",
 				type: "error",
 			},
-			{ inputs: [], name: "ReentrancyGuardReentrantCall", type: "error" },
 			{
 				anonymous: false,
 				inputs: [
@@ -268,6 +257,13 @@ export const getPredictionPoolContractConfig = (
 				type: "event",
 			},
 			{
+				inputs: [],
+				name: "STRICT_MIN_ROUND_DURATION",
+				outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+				stateMutability: "view",
+				type: "function",
+			},
+			{
 				inputs: [{ internalType: "address", name: "", type: "address" }],
 				name: "allowedDataFeeds",
 				outputs: [{ internalType: "bool", name: "", type: "bool" }],
@@ -332,6 +328,16 @@ export const getPredictionPoolContractConfig = (
 			},
 			{
 				inputs: [
+					{ internalType: "uint256", name: "_roundId", type: "uint256" },
+					{ internalType: "address", name: "player", type: "address" },
+				],
+				name: "getBetWeight",
+				outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+				stateMutability: "view",
+				type: "function",
+			},
+			{
+				inputs: [
 					{ internalType: "address", name: "_dataFeed", type: "address" },
 				],
 				name: "getChainlinkDataFeedNormalizedPrice",
@@ -366,6 +372,17 @@ export const getPredictionPoolContractConfig = (
 						name: "",
 						type: "tuple",
 					},
+				],
+				stateMutability: "view",
+				type: "function",
+			},
+			{
+				inputs: [
+					{ internalType: "uint256", name: "_roundId", type: "uint256" },
+				],
+				name: "getTotalWeight",
+				outputs: [
+					{ internalType: "uint256", name: "totalWeight", type: "uint256" },
 				],
 				stateMutability: "view",
 				type: "function",
