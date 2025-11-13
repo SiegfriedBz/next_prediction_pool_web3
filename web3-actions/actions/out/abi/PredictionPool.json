@@ -16,20 +16,6 @@
             "stateMutability": "nonpayable",
             "type": "constructor"
         },
-        {
-            "inputs": [
-                { "internalType": "address", "name": "owner", "type": "address" }
-            ],
-            "name": "OwnableInvalidOwner",
-            "type": "error"
-        },
-        {
-            "inputs": [
-                { "internalType": "address", "name": "account", "type": "address" }
-            ],
-            "name": "OwnableUnauthorizedAccount",
-            "type": "error"
-        },
         { "inputs": [], "name": "PredictionPool_AlreadyClaimed", "type": "error" },
         {
             "inputs": [],
@@ -72,7 +58,6 @@
             "name": "PredictionPool_ZeroAddressNotAllowed",
             "type": "error"
         },
-        { "inputs": [], "name": "ReentrancyGuardReentrantCall", "type": "error" },
         {
             "anonymous": false,
             "inputs": [
@@ -268,6 +253,13 @@
             "type": "event"
         },
         {
+            "inputs": [],
+            "name": "STRICT_MIN_ROUND_DURATION",
+            "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
             "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
             "name": "allowedDataFeeds",
             "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
@@ -332,6 +324,16 @@
         },
         {
             "inputs": [
+                { "internalType": "uint256", "name": "_roundId", "type": "uint256" },
+                { "internalType": "address", "name": "player", "type": "address" }
+            ],
+            "name": "getBetWeight",
+            "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
                 { "internalType": "address", "name": "_dataFeed", "type": "address" }
             ],
             "name": "getChainlinkDataFeedNormalizedPrice",
@@ -378,6 +380,17 @@
                     "name": "",
                     "type": "tuple"
                 }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                { "internalType": "uint256", "name": "_roundId", "type": "uint256" }
+            ],
+            "name": "getTotalWeight",
+            "outputs": [
+                { "internalType": "uint256", "name": "totalWeight", "type": "uint256" }
             ],
             "stateMutability": "view",
             "type": "function"
