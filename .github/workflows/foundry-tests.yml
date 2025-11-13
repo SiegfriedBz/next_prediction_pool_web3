@@ -21,6 +21,8 @@ jobs:
           version: stable
 
       - name: Run Foundry Tests
+        env:
+          MY_ADDRESS: ${{ secrets.MY_ADDRESS }}
         run: |
           cd be
           forge install
