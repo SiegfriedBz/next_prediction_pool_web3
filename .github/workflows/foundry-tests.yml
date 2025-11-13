@@ -1,6 +1,10 @@
 name: Foundry Tests
 
-on: [push, pull_request]
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
 
 jobs:
   test:
@@ -19,4 +23,5 @@ jobs:
       - name: Run Foundry Tests
         run: |
           cd be
+          forge install
           forge test -vvv
