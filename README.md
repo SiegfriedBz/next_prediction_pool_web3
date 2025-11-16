@@ -1,271 +1,118 @@
 # 🎲 Bet2Gether
 
-A **full-stack Web3 DApp** built with **Next.js**, **Foundry**, and **Solidity**, enabling users to participate in ETH-based prediction games on Ethereum. Real-time prices are powered by **Chainlink Price Feeds**, game resolution is automated via **Chainlink Keepers**, and winning creators earn **ERC-1155 NFTs**. Future iterations will integrate DAO governance for community-driven decision-making.
+**Bet2Gether is a trustless prediction game where users bet on crypto price movements, with automated payouts and NFT rewards—powered by Ethereum, Solidity, Chainlink and Tenderly.**
 
-This DApp runs on the **Ethereum _Sepolia_ testnet**, leveraging smart contracts, **real-time event listeners**, and decentralized services to provide interactive, transparent gameplay.
+## 🚀 Quick Start
 
-> 💡 Need Sepolia ETH? You can get some from this faucet: [Sepolia Faucet](https://sepolia-faucet.pk910.de/)
+1. **Try the Demo**: [🌐 Live Demo ✨](https://bet2gether-alpha.vercel.app/)
+2. **Get Testnet ETH**: [Sepolia Faucet](https://sepolia-faucet.pk910.de/)
+3. **Create a Game**: Pick an asset, predict its price, bet ETH, claim rewards and win NFTs!
 
-## Core Features
+![Create Game 1/2](./assets/bet2gether-01.gif)
+*Game creation flow (1/2)*
 
-- Create and participate in prediction games with ETH bets.
-- Fetch real-time asset prices via [Chainlink Price Feeds](https://docs.chain.link/data-feeds/price-feeds) for game creation and resolution.
-- Automatic game resolution via [Chainlink Keepers](https://docs.chain.link/chainlink-automation/overview/getting-started).
-- Random NFT rewards for creators using [Chainlink VRF](https://docs.chain.link/vrf) and [Tenderly Web3 Actions](https://docs.tenderly.co/web3-actions/intro-to-web3-actions).
-- Real-time updates using [Alchemy WebSockets](https://www.alchemy.com/docs/reference/subscription-api).
-- NFT metadata stored on IPFS, ensuring decentralization and immutability.
-- Opt-in on-chain event toasts for live feedback.
+![Create Game 2/2](./assets/bet2gether-02.gif)
+*Game creation flow (2/2)*
 
-## Tech Stack
+## 🎮 How It Works
 
-### Frontend stack
+### For Players
+
+1. **Create**: Pick an asset (LINK/ETH/BTC/DAI), predict price movement (↑/↓) against USD, set duration, and bet ETH.
+2. **Bet**: Join active games by predicting outcomes and betting ETH.
+3. **Win**: Claim ETH rewards if your bet was correct (weighted by bet size/timing).
+4. **Earn NFTs**: Game creators who win also receive a **random ERC-1155 NFT**.
+
+> **How It’s Trustless**:
+>
+> - **Prices**: **Chainlink Price Feeds** (tamper-proof, decentralized).
+> - **Game Resolution**: **Chainlink Keepers** (automated, no admin).
+> - **Rewards**: **Chainlink VRF** (provably fair randomness).
+
+### For Developers
+
+- **Tech Stack**: **Next.js** + **Solidity** + **Chainlink** + **Tenderly Web3 Actions**.
+- **Why It’s Unique**:
+  - Fully on-chain (*except* Tenderly Web3 Actions for NFT minting—*temporary off-chain logic experiments*).
+  - **Automated**, **transparent**, and **no admin control** over game outcomes.
+
+---
+
+## ✨ Key Features
+
+ | Feature | Details |
+ |-----------------------|-------------------------------------------------------------------------|
+ | **Prediction Games**  | Bet on ETH/BTC/LINK/DAI price movements (↑/↓) against USD                               |
+ | **Fair Pricing**      | Powered by **Chainlink Price Feeds** ensure tamper-proof, decentralized asset prices     |
+ | **Auto-Resolution**   | **Chainlink Keepers** trigger resolution at deadline—no admin intervention                  |
+ | **NFT Rewards**       | Winning creators receive **randomized ERC-1155 NFTs** (via **Chainlink VRF**)    |
+ | **Real-Time UI**      | **Alchemy WebSockets** for live updates (new games, bets, resolutions, NFT rewards)           |
+
+---
+
+## 🛠️ Tech Stack
+
+### Frontend
 
 | Technology                   | Purpose                         |
 | ---------------------------- | ------------------------------- |
-| Next.js + TypeScript         | Core web framework              |
-| Tailwind CSS + shadcn/ui     | UI styling and components       |
+| Next.js + TypeScript         | Core framework              |
+| Tailwind + shadcn/ui     | UI styling and components       |
 | Zod + React Hook Form        | Form validation and type safety |
-| TanStack Table               | Interactive and sortable tables |
+ | React Context         | State management (isolated providers for games/bets) |
+ | Custom Hooks          | `usePPoolNewBetEvent`, `usePPoolNewStatusEvent` (on-chain event-driven refetching) |
 | TanStack Query (React Query) | Caching and data sync           |
-| Wagmi + RainbowKit           | Web3 wallet connection & hooks  |
-| pnpm                         | Frontend package manager        |
+| TanStack Table               | Interactive and sortable tables |
+| **Wagmi** + RainbowKit           | Web3 wallet connection & hooks  |
+| pnpm                     | Frontend package manager       |
 
-### Backend stack
+### Backend
 
-| Layer             | Technologies                       |
-| ----------------- | ---------------------------------- |
-| Smart Contracts   | Solidity, Foundry, Sepolia testnet |
-| Automation        | Chainlink Keepers (logic based)    |
-| Asset prices      | Chainlink Price Feeds              |
-| Randomness        | Chainlink VRF v2.5                 |
-| Storage           | IPFS                               |
-| Blockchain Access | Alchemy HTTP + WebSocket           |
-| Off-chain Logic   | Tenderly Web3 Actions              |
-| Package Manager   | forge                              |
-| **Testing**       | Foundry                            |
+| Layer          | Technologies                     |
+ |----------------|----------------------------------|
+ | Contracts  | **Solidity**, **Foundry**, ***Sepolia***      |
+ | Testing    | **Foundry tests**          |
+ | Oracles     | **Chainlink** Price Feeds / Keepers (Automation) / VRF (Randomness) |
+ | Storage    | IPFS (NFT metadata)             |
+ | Blockchain Access        | **Alchemy** (HTTP + WebSocket)       |
+ | Off-Chain Logic  | **Tenderly Web3 Actions** (NFT minting)          |
+ | Package Manager | forge |
 
-## 🧩 Architecture Overview
+---
 
-Bet2Gether uses an on-chain, event driven system to sync UI state with blockchain data in real-time.
+## 📚 Technical Details
 
-- Contract events are streamed via Alchemy WebSockets and processed with wagmi `watchContractEvent`.
+### Frontend details
 
-- Users can switch on-chain event toasts (`GameListenerToastsSwitch`)
+- **React Context Providers**:
+  - `RoundsProvider`: Manages active/resolved rounds.
+  - `ActiveRoundsWithPlayerBetsProvider`: Tracks user bets in active games.
+  - `ResolvedRoundsWithPlayerBetsAndWinsProvider`: Tracks resolved games and claimable rewards.
+  - **Performance**: Independent providers minimize re-renders; shared React Query client ensures cache consistency.
+- **Real-Time Updates**:
+  - **Alchemy WebSockets** → wagmi `watchContractEvent` → selective query refetching.
 
-- Custom hooks (`usePPoolNewBetEvent`, `usePPoolNewStatusEvent`) selectively refetch only affected queries.
+### Backend details
 
-- Independent React Context Providers manage data isolation:
-  - `RoundsProvider` & `ActiveRoundsWithPlayerBetsProvider` → `BetOnGamesTab`
-  - `RoundsProvider` & `ResolvedRoundsWithPlayerBetsAndWinsProvider` → `ClaimRewardsTab`
-  Providers are independent at the React context level but share the same React Query client, ensuring global cache consistency.
-
-Together, this ensures minimal re-rendering and maximum responsiveness for on-chain updates.
-
-## Backend
-
-### Smart Contracts
-
-### 1. PredictionPool
-
-Handles all ETH-based prediction games, allowing users to bet on whether an asset’s price (via Chainlink Price Feed) will rise or fall by each game’s end.
-
-Core logic includes:
-
-- Game (“round”) creation: users define the asset, target price, their prediction — whether the final price will be Less Than (LT) or Greater Than or Equal (GTE) to the target — as well as the bet amount and round duration.
-- Bet placement: others join the game choosing “Less Than” (LT) or “Greater Than or Equal” (GTE)
-- Automatic resolution: handled by Chainlink Keepers at the end of the round
-- Secure payouts: winners claim rewards proportionally to bet amount and timing
-- Asset prices fetched from Chainlink price feeds
-- Owner controls: enable/disable feeds and set min duration
-- Security: reentrancy protection, strict validation, gas-optimized custom errors
-
-**PredictionPool Contract on Sepolia**  
-[View on Etherscan](https://sepolia.etherscan.io/address/0x833d9fE4773690427A01F1C72896000C38aFE2AD#code)
-
-#### Chainlink Price Feeds
-
-The DApp uses Chainlink Price Feed oracles to fetch reliable, decentralized price data for prediction rounds.
-
-- **Purpose:**  
-  - Fetch the current asset price when a user creates a game.  
-  - Fetch the price at the time a game is "resolved" to calculate winners.  
-
-- **Supported Trading Pairs:**  
-  - LINK / USD  
-  - ETH / USD  
-  - BTC / USD  
-  - DAI / USD  
-
-- **Integration:**  
-  Each `PredictionPool` round is linked to a specific Chainlink price feed. The oracle ensures fairness by providing tamper-resistant, real-time price data.
-
-#### Chainlink Keepers
-
-The DApp uses Chainlink Keepers to automatically trigger game resolution once the duration expires, ensuring trustless and continuous operation.
-
-### 2. PredictionPoolToken (ERC-1155 NFT)
-
-Manages NFT rewards for game creators who win their own rounds.
-
-Key mechanics:
-
-- ERC-1155 multi-token standard to allow users to own multiple copies
-- Randomized NFT assignment via Chainlink VRF
-- Mint trigger: off-chain Tenderly Web3 Action, listening for `PredictionPool_RoundResolved` events
-- NFT metadata + assets: stored on IPFS
-
-**PredictionPoolToken Contract on Sepolia**  
-[View on Etherscan](https://sepolia.etherscan.io/address/0xf49beA8f5D5bf8e276CF4c4174E92ADc9f3C3eB6#code)
-
-#### Chainlink VRF
-
-The DApp uses Chainlink VRF v2.5 to provide randomness for ERC-1155 mints.
-
-#### ⚙️ Tenderly Web3 Actions
-
-Tenderly Web3 Actions extend on-chain logic off-chain — listening to events and performing follow-up operations.
-
-In Bet2Gether, they:
-
-- Watch for PredictionPool_RoundResolved events
-- Parse logs to detect whether the round creator won
-- Automatically mint a new ERC-1155 NFT for the winner
-- Execute the mint via the PredictionPoolToken contract
-
-Workflow Overview
-
-- Event emitted by `PredictionPool` → `PredictionPool_RoundResolved`(roundId, creator, isWinner)
-- Tenderly Action parses event logs
-- If isWinner == true, it sends a transaction to the `PredictionPoolToken` contract to mint a ERC-1155 NFT to the creator.
-- Logs + transactions viewable in Tenderly Dashboard
+- **Chainlink Workflow**:
+  - **Price Feeds**: Fetch real-time prices for game creation (by user) / resolution (automated).
+    - Supported Price Feeds:
+      - `LINK/USD`, `ETH/USD`, `BTC/USD`, `DAI/USD`
+      - A game on *Sepolia* uses the following [Chainlink Feeds](https://docs.chain.link/data-feeds/price-feeds/addresses?page=1&testnetPage=1&networkType=testnet&search=&testnetSearch=).
+  - **Keepers**: Auto-resolve rounds at deadline.
+  - **VRF**: Randomize NFT pick for winners (among 3 possible NFTs).
+  - **ERC-1155**: Winners receive **unique NFTs** (randomized via Chainlink VRF) and can own multiple copies.
   
-Example Tenderly Action Log:
+- **Tenderly Logic**:
+  - Listens for `PredictionPool_RoundResolved` event → mints NFTs via `PredictionPoolToken` for game creator if is among winner(s).
+  - **Future**: Migrate to on-chain for full transparency.
 
-![Tenderly Web3 Action Log](./assets/tenderly-action-logs.png)
+### Flow Diagrams
 
-Note:
-Tenderly Web3 Actions are used as an experiment to handle off-chain logic based on on-chain events.
+#### 1️⃣ Round Creation & Betting
 
-Moving this logic fully on-chain (in the PredictionPool contract) in the future would enhance:
-
-- Transparency: logic verifiable directly in the smart contract.
-- Fairness & immutability: cannot be altered or disabled off-chain.
-
-### 📘 PredictionPool & PredictionPoolToken Deployment Parameters
-
-All deployment parameters (e.g., LINK Token, VRF Coordinator, Subscription ID, Key Hash, ...)
-can be found in the Foundry project under:
-
-```bash
-be/script/Constants_PredictionPool.sol
-be/script/Constants_PredictionPoolToken.sol
-```
-
-These files centralize constants for reproducible deployments and environment consistency.
-
-## 🚀 Deployment & Setup
-
-### Repo Structure
-
-```bash
-fe/             # Next.js frontend
-be/             # Foundry project (smart contracts & deployment scripts)
-web3-actions/   # Tenderly Web3 Actions
-```
-
-### **Frontend (`fe/`)**
-
-#### .env variables (fe)
-
-```bash
-NEXT_PUBLIC_ETH_SEPOLIA_ALCHEMY_HTTP_URL=  # Alchemy Sepolia RPC URL
-NEXT_PUBLIC_ETH_SEPOLIA_ALCHEMY_WS_URL=    # Alchemy Sepolia WebSocket endpoint
-NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID=      # WalletConnect Project ID
-```
-
-```bash
-cd fe
-pnpm install
-pnpm run dev
-```
-
-### **Backend (`be/`)**
-
-#### .env variables (be)
-
-```bash
-ALCHEMY_SEPOLIA_RPC_URL=  # Alchemy Sepolia RPC URL
-ETHERSCAN_API_KEY=        # Etherscan API key for contract verification
-PRIVATE_KEY="0x..."       # Your deployer wallet private key
-MY_ADDRESS="0x..."        # Your wallet address for convenience
-```
-
-#### Deploy Smart Contracts (Foundry)
-
-> ⚠️ Make sure Foundry is installed to run the forge scripts:  [Foundry Installation](https://getfoundry.sh/)
->
-
-##### Simulate locally (Foundry EVM)
-
-```bash
-cd be
-forge script script/PredictionPoolScript.s.sol
-forge script script/PredictionPoolTokenScript.s.sol
-```
-
-##### Simulate on Sepolia (dry-run)
-
-```bash
-cd be
-forge script script/PredictionPoolScript.s.sol --rpc-url $RPC_URL
-forge script script/PredictionPoolTokenScript.s.sol --rpc-url $RPC_URL
-```
-
-##### Deploy to Sepolia
-
-```bash
-cd be
-forge script script/PredictionPoolScript.s.sol --rpc-url $RPC_URL --broadcast
-forge script script/PredictionPoolTokenScript.s.sol --rpc-url $RPC_URL --broadcast
-```
-
-##### ✅ Deploy to Sepolia & Verify on Etherscan
-
-```bash
-cd be
-forge script script/PredictionPoolScript.s.sol --rpc-url $RPC_URL --broadcast --verify
-forge script script/PredictionPoolTokenScript.s.sol --rpc-url $RPC_URL --broadcast --verify
-```
-
-> 💡 Etherscan API: [Verify with Foundry](https://docs.etherscan.io/contract-verification/verify-with-foundry
-)
-
-### 🧪 Testing
-
-Both `PredictionPool` and `PredictionPoolToken` contracts include **comprehensive Foundry tests** covering:
-
-- **PredictionPool**:
-  - Deployment, round creation, betting, reward claiming, and edge cases.
-  - Tests for `getRound`, `createRound`, `betOn`, `claimReward`, `getBetWeight`, `getTotalWeight`, `toggleAllowPriceFeed`, and `setRoundDuration`.
-  - Edge cases for invalid inputs, zero addresses, and access control.
-- **PredictionPoolToken**:
-  - Deployment, minting, VRF fulfillment, and edge cases.
-  - Tests for `mint`, `setVrfSubscriptionId`, `grantRole`, and `uri`.
-  - Edge cases for token IDs (`0`, `UINT256_MAX`) and invalid requests.
-
-**Run all tests locally**:
-
-```bash
-cd be
-forge test
-```
-
-## 🧩 Architecture & Flow
-
-1️⃣ **Round Creation & Betting**
-
-- Users create games ("_rounds_") on a given pair, with a target price, their prediction — whether the final price will be Less Than (LT) or Greater Than or Equal (GTE) to the target — as well as the bet amount and round duration.
-- When creating a game ("_round_"), after selecting a pair, the current price for this pair is fetched from **Chainlink Price Feeds** and displayed.
+- Users create games ("*rounds*") on a given pair, with a target price, their prediction — whether the final price will be Less Than (LT) or Greater Than or Equal (GTE) to the target — as well as the bet amount and round duration.
+- When creating a game ("*round*"), after selecting a pair, the current price for this pair is fetched from **Chainlink Price Feeds** and displayed.
 - Other users can place bets on an active game by choosing a side.
 
 ```mermaid
@@ -283,9 +130,11 @@ sequenceDiagram
     Pool ->> Pool: emit NewBet
 ```
 
-2️⃣ **Chainlink Automation & Game Resolution**
+*Diagram: [Round Creation & Betting] Flow*
 
-- **Chainlink Automation** periodically checks for  games ("_rounds_") ready to resolve.
+#### 2️⃣ Chainlink Automation & Game Resolution
+
+- **Chainlink Automation** periodically checks for  games ("*rounds*") ready to resolve.
 - `_resolveRound` fetches the final price, computes winners, and emits a `RoundResolved` event.
 
 ```mermaid
@@ -307,7 +156,9 @@ sequenceDiagram
     Pool ->> Pool: emit RoundResolved(roundId, roundCreator, roundCreatorIsWinner)
 ```
 
-3️⃣ **Reward Claiming**
+*Diagram: [Chainlink Automation & Game Resolution] Flow*
+
+#### 3️⃣ Reward Claiming
 
 - Users claim rewards using `claimReward()`.
 - Rewards are proportional to the bet amount and time of bet.
@@ -327,7 +178,9 @@ sequenceDiagram
     Pool ->> Pool: emit RewardClaimed
 ```
 
-4️⃣ **Reward ERC1155 Minting for Round Creator**
+*Diagram: [Reward Claiming] Flow*
+
+#### 4️⃣ Reward ERC1155 Minting for Round Creator
 
 - If the round creator wins, they receive a random (using **Chainlink VRF** in the `PredictionPoolToken` contract) ERC1155 NFT.
 - Currently handled via **Tenderly Web3 Actions**.
@@ -352,11 +205,143 @@ sequenceDiagram
     Token ->> Token: emit Mint(winner, tokenId)
 ```
 
+*Diagram: [Reward ERC1155 Minting for Round Creator] Flow*
+
+---
+
+### 📘 Contracts
+
+#### 1️⃣ PredictionPool
+
+Handles core game logic, all ETH-based prediction games, allowing users to bet on whether an asset’s price (via Chainlink Price Feed) will rise or fall by each game’s end.
+
+#### 2️⃣ PredictionPoolToken (ERC-1155 NFT)
+
+Manages NFT rewards for game creators who win their own rounds.
+
+| Contract               | Address (Sepolia)                                  | Purpose                          |
+|------------------------|---------------------------------------------------|----------------------------------|
+| PredictionPool         | [0x833d9fE4773690427A01F1C72896000C38aFE2AD](https://sepolia.etherscan.io/address/0x833d9fE4773690427A01F1C72896000C38aFE2AD) | Core game logic                 |
+| PredictionPoolToken    | [0xf49beA8f5D5bf8e276CF4c4174E92ADc9f3C3eB6](https://sepolia.etherscan.io/address/0xf49beA8f5D5bf8e276CF4c4174E92ADc9f3C3eB6) | ERC-1155 NFT rewards            |
+
+---
+
+### 🚀 Setup & Deployment
+
+#### Backend setup
+
+All deployment parameters (e.g., LINK Token, VRF Coordinator, Subscription ID, Key Hash, ...) can be found in the Foundry project under:
+
+```bash
+be/script/Constants_PredictionPool.sol
+be/script/Constants_PredictionPoolToken.sol
+```
+
+##### 1. (be) Environment Variables
+
+```bash
+# Backend
+ALCHEMY_SEPOLIA_RPC_URL=
+ETHERSCAN_API_KEY=
+PRIVATE_KEY=
+```
+
+##### 2. Deploy (and get verified) contracts on *Sepolia* Testnet
+
+```bash
+# Backend
+cd be 
+# Deploy PredictionPool
+forge script script/PredictionPoolScript.s.sol --rpc-url \$RPC_URL --broadcast --verify
+# Deploy PredictionPoolToken
+forge script script/PredictionPoolTokenScript.s.sol --rpc-url \$RPC_URL --broadcast --verify
+```
+
+#### Tenderly Setup
+
+1. **Configure**
+   - Update `web3-actions/` with deployed contract addresses/ABIs.
+   - Set secret variables (Tenderly API key, RPC URL).
+
+2. **Deploy**
+
+   ```bash
+   cd web3-actions && tenderly actions deploy
+   ```
+
+3. **Monitor**
+
+View logs/transactions in the Tenderly Dashboard.
+
+Example Tenderly Action Log:
+
+![Tenderly Web3 Action Log](./assets/tenderly-action-logs.png)
+
+> **Note**:
+> Tenderly is **temporarily** used for NFT minting to:
+>
+> - Experiment with off-chain automation.
+> - Reduce gas costs for users during testing.
+> *Future*: All logic will migrate on-chain.
+
+#### Frontend setup
+
+##### 1. (fe) Environment Variables
+
+```bash
+# Frontend
+NEXT_PUBLIC_ETH_SEPOLIA_ALCHEMY_HTTP_URL=
+NEXT_PUBLIC_ETH_SEPOLIA_ALCHEMY_WS_URL=   # 🔧 For live updates
+NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID=
+```
+
+##### 2. Set deployed contracts addresses & ABIs
+
+- Update `/fe/app/_contracts/` with the latest ABIs and addresses from Sepolia.
+
+##### 3. Install dependencies & run locally
+
+```bash
+# Frontend
+cd fe && pnpm install && pnpm dev
+```
+
+#### 📖 See Docs
+>
+>
+> - [Chainlink Price Feeds](https://docs.chain.link/data-feeds/price-feeds)
+> - [Chainlink Keepers](https://docs.chain.link/chainlink-automation)
+> - [Chainlink VRF](https://docs.chain.link/vrf)
+> - [Tenderly Web3 Actions](https://docs.tenderly.co/web3-actions)
+> - [Alchemy WebSockets](<https://docs.alchemy.com/alchemy/guides/ethereum-websockets>)
+
+### 🧪 Testing - Contracts
+
+- **Current Coverage**:
+
+  | Contract               | Lines (%) | Statements (%) | Branches (%) | Functions (%) |
+  |------------------------|-----------|----------------|--------------|---------------|
+  | `PredictionPool`       | 85.71     | 84.66          | 66.67        | 85.00         |
+  | `PredictionPoolToken`   | 76.19     | 79.49          | 25.00        | 75.00         |
+  | **Total**              | **74.42** | **74.36**      | **40.74**     | **72.00**      |
+
+  - `PredictionPool.sol`: **85.71%** (138/161 lines) — Core logic + edge cases.
+  - `PredictionPoolToken.sol`: **76.19%** (32/42 lines) — Minting + VRF tests.
+  - *Branches*: **40.74%** (edge cases like zero-address checks).
+
+- **Run locally**
+
+  ```bash
+  cd be && forge test
+  ```
+
+---
+
 ## 🪙 Rewards & Tokenomics
 
 The DApp supports two types of rewards:
 
-### Player Rewards
+### 1️⃣ Player Rewards
 
 Players share the total round pot based on:
 
@@ -365,41 +350,56 @@ Players share the total round pot based on:
 
 Rewards claimed via `claimReward(roundId)`
 
-### Creator NFT Rewards
+### 2️⃣ Creator NFT Rewards
 
 If a round creator wins their own prediction,
 they receive a random ERC-1155 NFT reward.
 
 Currently handled off-chain (Tenderly), but easily portable on-chain.
 
-## Future Improvements
+---
 
-### DAO & Governance Expansion
+## 🔮 Future Improvements
 
-A future iteration of Bet2Gether could introduce a **Bet2GetherDAO smart contract** to decentralize key decisions across the platform.
+### 1️⃣ Testing Enhancements
 
-Game creators who earn PredictionPoolToken NFTs could use them as governance tokens, granting voting power within the DAO.
+- **Focus Areas**:
+  - Reentrancy attacks in `PredictionPool`.
+  - Invalid NFT minting in `PredictionPoolToken`.
+- **Goal**: Increase branch coverage to **>80%**.
 
-DAO members would collectively decide on key parameters such as:
+### 2️⃣ On-Chain NFT Minting
 
-- Platform fees for game creation or betting (currently unset).
-- Which Chainlink Price Feeds are authorized for new rounds.
-- The allocation and use of any protocol treasury or revenue.
+- **Migration Plan**:
+  - Replace Tenderly with `PredictionPool` contract logic.
+  - **Benefits**:
+    - Full transparency (verifiable on-chain).
+    - No off-chain dependencies.
 
-This governance layer would evolve Bet2Gether from a prediction DApp into a community-owned prediction ecosystem, where active participation directly shapes the platform’s future.
+### 3️⃣ DAO Governance
 
-### Long-Term Vision
+- **Design**:
+  - Use `PredictionPoolToken` NFTs as governance tokens.
+  - **Voting Scope**:
+    - Platform fees (e.g., 1% of round pots).
+    - Supported Chainlink Price Feeds.
+- **Tools**: OpenZeppelin Governor.
 
-Beyond governance, Bet2Gether aims to evolve into a fully community-driven ecosystem where:
+---
 
-- A DAO Treasury accumulates a portion of platform fees and funds new feature proposals.
-- Staking mechanisms reward long-term participants and DAO contributors.
-- Cross-chain integrations extend prediction rounds to multiple EVM networks.
-- The NFT collection gains utility in governance, staking, or reputation scoring, reflecting players’ and creators’ historical performance.
+## 🤝 Contributing
 
-## 👨‍💻 Author
+Open to collaborations! Reach out for:
 
-Siegfried Bozza
-Full-Stack Web Developer | Blockchain Enthusiast
+- Smart contract audits
+- Frontend optimizations
+- DAO governance ideas
 
+---
+
+## Author
+
+Built solo by **Siegfried Bozza**: Full-stack development, smart contracts, and deployment.
+
+💼 [LinkedIn](https://www.linkedin.com/in/siegfriedbozza/)
 🐙 [GitHub](https://github.com/SiegfriedBz)
