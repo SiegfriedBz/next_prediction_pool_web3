@@ -387,16 +387,6 @@ Currently handled off-chain (Tenderly), but easily portable on-chain.
 
 ---
 
-## 🤝 Contributing
-
-Open to collaborations! Reach out for:
-
-- Smart contract audits
-- Frontend optimizations
-- DAO governance ideas
-
----
-
 ## Author
 
 Built solo by **Siegfried Bozza**: Full-stack development, smart contracts, and deployment.
