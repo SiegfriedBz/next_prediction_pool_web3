@@ -2,7 +2,7 @@ import { type HexAddress, Network, type NetworkT } from "../_types";
 import type { ContractConfigT } from "./types";
 
 const predictionPoolAddressMap = new Map<NetworkT, HexAddress>([
-	[Network.SEPOLIA, "0x833d9fE4773690427A01F1C72896000C38aFE2AD"],
+	[Network.SEPOLIA, "0x51A0a7561dEbA056C1cDF5aB4c369Db686c77EF6"],
 	// [Network.MUMBAI, ""]
 ]);
 
@@ -366,6 +366,7 @@ export const getPredictionPoolContractConfig = (
 							{ internalType: "uint256", name: "ltTotal", type: "uint256" },
 							{ internalType: "address", name: "priceFeed", type: "address" },
 							{ internalType: "uint256", name: "target", type: "uint256" },
+							{ internalType: "uint256", name: "start", type: "uint256" },
 							{ internalType: "uint256", name: "end", type: "uint256" },
 						],
 						internalType: "struct PredictionPool.Round",
@@ -470,6 +471,7 @@ export const getPredictionPoolContractConfig = (
 					{ internalType: "uint256", name: "ltTotal", type: "uint256" },
 					{ internalType: "address", name: "priceFeed", type: "address" },
 					{ internalType: "uint256", name: "target", type: "uint256" },
+					{ internalType: "uint256", name: "start", type: "uint256" },
 					{ internalType: "uint256", name: "end", type: "uint256" },
 				],
 				stateMutability: "view",

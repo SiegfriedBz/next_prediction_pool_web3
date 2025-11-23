@@ -2,7 +2,7 @@ import { type HexAddress, Network, type NetworkT } from "../_types";
 import type { ContractConfigT } from "./types";
 
 const predictionPoolTokenAddressMap = new Map<NetworkT, HexAddress>([
-	[Network.SEPOLIA, "0xf49beA8f5D5bf8e276CF4c4174E92ADc9f3C3eB6"],
+	[Network.SEPOLIA, "0xddd3c73caE8541FC6Ea119C1BffC5B6547D33eCf"],
 	// [Network.MUMBAI, ""]
 ]);
 
@@ -22,8 +22,8 @@ export const getPredictionPoolTokenContractConfig = (
 					{ internalType: "address", name: "_minter", type: "address" },
 					{ internalType: "address", name: "_linkToken", type: "address" },
 					{ internalType: "address", name: "_vrfCoordinator", type: "address" },
-					{ internalType: "uint256", name: "_vrf_subId", type: "uint256" },
-					{ internalType: "bytes32", name: "_vrf_keyHash", type: "bytes32" },
+					{ internalType: "uint256", name: "_vrfSubId", type: "uint256" },
+					{ internalType: "bytes32", name: "_vrfKeyHash", type: "bytes32" },
 				],
 				stateMutability: "nonpayable",
 				type: "constructor",
@@ -408,6 +408,27 @@ export const getPredictionPoolTokenContractConfig = (
 			},
 			{
 				inputs: [],
+				name: "I_LINK_TOKEN",
+				outputs: [{ internalType: "address", name: "", type: "address" }],
+				stateMutability: "view",
+				type: "function",
+			},
+			{
+				inputs: [],
+				name: "I_MAX_TOKEN_ID",
+				outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+				stateMutability: "view",
+				type: "function",
+			},
+			{
+				inputs: [],
+				name: "I_VRF_KEY_HASH",
+				outputs: [{ internalType: "bytes32", name: "", type: "bytes32" }],
+				stateMutability: "view",
+				type: "function",
+			},
+			{
+				inputs: [],
 				name: "MINTER_ROLE",
 				outputs: [{ internalType: "bytes32", name: "", type: "bytes32" }],
 				stateMutability: "view",
@@ -468,27 +489,6 @@ export const getPredictionPoolTokenContractConfig = (
 				type: "function",
 			},
 			{
-				inputs: [],
-				name: "i_linkToken",
-				outputs: [{ internalType: "address", name: "", type: "address" }],
-				stateMutability: "view",
-				type: "function",
-			},
-			{
-				inputs: [],
-				name: "i_maxTokenId",
-				outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
-				stateMutability: "view",
-				type: "function",
-			},
-			{
-				inputs: [],
-				name: "i_vrf_keyHash",
-				outputs: [{ internalType: "bytes32", name: "", type: "bytes32" }],
-				stateMutability: "view",
-				type: "function",
-			},
-			{
 				inputs: [
 					{ internalType: "address", name: "account", type: "address" },
 					{ internalType: "address", name: "operator", type: "address" },
@@ -544,12 +544,43 @@ export const getPredictionPoolTokenContractConfig = (
 			},
 			{
 				inputs: [{ internalType: "uint256", name: "", type: "uint256" }],
-				name: "s_requests",
+				name: "sRequests",
 				outputs: [
 					{ internalType: "address", name: "to", type: "address" },
 					{ internalType: "bool", name: "fulfilled", type: "bool" },
 					{ internalType: "bool", name: "exists", type: "bool" },
 				],
+				stateMutability: "view",
+				type: "function",
+			},
+			{
+				inputs: [],
+				name: "sVrfCallbackGasLimit",
+				outputs: [{ internalType: "uint32", name: "", type: "uint32" }],
+				stateMutability: "view",
+				type: "function",
+			},
+			{
+				inputs: [],
+				name: "sVrfRequestConfirmations",
+				outputs: [{ internalType: "uint16", name: "", type: "uint16" }],
+				stateMutability: "view",
+				type: "function",
+			},
+			{
+				inputs: [],
+				name: "sVrfSubId",
+				outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+				stateMutability: "view",
+				type: "function",
+			},
+			{
+				inputs: [
+					{ internalType: "address", name: "", type: "address" },
+					{ internalType: "uint256", name: "", type: "uint256" },
+				],
+				name: "sWinnerToMintedTokenIds",
+				outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
 				stateMutability: "view",
 				type: "function",
 			},
@@ -563,23 +594,6 @@ export const getPredictionPoolTokenContractConfig = (
 						type: "address",
 					},
 				],
-				stateMutability: "view",
-				type: "function",
-			},
-			{
-				inputs: [],
-				name: "s_vrf_subId",
-				outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
-				stateMutability: "view",
-				type: "function",
-			},
-			{
-				inputs: [
-					{ internalType: "address", name: "", type: "address" },
-					{ internalType: "uint256", name: "", type: "uint256" },
-				],
-				name: "s_winnerToMintedTokenIds",
-				outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
 				stateMutability: "view",
 				type: "function",
 			},
