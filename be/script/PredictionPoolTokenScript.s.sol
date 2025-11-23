@@ -8,7 +8,7 @@ import {Constants_PredictionPoolToken} from "./Constants_PredictionPoolToken.sol
 contract PredictionPoolTokenScript is Script, Constants_PredictionPoolToken {
     address MY_ADDRESS = address(uint160(uint256(vm.envUint("MY_ADDRESS"))));
 
-    function setUp() public {}
+    // function setUp() public {}
 
     function run() public returns (PredictionPoolToken token) {
         console.log("Deploying PredictionPoolToken...");
