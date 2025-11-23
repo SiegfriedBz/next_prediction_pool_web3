@@ -6,13 +6,23 @@
 
 1. **Try the Demo**: [🌐 Live Demo ✨](https://bet2gether-alpha.vercel.app/)
 2. **Get Testnet ETH**: [Sepolia Faucet](https://sepolia-faucet.pk910.de/)
-3. **Create a Game**: Pick an asset, predict its price, bet ETH, claim rewards and win NFTs!
+3. Connect your wallet to the DApp
+4. **Create a Game**: Pick an asset, predict its price, bet ETH, claim rewards and win NFTs!
 
-![Create Game 1/2](./assets/bet2gether-01.gif)
-*Game creation flow (1/2)*
+---
 
-![Create Game 2/2](./assets/bet2gether-02.gif)
-*Game creation flow (2/2)*
+<div align="center">
+  <img src="./assets/bet2gether-01.gif" alt="Game creation flow (1/2)" width="600"/>
+  <p><em>Game creation flow (1/2)</em></p>
+</div>
+
+<div align="center">
+  <img src="./assets/bet2gether-02.gif" alt="Game creation flow (2/2)" width="600"/>
+  <p><em>Game creation flow (2/2)</em></p>
+</div>
+
+---
+  
 
 ## 🎮 How It Works
 
@@ -319,20 +329,27 @@ cd fe && pnpm install && pnpm dev
 
 - **Current Coverage**:
 
-  | Contract               | Lines (%) | Statements (%) | Branches (%) | Functions (%) |
-  |------------------------|-----------|----------------|--------------|---------------|
-  | `PredictionPool`       | 85.71     | 84.66          | 66.67        | 85.00         |
-  | `PredictionPoolToken`   | 76.19     | 79.49          | 25.00        | 75.00         |
-  | **Total**              | **74.42** | **74.36**      | **40.74**     | **72.00**      |
+| Contract               | Lines (%)      | Statements (%) | Branches (%)   | Functions (%)  |
+|------------------------|----------------|----------------|----------------|-----------------|
+| `PredictionPool`       | 89.53% (154/172) | 86.81% (158/182) | 77.78% (21/27)  | 96.00% (24/25)  |
+| `PredictionPoolToken`  | 85.71% (36/42)  | 87.18% (34/39)  | 25.00% (1/4)    | 87.50% (7/8)    |
+| **Total**              | **77.97%**     | **76.47%**     | **46.30%**      | **81.48%**      |
 
-  - `PredictionPool.sol`: **85.71%** (138/161 lines) — Core logic + edge cases.
-  - `PredictionPoolToken.sol`: **76.19%** (32/42 lines) — Minting + VRF tests.
-  - *Branches*: **40.74%** (edge cases like zero-address checks).
+### **Detailed Coverage Breakdown**
+- **`PredictionPool.sol`**: **89.53%** (154/172 lines) — Core logic + edge cases.
+  - **Branches**: **77.78%** (21/27) — To improve.
+  - **Functions**: **96.00%** (24/25) — Nearly full function coverage.
+
+- **`PredictionPoolToken.sol`**: **85.71%** (36/42 lines) — Minting + VRF tests.
+  - **Branches**: **25.00%** (1/4) — To improve.
+  - **Functions**: **87.50%** (7/8) — Strong function coverage.
 
 - **Run locally**
 
   ```bash
-  cd be && forge test
+  cd be
+  forge test
+  forge coverage
   ```
 
 ---
