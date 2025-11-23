@@ -1,12 +1,10 @@
 "use client";
 
-import { type FC, type PropsWithChildren } from "react";
-import {
-	type State as WagmiState,
-} from "wagmi";
+import type { FC, PropsWithChildren } from "react";
+import type { State as WagmiState } from "wagmi";
 import { Toaster } from "@/components/ui/sonner";
-import { ThemeProvider } from "./theme-provider";
 import { CustomWagmiProvider } from "./custom-wagmi-provider";
+import { ThemeProvider } from "./theme-provider";
 
 type Props = {
 	initialWagmiState: WagmiState | undefined;

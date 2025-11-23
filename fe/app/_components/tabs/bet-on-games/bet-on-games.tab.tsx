@@ -1,4 +1,5 @@
 import { ActiveRoundsWithPlayerBetsProvider } from "@/app/_contexts/active-rounds-with-player-bets-provider";
+import { RoundsProvider } from "@/app/_contexts/rounds-provider";
 import {
 	Card,
 	CardContent,
@@ -11,7 +12,6 @@ import { TypographyH2 } from "../../typography/h2";
 import { TypographyLead } from "../../typography/lead";
 import { GamesStatsCard } from "./games-stats-card";
 import { GamesTable } from "./games-table";
-import { RoundsProvider } from "@/app/_contexts/rounds-provider";
 
 export const BetOnGamesTab = () => {
 	return (
