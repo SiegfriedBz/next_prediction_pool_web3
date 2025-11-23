@@ -221,8 +221,8 @@ Manages NFT rewards for game creators who win their own rounds.
 
 | Contract               | Address (Sepolia)                                  | Purpose                          |
 |------------------------|---------------------------------------------------|----------------------------------|
-| PredictionPool         | [0x833d9fE4773690427A01F1C72896000C38aFE2AD](https://sepolia.etherscan.io/address/0x833d9fE4773690427A01F1C72896000C38aFE2AD) | Core game logic                 |
-| PredictionPoolToken    | [0xf49beA8f5D5bf8e276CF4c4174E92ADc9f3C3eB6](https://sepolia.etherscan.io/address/0xf49beA8f5D5bf8e276CF4c4174E92ADc9f3C3eB6) | ERC-1155 NFT rewards            |
+| PredictionPool         | [0x51A0a7561dEbA056C1cDF5aB4c369Db686c77EF6](https://sepolia.etherscan.io/address/0x51A0a7561dEbA056C1cDF5aB4c369Db686c77EF6) | Core game logic                 |
+| PredictionPoolToken    | [0xddd3c73caE8541FC6Ea119C1BffC5B6547D33eCf](https://sepolia.etherscan.io/address/0xddd3c73caE8541FC6Ea119C1BffC5B6547D33eCf) | ERC-1155 NFT rewards            |
 
 ---
 
@@ -361,32 +361,35 @@ Currently handled off-chain (Tenderly), but easily portable on-chain.
 
 ## 🔮 Future Improvements
 
-### DAO & Governance Expansion
+### 1️⃣ Testing Enhancements
 
-A future iteration of Bet2Gether could introduce a **Bet2GetherDAO smart contract** to decentralize key decisions across the platform.
+- **Focus Areas**:
+  - Reentrancy attacks in `PredictionPool`.
+  - Invalid NFT minting in `PredictionPoolToken`.
+- **Goal**: Increase branch coverage to **>80%**.
 
-Game creators who earn PredictionPoolToken NFTs could use them as governance tokens, granting voting power within the DAO.
+### 2️⃣ On-Chain NFT Minting
 
-DAO members would collectively decide on key parameters such as:
+- **Migration Plan**:
+  - Replace Tenderly with `PredictionPool` contract logic.
+  - **Benefits**:
+    - Full transparency (verifiable on-chain).
+    - No off-chain dependencies.
 
-- Platform fees for game creation or betting (currently unset).
-- Which Chainlink Price Feeds are authorized for new rounds.
-- The allocation and use of any protocol treasury or revenue.
+### 3️⃣ DAO Governance
 
-This governance layer would evolve Bet2Gether from a prediction DApp into a community-owned prediction ecosystem, where active participation directly shapes the platform’s future.
+- **Design**:
+  - Use `PredictionPoolToken` NFTs as governance tokens.
+  - **Voting Scope**:
+    - Platform fees (e.g., 1% of round pots).
+    - Supported Chainlink Price Feeds.
+- **Tools**: OpenZeppelin Governor.
 
-### Long-Term Vision
+---
 
-Beyond governance, Bet2Gether aims to evolve into a fully community-driven ecosystem where:
+## Author
 
-- A DAO Treasury accumulates a portion of platform fees and funds new feature proposals.
-- Staking mechanisms reward long-term participants and DAO contributors.
-- Cross-chain integrations extend prediction rounds to multiple EVM networks.
-- The NFT collection gains utility in governance, staking, or reputation scoring, reflecting players’ and creators’ historical performance.
+Built solo by **Siegfried Bozza**: Full-stack development, smart contracts, and deployment.
 
-## 👨‍💻 Author
-
-Siegfried Bozza
-Full-Stack Web Developer | Blockchain Enthusiast
-
+💼 [LinkedIn](https://www.linkedin.com/in/siegfriedbozza/)
 🐙 [GitHub](https://github.com/SiegfriedBz)
