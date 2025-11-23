@@ -1,4 +1,5 @@
 import { ResolvedRoundsWithPlayerBetsAndWinsProvider } from "@/app/_contexts/resolved-rounds-with-player-bets-and-wins-provider";
+import { RoundsProvider } from "@/app/_contexts/rounds-provider";
 import {
 	Card,
 	CardContent,
@@ -11,7 +12,6 @@ import { TypographyH2 } from "../../typography/h2";
 import { TypographyLead } from "../../typography/lead";
 import { ClaimRewardsTable } from "./claim-rewards-table";
 import { ClaimsStatsCard } from "./claims-stats-card";
-import { RoundsProvider } from "@/app/_contexts/rounds-provider";
 
 export const ClaimRewardsTab = () => {
 	return (
