@@ -13,7 +13,7 @@ actions:
             filters:
             - eventEmitted:
                 contract:
-                  address: 0x833d9fE4773690427A01F1C72896000C38aFE2AD
+                  address: 0x51A0a7561dEbA056C1cDF5aB4c369Db686c77EF6
                 name: PredictionPool_RoundResolved
               network: 11155111
             status:
