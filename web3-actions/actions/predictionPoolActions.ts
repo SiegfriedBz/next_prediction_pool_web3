@@ -9,7 +9,7 @@ import PredictionPool from "./abi/PredictionPool.json";
 import PredictionPoolToken from "./abi/PredictionPoolToken.json";
 
 const PredictionPool_Token_Address =
-	"0xf49beA8f5D5bf8e276CF4c4174E92ADc9f3C3eB6";
+	"0xddd3c73caE8541FC6Ea119C1BffC5B6547D33eCf";
 
 const predictionPoolIface = new Interface(PredictionPool.abi);
 const predictionPoolTokenIface = new Interface(PredictionPoolToken.abi);
