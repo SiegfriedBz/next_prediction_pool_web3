@@ -16,8 +16,8 @@
                     "name": "_vrfCoordinator",
                     "type": "address"
                 },
-                { "internalType": "uint256", "name": "_vrf_subId", "type": "uint256" },
-                { "internalType": "bytes32", "name": "_vrf_keyHash", "type": "bytes32" }
+                { "internalType": "uint256", "name": "_vrfSubId", "type": "uint256" },
+                { "internalType": "bytes32", "name": "_vrfKeyHash", "type": "bytes32" }
             ],
             "stateMutability": "nonpayable",
             "type": "constructor"
@@ -406,6 +406,27 @@
         },
         {
             "inputs": [],
+            "name": "I_LINK_TOKEN",
+            "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "I_MAX_TOKEN_ID",
+            "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "I_VRF_KEY_HASH",
+            "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [],
             "name": "MINTER_ROLE",
             "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
             "stateMutability": "view",
@@ -474,27 +495,6 @@
             "type": "function"
         },
         {
-            "inputs": [],
-            "name": "i_linkToken",
-            "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "i_maxTokenId",
-            "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "i_vrf_keyHash",
-            "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
             "inputs": [
                 { "internalType": "address", "name": "account", "type": "address" },
                 { "internalType": "address", "name": "operator", "type": "address" }
@@ -556,12 +556,43 @@
         },
         {
             "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
-            "name": "s_requests",
+            "name": "sRequests",
             "outputs": [
                 { "internalType": "address", "name": "to", "type": "address" },
                 { "internalType": "bool", "name": "fulfilled", "type": "bool" },
                 { "internalType": "bool", "name": "exists", "type": "bool" }
             ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "sVrfCallbackGasLimit",
+            "outputs": [{ "internalType": "uint32", "name": "", "type": "uint32" }],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "sVrfRequestConfirmations",
+            "outputs": [{ "internalType": "uint16", "name": "", "type": "uint16" }],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "sVrfSubId",
+            "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                { "internalType": "address", "name": "", "type": "address" },
+                { "internalType": "uint256", "name": "", "type": "uint256" }
+            ],
+            "name": "sWinnerToMintedTokenIds",
+            "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
             "stateMutability": "view",
             "type": "function"
         },
@@ -575,23 +606,6 @@
                     "type": "address"
                 }
             ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "s_vrf_subId",
-            "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                { "internalType": "address", "name": "", "type": "address" },
-                { "internalType": "uint256", "name": "", "type": "uint256" }
-            ],
-            "name": "s_winnerToMintedTokenIds",
-            "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
             "stateMutability": "view",
             "type": "function"
         },

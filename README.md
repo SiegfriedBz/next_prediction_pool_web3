@@ -221,8 +221,8 @@ Manages NFT rewards for game creators who win their own rounds.
 
 | Contract               | Address (Sepolia)                                  | Purpose                          |
 |------------------------|---------------------------------------------------|----------------------------------|
-| PredictionPool         | [0x833d9fE4773690427A01F1C72896000C38aFE2AD](https://sepolia.etherscan.io/address/0x833d9fE4773690427A01F1C72896000C38aFE2AD) | Core game logic                 |
-| PredictionPoolToken    | [0xf49beA8f5D5bf8e276CF4c4174E92ADc9f3C3eB6](https://sepolia.etherscan.io/address/0xf49beA8f5D5bf8e276CF4c4174E92ADc9f3C3eB6) | ERC-1155 NFT rewards            |
+| PredictionPool         | [0x51A0a7561dEbA056C1cDF5aB4c369Db686c77EF6](https://sepolia.etherscan.io/address/0x51A0a7561dEbA056C1cDF5aB4c369Db686c77EF6) | Core game logic                 |
+| PredictionPoolToken    | [0xddd3c73caE8541FC6Ea119C1BffC5B6547D33eCf](https://sepolia.etherscan.io/address/0xddd3c73caE8541FC6Ea119C1BffC5B6547D33eCf) | ERC-1155 NFT rewards            |
 
 ---
 

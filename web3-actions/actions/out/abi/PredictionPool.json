@@ -374,6 +374,7 @@
                             "type": "address"
                         },
                         { "internalType": "uint256", "name": "target", "type": "uint256" },
+                        { "internalType": "uint256", "name": "start", "type": "uint256" },
                         { "internalType": "uint256", "name": "end", "type": "uint256" }
                     ],
                     "internalType": "struct PredictionPool.Round",
@@ -480,6 +481,7 @@
                 { "internalType": "uint256", "name": "ltTotal", "type": "uint256" },
                 { "internalType": "address", "name": "priceFeed", "type": "address" },
                 { "internalType": "uint256", "name": "target", "type": "uint256" },
+                { "internalType": "uint256", "name": "start", "type": "uint256" },
                 { "internalType": "uint256", "name": "end", "type": "uint256" }
             ],
             "stateMutability": "view",
