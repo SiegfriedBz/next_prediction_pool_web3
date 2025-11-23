@@ -361,45 +361,32 @@ Currently handled off-chain (Tenderly), but easily portable on-chain.
 
 ## 🔮 Future Improvements
 
-### 1️⃣ Testing Enhancements
+### DAO & Governance Expansion
 
-- **Focus Areas**:
-  - Reentrancy attacks in `PredictionPool`.
-  - Invalid NFT minting in `PredictionPoolToken`.
-- **Goal**: Increase branch coverage to **>80%**.
+A future iteration of Bet2Gether could introduce a **Bet2GetherDAO smart contract** to decentralize key decisions across the platform.
 
-### 2️⃣ On-Chain NFT Minting
+Game creators who earn PredictionPoolToken NFTs could use them as governance tokens, granting voting power within the DAO.
 
-- **Migration Plan**:
-  - Replace Tenderly with `PredictionPool` contract logic.
-  - **Benefits**:
-    - Full transparency (verifiable on-chain).
-    - No off-chain dependencies.
+DAO members would collectively decide on key parameters such as:
 
-### 3️⃣ DAO Governance
+- Platform fees for game creation or betting (currently unset).
+- Which Chainlink Price Feeds are authorized for new rounds.
+- The allocation and use of any protocol treasury or revenue.
 
-- **Design**:
-  - Use `PredictionPoolToken` NFTs as governance tokens.
-  - **Voting Scope**:
-    - Platform fees (e.g., 1% of round pots).
-    - Supported Chainlink Price Feeds.
-- **Tools**: OpenZeppelin Governor.
+This governance layer would evolve Bet2Gether from a prediction DApp into a community-owned prediction ecosystem, where active participation directly shapes the platform’s future.
 
----
+### Long-Term Vision
 
-## 🤝 Contributing
+Beyond governance, Bet2Gether aims to evolve into a fully community-driven ecosystem where:
 
-Open to collaborations! Reach out for:
+- A DAO Treasury accumulates a portion of platform fees and funds new feature proposals.
+- Staking mechanisms reward long-term participants and DAO contributors.
+- Cross-chain integrations extend prediction rounds to multiple EVM networks.
+- The NFT collection gains utility in governance, staking, or reputation scoring, reflecting players’ and creators’ historical performance.
 
-- Smart contract audits
-- Frontend optimizations
-- DAO governance ideas
+## 👨‍💻 Author
 
----
+Siegfried Bozza
+Full-Stack Web Developer | Blockchain Enthusiast
 
-## Author
-
-Built solo by **Siegfried Bozza**: Full-stack development, smart contracts, and deployment.
-
-💼 [LinkedIn](https://www.linkedin.com/in/siegfriedbozza/)
 🐙 [GitHub](https://github.com/SiegfriedBz)
