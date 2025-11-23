@@ -38,14 +38,14 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
-import { cn } from "@/lib/utils";
-import { FeedPairSelect } from "./feed-pair.select";
-import { SideCheckBox } from "./side.checkbox";
 import {
 	Tooltip,
 	TooltipContent,
 	TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { cn } from "@/lib/utils";
+import { FeedPairSelect } from "./feed-pair.select";
+import { SideCheckBox } from "./side.checkbox";
 
 const formSchema = z.object({
 	ethValue: z
@@ -180,7 +180,9 @@ export const CreateGameForm = () => {
 							<FormControl>
 								<FeedPairSelect {...field} onValueChange={field.onChange} />
 							</FormControl>
-							<FormDescription>Select a price feed to base your prediction on.</FormDescription>
+							<FormDescription>
+								Select a price feed to base your prediction on.
+							</FormDescription>
 							<FormMessage />
 						</FormItem>
 					)}
@@ -199,26 +201,33 @@ export const CreateGameForm = () => {
 								<FormControl>
 									<Input {...field} className="max-sm:w-full w-64" />
 								</FormControl>
-								<FormDescription>Reference price used to determine the bet outcome.</FormDescription>
+								<FormDescription>
+									Reference price used to determine the bet outcome.
+								</FormDescription>
 								<FormMessage />
 							</FormItem>
 						)}
 					/>
 					<div className="flex flex-col gap-y-2.5 text-3xl">
 						<Tooltip>
-								<TooltipTrigger asChild>
-									<Label className="flex w-fit items-center gap-x-2 text-semibold">
-										<TargetIcon size={16} />
-										Current Price (USD)
-										<CircleQuestionMarkIcon size={14}
-										/>
-									</Label>
-								</TooltipTrigger>
-								<TooltipContent className="max-w-64 text-sm">
-									<p>Price data provided by <span className="font-bold italic">Chainlink Price Feeds</span>, aggregated 
-									from multiple exchanges for reliable on-chain market information.</p>
-								</TooltipContent>
-							</Tooltip>
+							<TooltipTrigger asChild>
+								<Label className="flex w-fit items-center gap-x-2 text-semibold">
+									<TargetIcon size={16} />
+									Current Price (USD)
+									<CircleQuestionMarkIcon size={14} />
+								</Label>
+							</TooltipTrigger>
+							<TooltipContent className="max-w-64 text-sm">
+								<p>
+									Price data provided by{" "}
+									<span className="font-bold italic">
+										Chainlink Price Feeds
+									</span>
+									, aggregated from multiple exchanges for reliable on-chain
+									market information.
+								</p>
+							</TooltipContent>
+						</Tooltip>
 
 						{currentPrice ? (
 							<Input
@@ -250,7 +259,9 @@ export const CreateGameForm = () => {
 								/>
 							</FormControl>
 							<FormDescription>
-								Select whether you predict the final price will end above or below your target.							</FormDescription>
+								Select whether you predict the final price will end above or
+								below your target.{" "}
+							</FormDescription>
 							<FormMessage />
 						</FormItem>
 					)}
@@ -271,7 +282,9 @@ export const CreateGameForm = () => {
 									className="max-sm:w-full w-64"
 								/>
 							</FormControl>
-							<FormDescription>Set how long the game will last.</FormDescription>
+							<FormDescription>
+								Set how long the game will last.
+							</FormDescription>
 							<FormMessage />
 						</FormItem>
 					)}
@@ -290,7 +303,9 @@ export const CreateGameForm = () => {
 								<Input {...field} className="max-sm:w-full w-64" />
 							</FormControl>
 
-							<FormDescription>Enter the amount of ETH you want to stake.</FormDescription>
+							<FormDescription>
+								Enter the amount of ETH you want to stake.
+							</FormDescription>
 
 							<FormMessage />
 						</FormItem>
