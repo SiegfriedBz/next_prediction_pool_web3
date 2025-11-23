@@ -28,8 +28,8 @@ contract PredictionPoolTest is Test, Constants_PredictionPool {
     MockOffchainAggregator public mockPriceFeed;
 
     address owner = vm.envAddress("MY_ADDRESS");
-    address player_01 = makeAddr("player_01");
-    address player_02 = makeAddr("player_02");
+    address player01 = makeAddr("player01");
+    address player02 = makeAddr("player02");
     uint256 betValue = 0.1 ether;
     uint256 betOnValue = betValue / 2;
     uint256 zeroBet = 0;
@@ -69,12 +69,12 @@ contract PredictionPoolTest is Test, Constants_PredictionPool {
         uint256 duration = 2 minutes;
 
         // hoax => prank & fund
-        hoax(player_01);
+        hoax(player01);
         pPool.createRound{value: betValue}(feed, target, PredictionPool.BetSide.Gte, duration);
 
         PredictionPool.Round memory round = pPool.getRound(0);
 
-        assertEq(round.creator, player_01);
+        assertEq(round.creator, player01);
         assertEq(round.priceFeed, feed);
         assertEq(round.target, target);
         assertEq(round.gteTotal, betValue);
@@ -89,7 +89,7 @@ contract PredictionPoolTest is Test, Constants_PredictionPool {
         uint256 duration = 2 minutes;
 
         // hoax => prank & fund
-        hoax(player_01);
+        hoax(player01);
         pPool.createRound{value: betValue}(feed, target, PredictionPool.BetSide.Gte, duration);
 
         PredictionPool.Round memory round = pPool.getRound(1);
@@ -107,9 +107,9 @@ contract PredictionPoolTest is Test, Constants_PredictionPool {
     function test_createRound() public {
         uint256 timestamp = block.timestamp;
 
-        (PredictionPool.Round memory round, address feed, uint256 target, uint256 duration) = _player01_createRound();
+        (PredictionPool.Round memory round, address feed, uint256 target, uint256 duration) = _player01CreateRound();
 
-        assertEq(round.creator, player_01);
+        assertEq(round.creator, player01);
         assertEq(round.priceFeed, feed);
         assertEq(round.target, target);
         assertEq(round.gteTotal, betValue);
@@ -123,11 +123,11 @@ contract PredictionPoolTest is Test, Constants_PredictionPool {
         uint256 target = 1_000;
         uint256 duration = 2 minutes;
 
-        hoax(player_01);
+        hoax(player01);
 
         vm.expectEmit();
         emit PredictionPool.PredictionPool_RoundCreated(
-            0, player_01, betValue, PredictionPool.BetSide.Gte, block.timestamp + duration
+            0, player01, betValue, PredictionPool.BetSide.Gte, block.timestamp + duration
         );
 
         pPool.createRound{value: betValue}(feed, target, PredictionPool.BetSide.Gte, duration);
@@ -138,10 +138,10 @@ contract PredictionPoolTest is Test, Constants_PredictionPool {
         uint256 target = 1_000;
         uint256 duration = 2 minutes;
 
-        hoax(player_01);
+        hoax(player01);
 
         vm.expectEmit();
-        emit PredictionPool.PredictionPool_NewBet(0, player_01, betValue, PredictionPool.BetSide.Gte, block.timestamp);
+        emit PredictionPool.PredictionPool_NewBet(0, player01, betValue, PredictionPool.BetSide.Gte, block.timestamp);
 
         pPool.createRound{value: betValue}(feed, target, PredictionPool.BetSide.Gte, duration);
     }
@@ -152,8 +152,8 @@ contract PredictionPoolTest is Test, Constants_PredictionPool {
         uint256 duration = 2 minutes;
 
         // Ensure the sender has no funds
-        vm.prank(player_01);
-        vm.deal(player_01, 0);
+        vm.prank(player01);
+        vm.deal(player01, 0);
 
         // Use try/catch to check for OutOfFunds
         bool reverted = false;
@@ -178,7 +178,7 @@ contract PredictionPoolTest is Test, Constants_PredictionPool {
         uint256 duration = 2 minutes;
 
         // hoax => prank & fund
-        hoax(player_01);
+        hoax(player01);
 
         vm.expectRevert(PredictionPool_InvalidValue.selector);
         pPool.createRound{value: zeroBet}(feed, target, PredictionPool.BetSide.Gte, duration);
@@ -190,7 +190,7 @@ contract PredictionPoolTest is Test, Constants_PredictionPool {
         uint256 duration = 2 minutes;
 
         // hoax => prank & fund
-        hoax(player_01);
+        hoax(player01);
 
         vm.expectRevert(PredictionPool_InvalidFeed.selector);
         pPool.createRound{value: betValue}(invalidFeed, target, PredictionPool.BetSide.Gte, duration);
@@ -202,7 +202,7 @@ contract PredictionPoolTest is Test, Constants_PredictionPool {
         uint256 target = uint256(1_000);
 
         // hoax => prank & fund
-        hoax(player_01);
+        hoax(player01);
 
         vm.expectRevert(PredictionPool_InvalidDuration.selector);
         pPool.createRound{value: betValue}(feed, target, PredictionPool.BetSide.Gte, invalidDuration);
@@ -210,11 +210,11 @@ contract PredictionPoolTest is Test, Constants_PredictionPool {
 
     // === betOn Tests ===
     function test_betOn() public {
-        // 1. player_01 creates new round
-        (PredictionPool.Round memory round,,,) = _player01_createRound();
+        // 1. player01 creates new round
+        (PredictionPool.Round memory round,,,) = _player01CreateRound();
 
-        // 2. player_02 bets on round
-        hoax(player_02);
+        // 2. player02 bets on round
+        hoax(player02);
         pPool.betOn{value: betOnValue}(round.id, PredictionPool.BetSide.Lt);
 
         // 3. fetch round
@@ -225,61 +225,61 @@ contract PredictionPoolTest is Test, Constants_PredictionPool {
     }
 
     function test_betOn_Emits_NewBet_Event() public {
-        // 1. player_01 creates new round
-        (PredictionPool.Round memory round,,,) = _player01_createRound();
+        // 1. player01 creates new round
+        (PredictionPool.Round memory round,,,) = _player01CreateRound();
 
-        // 2. player_02 bets on round
-        hoax(player_02);
+        // 2. player02 bets on round
+        hoax(player02);
 
         vm.expectEmit();
-        emit PredictionPool.PredictionPool_NewBet(0, player_02, betOnValue, PredictionPool.BetSide.Lt, block.timestamp);
+        emit PredictionPool.PredictionPool_NewBet(0, player02, betOnValue, PredictionPool.BetSide.Lt, block.timestamp);
 
         pPool.betOn{value: betOnValue}(round.id, PredictionPool.BetSide.Lt);
     }
 
     function test_betOn_RevertWhen_BetValueIsZero() public {
-        // 1. player_01 creates new round
-        (PredictionPool.Round memory round,,,) = _player01_createRound();
+        // 1. player01 creates new round
+        (PredictionPool.Round memory round,,,) = _player01CreateRound();
 
-        // 2. player_02 bets on round without sending value
-        hoax(player_02);
+        // 2. player02 bets on round without sending value
+        hoax(player02);
 
         vm.expectRevert(PredictionPool_InvalidValue.selector);
         pPool.betOn{value: zeroBet}(round.id, PredictionPool.BetSide.Lt);
     }
 
     function test_betOn_RevertWhen_RoundNotActive() public {
-        // 1. player_01 creates new round
-        (PredictionPool.Round memory round,,,) = _player01_createRound();
+        // 1. player01 creates new round
+        (PredictionPool.Round memory round,,,) = _player01CreateRound();
 
         // 2. Fwd Time travel - Sets block.timestamp.
         vm.warp(round.end + 1);
 
-        // 3. player_02 tries betting on non-active round
-        hoax(player_02);
+        // 3. player02 tries betting on non-active round
+        hoax(player02);
 
         vm.expectRevert(PredictionPool_RoundIsNotActive.selector);
         pPool.betOn{value: betOnValue}(round.id, PredictionPool.BetSide.Lt);
     }
 
     function test_betOn_RevertWhen_PlayerAlreadyBetOnRound() public {
-        // 1. player_01 creates new round
-        (PredictionPool.Round memory round,,,) = _player01_createRound();
+        // 1. player01 creates new round
+        (PredictionPool.Round memory round,,,) = _player01CreateRound();
 
-        // 2. player_02 bets on round
-        hoax(player_02);
+        // 2. player02 bets on round
+        hoax(player02);
         pPool.betOn{value: betOnValue}(round.id, PredictionPool.BetSide.Lt);
 
-        // 3. player_02 tries betting again
-        vm.prank(player_02);
+        // 3. player02 tries betting again
+        vm.prank(player02);
         vm.expectRevert(PredictionPool_CanBetOnlyOncePerRound.selector);
         pPool.betOn{value: betOnValue}(round.id, PredictionPool.BetSide.Lt);
     }
 
     // === roundIsReadyForUpkeep Tests ===
     function test_roundIsReadyForUpkeep_ReturnsTrueWhenRoundHasEndend() public {
-        // 1. player_01 creates new round
-        (PredictionPool.Round memory round,,,) = _player01_createRound();
+        // 1. player01 creates new round
+        (PredictionPool.Round memory round,,,) = _player01CreateRound();
 
         vm.warp(round.end);
 
@@ -287,8 +287,8 @@ contract PredictionPoolTest is Test, Constants_PredictionPool {
     }
 
     function test_roundIsReadyForUpkeep_ReturnsFalseWhenRoundHasNotEndend() public {
-        // 1. player_01 creates new round
-        (PredictionPool.Round memory round,,,) = _player01_createRound();
+        // 1. player01 creates new round
+        (PredictionPool.Round memory round,,,) = _player01CreateRound();
 
         vm.warp(round.end - 1);
 
@@ -302,14 +302,14 @@ contract PredictionPoolTest is Test, Constants_PredictionPool {
         // 1.1. set mockPriceFeed return value
         mockPriceFeed.updateAnswer(100);
 
-        // 2. player_01 create a round on mockPriceFeed
+        // 2. player01 create a round on mockPriceFeed
         address feed = address(mockPriceFeed);
         uint256 target = 10;
         PredictionPool.BetSide betSide = PredictionPool.BetSide.Gte;
         uint256 duration = 2 minutes;
 
         // hoax => prank & fund
-        hoax(player_01);
+        hoax(player01);
         pPool.createRound{value: betValue}(feed, target, betSide, duration);
 
         PredictionPool.Round memory round = pPool.getRound(0);
@@ -330,7 +330,7 @@ contract PredictionPoolTest is Test, Constants_PredictionPool {
         _ownerAddMockPriceFeed(address(pPool));
         mockPriceFeed.updateAnswer(100); // Price = 100
 
-        hoax(player_01);
+        hoax(player01);
         pPool.createRound{value: betValue}(address(mockPriceFeed), 100, PredictionPool.BetSide.Gte, 2 minutes);
 
         vm.warp(block.timestamp + 2 minutes + 1);
@@ -342,7 +342,7 @@ contract PredictionPoolTest is Test, Constants_PredictionPool {
         PredictionPool.Round memory round = pPool.getRound(0);
 
         assertEq(uint8(round.status), uint8(PredictionPool.RoundStatus.Resolved));
-        assertTrue(pPool.isRoundWinner(0, player_01)); // Player_01 should be a winner (GTE, price == target)
+        assertTrue(pPool.isRoundWinner(0, player01)); // player01 should be a winner (GTE, price == target)
     }
 
     /// @dev Tests _resolveRound when price equals target and player makes WRONG price move prediction.
@@ -350,7 +350,7 @@ contract PredictionPoolTest is Test, Constants_PredictionPool {
         _ownerAddMockPriceFeed(address(pPool));
         mockPriceFeed.updateAnswer(100); // Price = 100
 
-        hoax(player_01);
+        hoax(player01);
         pPool.createRound{value: betValue}(address(mockPriceFeed), 100, PredictionPool.BetSide.Lt, 2 minutes);
 
         vm.warp(block.timestamp + 2 minutes + 1);
@@ -362,7 +362,7 @@ contract PredictionPoolTest is Test, Constants_PredictionPool {
         PredictionPool.Round memory round = pPool.getRound(0);
 
         assertEq(uint8(round.status), uint8(PredictionPool.RoundStatus.Resolved));
-        assertFalse(pPool.isRoundWinner(0, player_01)); // Player_01 should NOT be a winner (LT, price == target)
+        assertFalse(pPool.isRoundWinner(0, player01)); // player01 should NOT be a winner (LT, price == target)
     }
 
     // === claimReward Tests ===
@@ -378,7 +378,7 @@ contract PredictionPoolTest is Test, Constants_PredictionPool {
         mockPriceFeed.updateAnswer(100);
 
         /**
-         * 2. player_01 create a round on mockPriceFeed
+         * 2. player01 create a round on mockPriceFeed
          * - predict target price < mockPriceFeed (=> 100)
          * - predict upside
          */
@@ -388,7 +388,7 @@ contract PredictionPoolTest is Test, Constants_PredictionPool {
         uint256 duration = 2 minutes;
 
         // hoax => prank & fund
-        hoax(player_01);
+        hoax(player01);
         pPool.createRound{value: betValue}(feed, target, betSide, duration);
 
         PredictionPool.Round memory round = pPool.getRound(0);
@@ -399,7 +399,7 @@ contract PredictionPoolTest is Test, Constants_PredictionPool {
         roundIds[0] = round.id;
 
         vm.expectEmit();
-        emit PredictionPool.PredictionPool_RoundResolved(round.id, player_01, true);
+        emit PredictionPool.PredictionPool_RoundResolved(round.id, player01, true);
         pPool.performUpkeep(abi.encode(roundIds));
 
         // 3.1. Verify the Round is Resolved
@@ -407,13 +407,13 @@ contract PredictionPoolTest is Test, Constants_PredictionPool {
         assertEq(uint8(resolvedRound.status), uint8(PredictionPool.RoundStatus.Resolved));
 
         // 4. Claim reward as a winner
-        vm.prank(player_01);
+        vm.prank(player01);
         vm.expectEmit();
-        emit PredictionPool.PredictionPool_RewardClaimed(round.id, player_01, betValue);
+        emit PredictionPool.PredictionPool_RewardClaimed(round.id, player01, betValue);
         pPool.claimReward(round.id);
 
         // 4.1. Verify the reward was claimed
-        (,, bool claimed) = pPool.roundToPlayerBet(round.id, player_01);
+        (,, bool claimed) = pPool.roundToPlayerBet(round.id, player01);
         assertEq(claimed, true);
     }
 
@@ -422,12 +422,12 @@ contract PredictionPoolTest is Test, Constants_PredictionPool {
         _ownerAddMockPriceFeed(address(pPool));
         mockPriceFeed.updateAnswer(100); // Price = 100
 
-        // player_01 creates a round and bets Gte (target = 10, so they win)
-        hoax(player_01);
+        // player01 creates a round and bets Gte (target = 10, so they win)
+        hoax(player01);
         pPool.createRound{value: betValue}(address(mockPriceFeed), 10, PredictionPool.BetSide.Gte, 2 minutes);
 
-        // player_02 bets Gte (also wins)
-        hoax(player_02);
+        // player02 bets Gte (also wins)
+        hoax(player02);
         pPool.betOn{value: betOnValue}(0, PredictionPool.BetSide.Gte);
 
         // Resolve the round
@@ -438,27 +438,27 @@ contract PredictionPoolTest is Test, Constants_PredictionPool {
 
         // Calculate expected rewards
         uint256 totalPool = betValue + betOnValue;
-        uint256 p1Weight = pPool.getBetWeight(0, player_01);
-        uint256 p2Weight = pPool.getBetWeight(0, player_02);
+        uint256 p1Weight = pPool.getBetWeight(0, player01);
+        uint256 p2Weight = pPool.getBetWeight(0, player02);
         uint256 totalWeight = p1Weight + p2Weight;
         uint256 p1Reward = (totalPool * p1Weight) / totalWeight;
         uint256 p2Reward = (totalPool * p2Weight) / totalWeight;
 
         // Claim rewards
-        vm.prank(player_01);
+        vm.prank(player01);
         vm.expectEmit();
-        emit PredictionPool.PredictionPool_RewardClaimed(0, player_01, p1Reward);
+        emit PredictionPool.PredictionPool_RewardClaimed(0, player01, p1Reward);
         pPool.claimReward(0);
 
-        vm.prank(player_02);
+        vm.prank(player02);
         vm.expectEmit();
-        emit PredictionPool.PredictionPool_RewardClaimed(0, player_02, p2Reward);
+        emit PredictionPool.PredictionPool_RewardClaimed(0, player02, p2Reward);
         pPool.claimReward(0);
     }
 
     /// @dev Tests that a "last second" bet in a very long round has minimal weight and receives minimal reward.
     function test_claimReward_EdgeCase_LastSecondBet_LongDuration() public {
-        uint256 SAME_BET = betValue;
+        uint256 sameBet = betValue;
 
         _ownerAddMockPriceFeed(address(pPool));
         mockPriceFeed.updateAnswer(100); // Price = 100
@@ -466,18 +466,18 @@ contract PredictionPoolTest is Test, Constants_PredictionPool {
         // Use a very long duration (e.g., 1 year) to exaggerate the weight difference
         uint256 longDuration = 365 days;
 
-        // player_01 creates a round and bets Gte (target = 10, so they win)
-        hoax(player_01);
-        pPool.createRound{value: SAME_BET}(address(mockPriceFeed), 10, PredictionPool.BetSide.Gte, longDuration);
+        // player01 creates a round and bets Gte (target = 10, so they win)
+        hoax(player01);
+        pPool.createRound{value: sameBet}(address(mockPriceFeed), 10, PredictionPool.BetSide.Gte, longDuration);
 
         // Get the round's end time
         PredictionPool.Round memory round = pPool.getRound(0);
         uint256 roundEnd = round.end;
 
-        // player_02 bets Gte at the "last second" (just before round ends)
+        // player02 bets Gte at the "last second" (just before round ends)
         vm.warp(roundEnd - 1); // Set block.timestamp to 1 second before round ends
-        hoax(player_02);
-        pPool.betOn{value: SAME_BET}(0, PredictionPool.BetSide.Gte);
+        hoax(player02);
+        pPool.betOn{value: sameBet}(0, PredictionPool.BetSide.Gte);
 
         // Resolve the round (time travel to after round ends)
         vm.warp(roundEnd + 1);
@@ -486,31 +486,31 @@ contract PredictionPoolTest is Test, Constants_PredictionPool {
         pPool.performUpkeep(abi.encode(roundIds));
 
         // Check the weights
-        uint256 p1Weight = pPool.getBetWeight(0, player_01);
-        uint256 p2Weight = pPool.getBetWeight(0, player_02);
+        uint256 p1Weight = pPool.getBetWeight(0, player01);
+        uint256 p2Weight = pPool.getBetWeight(0, player02);
 
-        // Assert that player_02's weight is extremely small (close to zero)
+        // Assert that player02's weight is extremely small (close to zero)
         // With a 1-year round, (round.end - bet.time) is just 1 second, so weight should be negligible
         assertLt(p2Weight, p1Weight / 1_000_000);
 
         // Calculate expected rewards
-        uint256 totalPool = 2 * SAME_BET;
+        uint256 totalPool = 2 * sameBet;
         uint256 totalWeight = p1Weight + p2Weight;
         uint256 p1Reward = (totalPool * p1Weight) / totalWeight;
         uint256 p2Reward = (totalPool * p2Weight) / totalWeight;
 
-        // Assert that player_02's reward is extremely small (close to zero)
+        // Assert that player02's reward is extremely small (close to zero)
         assertLt(p2Reward, p1Reward / 1_000_000);
 
         // Claim rewards
-        vm.prank(player_01);
+        vm.prank(player01);
         vm.expectEmit();
-        emit PredictionPool.PredictionPool_RewardClaimed(0, player_01, p1Reward);
+        emit PredictionPool.PredictionPool_RewardClaimed(0, player01, p1Reward);
         pPool.claimReward(0);
 
-        vm.prank(player_02);
+        vm.prank(player02);
         vm.expectEmit();
-        emit PredictionPool.PredictionPool_RewardClaimed(0, player_02, p2Reward);
+        emit PredictionPool.PredictionPool_RewardClaimed(0, player02, p2Reward);
         pPool.claimReward(0);
     }
 
@@ -527,7 +527,7 @@ contract PredictionPoolTest is Test, Constants_PredictionPool {
         mockPriceFeed.updateAnswer(100);
 
         /**
-         * 2. player_01 create a round on mockPriceFeed
+         * 2. player01 create a round on mockPriceFeed
          * - predict target price > mockPriceFeed (=> 100)
          * - predict upside
          */
@@ -537,7 +537,7 @@ contract PredictionPoolTest is Test, Constants_PredictionPool {
         uint256 duration = 2 minutes;
 
         // hoax => prank & fund
-        hoax(player_01);
+        hoax(player01);
         pPool.createRound{value: betValue}(feed, target, betSide, duration);
 
         PredictionPool.Round memory round = pPool.getRound(0);
@@ -548,7 +548,7 @@ contract PredictionPoolTest is Test, Constants_PredictionPool {
         roundIds[0] = round.id;
 
         vm.expectEmit();
-        emit PredictionPool.PredictionPool_RoundResolved(round.id, player_01, false);
+        emit PredictionPool.PredictionPool_RoundResolved(round.id, player01, false);
         pPool.performUpkeep(abi.encode(roundIds));
 
         // 3.1. Verify the Round is Resolved
@@ -556,12 +556,12 @@ contract PredictionPoolTest is Test, Constants_PredictionPool {
         assertEq(uint8(resolvedRound.status), uint8(PredictionPool.RoundStatus.Resolved));
 
         // 4. Claim reward as a NOT-winner
-        vm.prank(player_01);
+        vm.prank(player01);
         vm.expectRevert(PredictionPool_NotAWinner.selector);
         pPool.claimReward(round.id);
 
         // 4.1. Verify the reward was NOT claimed
-        (,, bool claimed) = pPool.roundToPlayerBet(round.id, player_01);
+        (,, bool claimed) = pPool.roundToPlayerBet(round.id, player01);
         assertEq(claimed, false);
     }
 
@@ -579,7 +579,7 @@ contract PredictionPoolTest is Test, Constants_PredictionPool {
         mockPriceFeed.updateAnswer(100);
 
         /**
-         * 2. player_01 create a round on mockPriceFeed
+         * 2. player01 create a round on mockPriceFeed
          * - predict target price < mockPriceFeed (=> 100)
          * - predict downside
          */
@@ -589,7 +589,7 @@ contract PredictionPoolTest is Test, Constants_PredictionPool {
         uint256 duration = 2 minutes;
 
         // hoax => prank & fund
-        hoax(player_01);
+        hoax(player01);
         pPool.createRound{value: betValue}(feed, target, betSide, duration);
 
         PredictionPool.Round memory round = pPool.getRound(0);
@@ -600,7 +600,7 @@ contract PredictionPoolTest is Test, Constants_PredictionPool {
         roundIds[0] = round.id;
 
         vm.expectEmit();
-        emit PredictionPool.PredictionPool_RoundResolved(round.id, player_01, false);
+        emit PredictionPool.PredictionPool_RoundResolved(round.id, player01, false);
         pPool.performUpkeep(abi.encode(roundIds));
 
         // 3.1. Verify the Round is Resolved
@@ -608,12 +608,12 @@ contract PredictionPoolTest is Test, Constants_PredictionPool {
         assertEq(uint8(resolvedRound.status), uint8(PredictionPool.RoundStatus.Resolved));
 
         // 4. Claim reward as a NOT-winner
-        vm.prank(player_01);
+        vm.prank(player01);
         vm.expectRevert(PredictionPool_NotAWinner.selector);
         pPool.claimReward(round.id);
 
         // 4.1. Verify the reward was NOT claimed
-        (,, bool claimed) = pPool.roundToPlayerBet(round.id, player_01);
+        (,, bool claimed) = pPool.roundToPlayerBet(round.id, player01);
         assertEq(claimed, false);
     }
 
@@ -625,7 +625,7 @@ contract PredictionPoolTest is Test, Constants_PredictionPool {
         mockPriceFeed.updateAnswer(100);
 
         /**
-         * 2. player_01 create a round on mockPriceFeed
+         * 2. player01 create a round on mockPriceFeed
          * - predict target price < mockPriceFeed (=> 100)
          * - predict upside
          */
@@ -635,7 +635,7 @@ contract PredictionPoolTest is Test, Constants_PredictionPool {
         uint256 duration = 2 minutes;
 
         // hoax => prank & fund
-        hoax(player_01);
+        hoax(player01);
         pPool.createRound{value: betValue}(feed, target, betSide, duration);
 
         PredictionPool.Round memory round = pPool.getRound(0);
@@ -646,12 +646,12 @@ contract PredictionPoolTest is Test, Constants_PredictionPool {
         assertEq(uint8(resolvedRound.status), uint8(PredictionPool.RoundStatus.Active));
 
         // 4. Claim reward as a winner
-        vm.prank(player_01);
+        vm.prank(player01);
         vm.expectRevert(PredictionPool_RoundNotResolved.selector);
         pPool.claimReward(round.id);
 
         // 4.1. Verify the reward was NOT claimed
-        (,, bool claimed) = pPool.roundToPlayerBet(round.id, player_01);
+        (,, bool claimed) = pPool.roundToPlayerBet(round.id, player01);
         assertEq(claimed, false);
     }
 
@@ -663,7 +663,7 @@ contract PredictionPoolTest is Test, Constants_PredictionPool {
         mockPriceFeed.updateAnswer(100);
 
         /**
-         * 2. player_01 create a round on mockPriceFeed
+         * 2. player01 create a round on mockPriceFeed
          * - predict target price < mockPriceFeed (=> 100)
          * - predict upside
          */
@@ -673,7 +673,7 @@ contract PredictionPoolTest is Test, Constants_PredictionPool {
         uint256 duration = 2 minutes;
 
         // hoax => prank & fund
-        hoax(player_01);
+        hoax(player01);
         pPool.createRound{value: betValue}(feed, target, betSide, duration);
 
         PredictionPool.Round memory round = pPool.getRound(0);
@@ -689,22 +689,22 @@ contract PredictionPoolTest is Test, Constants_PredictionPool {
         assertEq(uint8(resolvedRound.status), uint8(PredictionPool.RoundStatus.Resolved));
 
         // 4. Claim reward as a winner
-        vm.prank(player_01);
+        vm.prank(player01);
         vm.expectEmit();
-        emit PredictionPool.PredictionPool_RewardClaimed(round.id, player_01, betValue);
+        emit PredictionPool.PredictionPool_RewardClaimed(round.id, player01, betValue);
         pPool.claimReward(round.id);
 
         // 4.1. Verify the reward was claimed
-        (,, bool claimed) = pPool.roundToPlayerBet(round.id, player_01);
+        (,, bool claimed) = pPool.roundToPlayerBet(round.id, player01);
         assertEq(claimed, true);
 
         // 5. Try to Claim reward again
-        vm.prank(player_01);
+        vm.prank(player01);
         vm.expectRevert(PredictionPool_AlreadyClaimed.selector);
         pPool.claimReward(round.id);
 
         // 4.1. Verify the reward is still marked as claimed
-        (,, claimed) = pPool.roundToPlayerBet(round.id, player_01);
+        (,, claimed) = pPool.roundToPlayerBet(round.id, player01);
         assertEq(claimed, true);
     }
 
@@ -712,17 +712,17 @@ contract PredictionPoolTest is Test, Constants_PredictionPool {
     /// @dev Tests that getBetWeight returns the correct weight for a bet.
     function test_getBetWeight() public {
         // 1. Create a round
-        (PredictionPool.Round memory round,,,) = _player01_createRound();
+        (PredictionPool.Round memory round,,,) = _player01CreateRound();
 
-        // 2. Get the bet for player_01
+        // 2. Get the bet for player01
         (
             uint256 betAmount, // eth amount placed for this bet
             uint256 betTime, // timestamp when user placed its bet on roundId
             // bool claimed
-        ) = pPool.roundToPlayerBet(round.id, player_01);
+        ) = pPool.roundToPlayerBet(round.id, player01);
 
-        // 3. Get the bet weight for player_01
-        uint256 weight = pPool.getBetWeight(round.id, player_01);
+        // 3. Get the bet weight for player01
+        uint256 weight = pPool.getBetWeight(round.id, player01);
 
         // 4. Verify the weight is non-zero
         assertGt(weight, 0);
@@ -737,35 +737,35 @@ contract PredictionPoolTest is Test, Constants_PredictionPool {
     /// @dev Tests that getTotalWeight returns the correct total weight for a round.
     function test_getTotalWeight() public {
         // 1. Create a round
-        (PredictionPool.Round memory round,,,) = _player01_createRound();
+        (PredictionPool.Round memory round,,,) = _player01CreateRound();
 
         // 2. Add a second player's bet
-        hoax(player_02);
+        hoax(player02);
         pPool.betOn{value: betOnValue}(round.id, PredictionPool.BetSide.Lt);
 
         // 3. Get the total weight
         uint256 totalWeight = pPool.getTotalWeight(round.id);
 
         // 4. Verify the total weight is the sum of individual weights
-        uint256 p1Weight = pPool.getBetWeight(round.id, player_01);
-        uint256 p2Weight = pPool.getBetWeight(round.id, player_02);
+        uint256 p1Weight = pPool.getBetWeight(round.id, player01);
+        uint256 p2Weight = pPool.getBetWeight(round.id, player02);
         assertEq(totalWeight, p1Weight + p2Weight);
     }
 
     /// @dev Tests getTotalWeight with only GTE bets.
     function test_getTotalWeight_OnlyGteBets() public {
-        (PredictionPool.Round memory round,,,) = _player01_createRound();
+        (PredictionPool.Round memory round,,,) = _player01CreateRound();
         uint256 totalWeight = pPool.getTotalWeight(round.id);
-        assertEq(totalWeight, pPool.getBetWeight(round.id, player_01));
+        assertEq(totalWeight, pPool.getBetWeight(round.id, player01));
     }
 
     /// @dev Tests getTotalWeight with only LT bets.
     function test_getTotalWeight_OnlyLtBets() public {
-        (PredictionPool.Round memory round,,,) = _player01_createRound();
-        hoax(player_02);
+        (PredictionPool.Round memory round,,,) = _player01CreateRound();
+        hoax(player02);
         pPool.betOn{value: betOnValue}(round.id, PredictionPool.BetSide.Lt);
         uint256 totalWeight = pPool.getTotalWeight(round.id);
-        assertEq(totalWeight, pPool.getBetWeight(round.id, player_01) + pPool.getBetWeight(round.id, player_02));
+        assertEq(totalWeight, pPool.getBetWeight(round.id, player01) + pPool.getBetWeight(round.id, player02));
     }
 
     // === toggleAllowPriceFeed Tests ===
@@ -826,7 +826,7 @@ contract PredictionPoolTest is Test, Constants_PredictionPool {
 
     function test_toggleAllowPriceFeed_RevertWhen_Notowner() public {
         // Not-owner tries to toggle Allow PriceFeed
-        vm.prank(player_01);
+        vm.prank(player01);
         vm.expectRevert(abi.encode("Ownable: caller is not the owner"));
         pPool.toggleAllowPriceFeed(SEPOLIA_LINK_USD);
     }
@@ -868,7 +868,7 @@ contract PredictionPoolTest is Test, Constants_PredictionPool {
     function test_setRoundDuration_RevertWhen_Notowner() public {
         // Not-owner tries to change minRoundDuration
         uint256 newDuration = 10 minutes;
-        vm.prank(player_01);
+        vm.prank(player01);
         vm.expectRevert(abi.encode("Ownable: caller is not the owner"));
         pPool.setRoundDuration(newDuration);
     }
@@ -956,7 +956,7 @@ contract PredictionPoolTest is Test, Constants_PredictionPool {
     }
 
     // === Helpers ===
-    function _player01_createRound()
+    function _player01CreateRound()
         internal
         returns (PredictionPool.Round memory round, address feed, uint256 target, uint256 duration)
     {
@@ -965,7 +965,7 @@ contract PredictionPoolTest is Test, Constants_PredictionPool {
         duration = 2 minutes;
 
         // hoax => prank & fund
-        hoax(player_01);
+        hoax(player01);
 
         pPool.createRound{value: betValue}(feed, target, PredictionPool.BetSide.Gte, duration);
 

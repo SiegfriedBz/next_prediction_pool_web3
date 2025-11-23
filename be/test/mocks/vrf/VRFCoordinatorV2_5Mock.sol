@@ -10,9 +10,9 @@ import {VRFConsumerBaseV2Plus} from "@chainlink/VRFConsumerBaseV2Plus.sol";
 import {SubscriptionAPI} from "@chainlink/SubscriptionAPI.sol";
 
 contract VRFCoordinatorV2_5Mock is SubscriptionAPI, IVRFCoordinatorV2Plus {
-    uint96 public immutable i_base_fee;
-    uint96 public immutable i_gas_price;
-    int256 public immutable i_wei_per_unit_link;
+    uint96 public immutable I_BASE_FEE;
+    uint96 public immutable I_GAS_PRICE;
+    int256 public immutable I_WEI_PER_UNIT_LINK;
 
     error InvalidRequest();
     error InvalidRandomWords();
@@ -41,9 +41,9 @@ contract VRFCoordinatorV2_5Mock is SubscriptionAPI, IVRFCoordinatorV2Plus {
     );
     event ConfigSet();
 
-    uint64 internal s_currentSubId;
-    uint256 internal s_nextRequestId = 1;
-    uint256 internal s_nextPreSeed = 100;
+    uint64 internal sCurrentSubId;
+    uint256 internal sNextRequestId = 1;
+    uint256 internal sNextPreSeed = 100;
 
     struct Request {
         uint256 subId;
@@ -51,12 +51,12 @@ contract VRFCoordinatorV2_5Mock is SubscriptionAPI, IVRFCoordinatorV2Plus {
         uint32 numWords;
         bytes extraArgs;
     }
-    mapping(uint256 => Request) internal s_requests; /* requestId */ /* request */
+    mapping(uint256 => Request) internal sRequests; /* requestId */ /* request */
 
     constructor(uint96 _baseFee, uint96 _gasPrice, int256 _weiPerUnitLink) SubscriptionAPI() {
-        i_base_fee = _baseFee;
-        i_gas_price = _gasPrice;
-        i_wei_per_unit_link = _weiPerUnitLink;
+        I_BASE_FEE = _baseFee;
+        I_GAS_PRICE = _gasPrice;
+        I_WEI_PER_UNIT_LINK = _weiPerUnitLink;
         setConfig();
     }
 
@@ -113,10 +113,10 @@ contract VRFCoordinatorV2_5Mock is SubscriptionAPI, IVRFCoordinatorV2Plus {
      */
     function fulfillRandomWordsWithOverride(uint256 _requestId, address _consumer, uint256[] memory _words) public {
         uint256 startGas = gasleft();
-        if (s_requests[_requestId].subId == 0) {
+        if (sRequests[_requestId].subId == 0) {
             revert InvalidRequest();
         }
-        Request memory req = s_requests[_requestId];
+        Request memory req = sRequests[_requestId];
 
         if (_words.length == 0) {
             _words = new uint256[](req.numWords);
@@ -136,15 +136,15 @@ contract VRFCoordinatorV2_5Mock is SubscriptionAPI, IVRFCoordinatorV2Plus {
 
         bool nativePayment = uint8(req.extraArgs[req.extraArgs.length - 1]) == 1;
 
-        uint256 rawPayment = i_base_fee + ((startGas - gasleft()) * i_gas_price);
+        uint256 rawPayment = I_BASE_FEE + ((startGas - gasleft()) * I_GAS_PRICE);
         if (!nativePayment) {
-            rawPayment = (1e18 * rawPayment) / uint256(i_wei_per_unit_link);
+            rawPayment = (1e18 * rawPayment) / uint256(I_WEI_PER_UNIT_LINK);
         }
         uint96 payment = uint96(rawPayment);
 
         _chargePayment(payment, nativePayment, req.subId);
 
-        delete (s_requests[_requestId]);
+        delete (sRequests[_requestId]);
         emit RandomWordsFulfilled(_requestId, _requestId, req.subId, payment, nativePayment, success, false);
     }
 
@@ -207,11 +207,11 @@ contract VRFCoordinatorV2_5Mock is SubscriptionAPI, IVRFCoordinatorV2Plus {
             revert InvalidSubscription();
         }
 
-        uint256 requestId = s_nextRequestId++;
-        uint256 preSeed = s_nextPreSeed++;
+        uint256 requestId = sNextRequestId++;
+        uint256 preSeed = sNextPreSeed++;
 
         bytes memory extraArgsBytes = VRFV2PlusClient._argsToBytes(_fromBytes(_req.extraArgs));
-        s_requests[requestId] = Request({
+        sRequests[requestId] = Request({
             subId: _req.subId,
             callbackGasLimit: _req.callbackGasLimit,
             numWords: _req.numWords,

@@ -6,8 +6,7 @@ import {
     PredictionPoolToken,
 
     // errors
-    PredictionPoolToken_NoZeroAddress,
-    PredictionPoolToken_RequestAlreadyFulfilled
+    PredictionPoolToken_NoZeroAddress
 } from "../src/PredictionPoolToken.sol";
 import {PredictionPoolTokenScript} from "../script/PredictionPoolTokenScript.s.sol";
 import {Constants_PredictionPoolToken} from "../script/Constants_PredictionPoolToken.sol";
@@ -18,8 +17,8 @@ contract PredictionPoolTokenTest is Test, Constants_PredictionPoolToken {
     VRFCoordinatorV2_5Mock public vrfCoordinatorMock;
 
     address owner = address(uint160(uint256(vm.envUint("MY_ADDRESS"))));
-    address winner_01 = makeAddr("winner_01");
-    address winner_02 = makeAddr("winner_02");
+    address winner01 = makeAddr("winner01");
+    address winner02 = makeAddr("winner02");
     address nonAdmin = makeAddr("nonAdmin");
     address nonMinter = makeAddr("nonMinter");
     address zeroAddress = address(0);
@@ -65,29 +64,29 @@ contract PredictionPoolTokenTest is Test, Constants_PredictionPoolToken {
         assertEq(pPoolToken.owner(), owner);
         assertTrue(pPoolToken.hasRole(pPoolToken.DEFAULT_ADMIN_ROLE(), owner));
         assertTrue(pPoolToken.hasRole(pPoolToken.MINTER_ROLE(), owner));
-        assertEq(pPoolToken.i_maxTokenId(), MAX_TOKEN_ID);
-        assertEq(pPoolToken.i_vrf_keyHash(), SEPOLIA_VRF_500GweiKeyHash);
-        assertEq(pPoolToken.i_linkToken(), SEPOLIA_LINK_TOKEN);
+        assertEq(pPoolToken.I_MAX_TOKEN_ID(), MAX_TOKEN_ID);
+        assertEq(pPoolToken.I_VRF_KEY_HASH(), SEPOLIA_VRF_500_GWEI_KEY_HASH);
+        assertEq(pPoolToken.I_LINK_TOKEN(), SEPOLIA_LINK_TOKEN);
     }
 
     // === Mint Tests ===
-    function test_mint_Emits_RequestSent_Event() public {
+    function test_mint_EmitsRequestsent_Event() public {
         // Mint a pPoolToken as owner
         vm.expectEmit();
-        emit PredictionPoolToken.PredictionPoolToken_RequestSent(winner_01, 1);
+        emit PredictionPoolToken.PredictionPoolToken_RequestSent(winner01, 1);
 
         vm.prank(owner);
-        pPoolToken.mint(winner_01); // => Request ID = 1
+        pPoolToken.mint(winner01); // => Request ID = 1
     }
 
     function test_mint_StoresRequest() public {
         // Mint a pPoolToken as owner
         vm.prank(owner);
-        pPoolToken.mint(winner_01);
+        pPoolToken.mint(winner01);
 
         // Verify the request is stored
-        (address requestTo, bool requestFulfilled, bool requestExists) = pPoolToken.s_requests(1);
-        assertEq(requestTo, winner_01);
+        (address requestTo, bool requestFulfilled, bool requestExists) = pPoolToken.sRequests(1);
+        assertEq(requestTo, winner01);
         assertFalse(requestFulfilled);
         assertTrue(requestExists);
     }
@@ -95,7 +94,7 @@ contract PredictionPoolTokenTest is Test, Constants_PredictionPoolToken {
     function test_mint_WhenFulfilledRequest_Emits_Mint_Event() public {
         // Mint a pPoolToken as owner
         vm.prank(owner);
-        pPoolToken.mint(winner_01); // => Request ID = 1
+        pPoolToken.mint(winner01); // => Request ID = 1
 
         // Simulate VRF fulfillment with a fixed random number
         uint256[] memory randomWords = new uint256[](1);
@@ -103,7 +102,7 @@ contract PredictionPoolTokenTest is Test, Constants_PredictionPoolToken {
         uint256 expectedTokenId = 42 % MAX_TOKEN_ID;
 
         vm.expectEmit();
-        emit PredictionPoolToken.PredictionPoolToken_Mint(winner_01, expectedTokenId);
+        emit PredictionPoolToken.PredictionPoolToken_Mint(winner01, expectedTokenId);
 
         hoax(owner);
         vrfCoordinatorMock.fulfillRandomWordsWithOverride(1, address(pPoolToken), randomWords);
@@ -111,40 +110,40 @@ contract PredictionPoolTokenTest is Test, Constants_PredictionPoolToken {
 
     function test_multipleMints() public {
         hoax(owner);
-        pPoolToken.mint(winner_01); // => Request ID = 1
+        pPoolToken.mint(winner01); // => Request ID = 1
         hoax(owner);
-        pPoolToken.mint(winner_02); // => Request ID = 2
+        pPoolToken.mint(winner02); // => Request ID = 2
 
         // Fulfill both requests
-        uint256[] memory randomWords_01 = new uint256[](1);
-        randomWords_01[0] = 42;
-        uint256 expectedTokenId_01 = 42 % MAX_TOKEN_ID;
+        uint256[] memory randomWords01 = new uint256[](1);
+        randomWords01[0] = 42;
+        uint256 expectedTokenId01 = 42 % MAX_TOKEN_ID;
 
-        uint256[] memory randomWords_02 = new uint256[](1);
-        randomWords_02[0] = 24;
-        uint256 expectedTokenId_02 = 24 % MAX_TOKEN_ID;
+        uint256[] memory randomWords02 = new uint256[](1);
+        randomWords02[0] = 24;
+        uint256 expectedTokenId02 = 24 % MAX_TOKEN_ID;
 
         // Fullfill & Verify Mint Events
         vm.expectEmit();
-        emit PredictionPoolToken.PredictionPoolToken_Mint(winner_01, expectedTokenId_01);
+        emit PredictionPoolToken.PredictionPoolToken_Mint(winner01, expectedTokenId01);
         hoax(owner);
-        vrfCoordinatorMock.fulfillRandomWordsWithOverride(1, address(pPoolToken), randomWords_01);
+        vrfCoordinatorMock.fulfillRandomWordsWithOverride(1, address(pPoolToken), randomWords01);
 
         vm.expectEmit();
-        emit PredictionPoolToken.PredictionPoolToken_Mint(winner_02, expectedTokenId_02);
+        emit PredictionPoolToken.PredictionPoolToken_Mint(winner02, expectedTokenId02);
         hoax(owner);
-        vrfCoordinatorMock.fulfillRandomWordsWithOverride(2, address(pPoolToken), randomWords_02);
+        vrfCoordinatorMock.fulfillRandomWordsWithOverride(2, address(pPoolToken), randomWords02);
 
         // Verify tokens were minted
-        assertEq(pPoolToken.balanceOf(winner_01, expectedTokenId_01), 1);
-        assertEq(pPoolToken.balanceOf(winner_02, expectedTokenId_02), 1);
+        assertEq(pPoolToken.balanceOf(winner01, expectedTokenId01), 1);
+        assertEq(pPoolToken.balanceOf(winner02, expectedTokenId02), 1);
     }
 
     function test_mint_RevertWhen_NotMinter() public {
         // Try to mint as a non-minter
         vm.prank(nonMinter);
         vm.expectRevert();
-        pPoolToken.mint(winner_01);
+        pPoolToken.mint(winner01);
     }
 
     function test_mint_RevertWhen_MintToZeroAddress() public {
@@ -166,7 +165,7 @@ contract PredictionPoolTokenTest is Test, Constants_PredictionPoolToken {
         vm.prank(owner);
         pPoolToken.setVrfSubscriptionId(newSubId);
 
-        assertEq(pPoolToken.s_vrf_subId(), newSubId);
+        assertEq(pPoolToken.sVrfSubId(), newSubId);
     }
 
     function test_setVrfSubscriptionId_RevertWhen_NotAdmin() public {
@@ -186,8 +185,8 @@ contract PredictionPoolTokenTest is Test, Constants_PredictionPoolToken {
         emit PredictionPoolToken.PredictionPoolToken_UpdateVrfSettings(requestConfirmations, callbackGasLimit);
         pPoolToken.updateVrfSettings(requestConfirmations, callbackGasLimit);
 
-        assertEq(pPoolToken.s_vrf_requestConfirmations(), requestConfirmations);
-        assertEq(pPoolToken.s_vrf_callbackGasLimit(), callbackGasLimit);
+        assertEq(pPoolToken.sVrfRequestConfirmations(), requestConfirmations);
+        assertEq(pPoolToken.sVrfCallbackGasLimit(), callbackGasLimit);
     }
 
     function test_updateVrfSettings_RevertWhen_NotAdmin() public {
@@ -202,68 +201,68 @@ contract PredictionPoolTokenTest is Test, Constants_PredictionPoolToken {
     // === grantRole Tests ===
     function test_grantRole_SetMinterRole() public {
         vm.prank(owner);
-        pPoolToken.grantRole(minterRole, winner_01);
+        pPoolToken.grantRole(minterRole, winner01);
 
-        assertTrue(pPoolToken.hasRole(minterRole, winner_01));
+        assertTrue(pPoolToken.hasRole(minterRole, winner01));
     }
 
     function test_grantRole__RevertWhen_NotAdmin() public {
         vm.prank(nonAdmin);
         vm.expectRevert();
-        pPoolToken.grantRole(minterRole, winner_01);
+        pPoolToken.grantRole(minterRole, winner01);
 
-        assertFalse(pPoolToken.hasRole(minterRole, winner_01));
+        assertFalse(pPoolToken.hasRole(minterRole, winner01));
     }
 
     // === VRF Fulfillment Tests ===
     function test_fulfillRandomWords() public {
         // Mint a pPoolToken to trigger a VRF request
         hoax(owner);
-        pPoolToken.mint(winner_01); // => Request ID = 1
+        pPoolToken.mint(winner01); // => Request ID = 1
 
         // Simulate VRF fulfillment with a fixed random number
         uint256[] memory randomWords = new uint256[](1);
         randomWords[0] = 42;
 
         vm.expectEmit();
-        emit PredictionPoolToken.PredictionPoolToken_RequestFulfilled(winner_01, 1);
+        emit PredictionPoolToken.PredictionPoolToken_RequestFulfilled(winner01, 1);
 
         hoax(owner);
         vrfCoordinatorMock.fulfillRandomWordsWithOverride(1, address(pPoolToken), randomWords);
 
-        // Verify the pPoolToken was minted to the winner_01
-        uint256 expectedTokenId_01 = 42 % MAX_TOKEN_ID;
+        // Verify the pPoolToken was minted to the winner01
+        uint256 expectedTokenId01 = 42 % MAX_TOKEN_ID;
 
-        assertEq(pPoolToken.balanceOf(winner_01, expectedTokenId_01), 1);
+        assertEq(pPoolToken.balanceOf(winner01, expectedTokenId01), 1);
     }
 
     function test_fulfillRandomWords_EdgeCaseTokenIds_Zero() public {
         hoax(owner);
-        pPoolToken.mint(winner_01);
+        pPoolToken.mint(winner01);
 
         uint256[] memory randomWords = new uint256[](1);
         randomWords[0] = 0; // Edge case: random number = 0
 
         hoax(owner);
         vrfCoordinatorMock.fulfillRandomWordsWithOverride(1, address(pPoolToken), randomWords);
-        assertEq(pPoolToken.balanceOf(winner_01, 0 % MAX_TOKEN_ID), 1);
+        assertEq(pPoolToken.balanceOf(winner01, 0 % MAX_TOKEN_ID), 1);
     }
 
     function test_fulfillRandomWords_EdgeCaseTokenIds_Max() public {
         hoax(owner);
-        pPoolToken.mint(winner_01);
+        pPoolToken.mint(winner01);
 
         uint256[] memory randomWords = new uint256[](1);
         randomWords[0] = type(uint256).max; // Edge case: random number = UINT256_MAX
 
         hoax(owner);
         vrfCoordinatorMock.fulfillRandomWordsWithOverride(1, address(pPoolToken), randomWords);
-        assertEq(pPoolToken.balanceOf(winner_01, 0 % MAX_TOKEN_ID), 1);
+        assertEq(pPoolToken.balanceOf(winner01, 0 % MAX_TOKEN_ID), 1);
     }
 
     function test_fulfillRandomWords_RevertWhen_AlreadyFulfilled() public {
         hoax(owner);
-        pPoolToken.mint(winner_01); // => Request ID = 1
+        pPoolToken.mint(winner01); // => Request ID = 1
 
         uint256[] memory randomWords = new uint256[](1);
         randomWords[0] = 42;

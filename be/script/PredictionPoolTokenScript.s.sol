@@ -6,7 +6,7 @@ import {PredictionPoolToken} from "../src/PredictionPoolToken.sol";
 import {Constants_PredictionPoolToken} from "./Constants_PredictionPoolToken.sol";
 
 contract PredictionPoolTokenScript is Script, Constants_PredictionPoolToken {
-    address MY_ADDRESS = address(uint160(uint256(vm.envUint("MY_ADDRESS"))));
+    address myAddress = address(uint160(uint256(vm.envUint("MY_ADDRESS"))));
 
     // function setUp() public {}
 
@@ -21,18 +21,18 @@ contract PredictionPoolTokenScript is Script, Constants_PredictionPoolToken {
         // address _minter,
         // address _linkToken,
         // address _vrfCoordinator,
-        // uint256 _vrf_subId,
-        // bytes32 _vrf_keyHash
+        // uint256 _vrfSubId,
+        // bytes32 _vrfKeyHash
         // )
         token = new PredictionPoolToken(
             TOKEN_URI,
             MAX_TOKEN_ID,
-            MY_ADDRESS,
-            MY_ADDRESS,
+            myAddress,
+            myAddress,
             SEPOLIA_LINK_TOKEN,
             SEPOLIA_VRF_COORDINATOR,
             SEPOLIA_VRF_SUB_ID,
-            SEPOLIA_VRF_500GweiKeyHash
+            SEPOLIA_VRF_500_GWEI_KEY_HASH
         );
 
         vm.stopBroadcast();
