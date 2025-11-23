@@ -39,8 +39,8 @@ contract PredictionPoolToken is ERC1155, AccessControl, VRFConsumerBaseV2Plus {
 
     // storage
     uint256 public s_vrf_subId;
-    uint16 private s_vrf_requestConfirmations = 3;
-    uint32 private s_vrf_callbackGasLimit = 150000;
+    uint16 public s_vrf_requestConfirmations = 3;
+    uint32 public s_vrf_callbackGasLimit = 150000;
 
     mapping(address => uint256[]) public s_winnerToMintedTokenIds;
     mapping(uint256 => Request) public s_requests; // requestId => Request
