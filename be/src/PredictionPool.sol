@@ -71,6 +71,7 @@ contract PredictionPool is Ownable, AutomationCompatibleInterface, ReentrancyGua
         uint256 ltTotal; // total ETH bet by ltPlayers
         address priceFeed; // address of the chainlink pair priceFeed for this round
         uint256 target; // target price
+        uint256 start; // timestamp when round starts
         uint256 end; // timestamp when round ends
     }
 
@@ -249,6 +250,7 @@ contract PredictionPool is Ownable, AutomationCompatibleInterface, ReentrancyGua
         round.status = RoundStatus.Active;
         round.priceFeed = _feed;
         round.target = _target;
+        round.start = block.timestamp;
         round.end = end;
 
         if (_betSide == BetSide.Gte) {
@@ -413,7 +415,7 @@ contract PredictionPool is Ownable, AutomationCompatibleInterface, ReentrancyGua
         Round storage round = rounds[_roundId];
 
         // earlier bet = higher weight; linearly scaled
-        uint256 timeFactor = ((round.end - bet.time) * 1e18) / minRoundDuration; // normalized to 1e18
+        uint256 timeFactor = ((round.end - bet.time) * 1e18) / (round.end - round.start); // normalized to 1e18
 
         return (bet.amount * timeFactor) / 1e18; // weight also normalized
     }
