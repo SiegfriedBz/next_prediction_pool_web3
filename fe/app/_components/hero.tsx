@@ -14,9 +14,7 @@ export const Hero: FC = () => {
 				Gether
 			</TypographyH1>
 
-			<div
-				className="mt-6 text-lg md:text-2xl max-w-2xl leading-relaxed"
-			>
+			<div className="mt-6 text-lg md:text-2xl max-w-2xl leading-relaxed">
 				<TypographyH4>
 					Predict. Bet. Win —{" "}
 					<span className="text-primary font-semibold">Together</span>.
@@ -34,13 +32,13 @@ export const Hero: FC = () => {
 				</TypographyLead>
 			</div>
 
-				<Button
-					asChild
-					size="lg"
-					className="mt-10 text-lg px-8 py-6 font-semibold tracking-wide transition-all duration-200 cursor-pointer"
-				>
-					<Link href="/#tabs">Start Betting</Link>
-				</Button>
+			<Button
+				asChild
+				size="lg"
+				className="mt-10 text-lg px-8 py-6 font-semibold tracking-wide transition-all duration-200 cursor-pointer"
+			>
+				<Link href="/#tabs">Start Betting</Link>
+			</Button>
 		</section>
 	);
 };

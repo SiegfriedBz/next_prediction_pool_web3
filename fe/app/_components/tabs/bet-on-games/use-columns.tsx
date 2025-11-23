@@ -78,9 +78,7 @@ export const useColumns = () => {
 					<TooltipTrigger>
 						<div className="text-semibold flex items-center gap-x-2">
 							Bet
-							<CircleQuestionMarkIcon
-								size={14}
-							/>
+							<CircleQuestionMarkIcon size={14} />
 						</div>
 					</TooltipTrigger>
 					<TooltipContent>
