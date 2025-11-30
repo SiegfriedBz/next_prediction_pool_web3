@@ -1,6 +1,16 @@
+[![Live Demo](https://img.shields.io/badge/Live-Demo-blue)](https://bet2gether-alpha.vercel.app)
+![Foundry](https://img.shields.io/badge/Foundry-Tested-informational)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+
 # 🎲 Bet2Gether
 
-**Bet2Gether is a trustless prediction game where users bet on crypto price movements, with automated payouts and NFT rewards—powered by Ethereum, Solidity, Chainlink and Tenderly.**
+---
+
+**Bet2Gether** is a **trust-minimized prediction game** for **crypto price movements**, offering **automated payouts** and **NFT rewards** —powered by **Ethereum**, **Solidity**, **Chainlink** and **Tenderly**.
+
+> I built Bet2Gether to explore decentralized, tamper-resistant prediction games with **real-time updates** and provably fair rewards. Players can create or join games, place bets, and receive automated payouts and NFTs. The platform relies on **Chainlink Price Feeds** to ensure accurate, decentralized asset prices, **Chainlink Keepers** to automatically resolve games without admin intervention, and **Chainlink VRF** to provide verifiable randomness for **NFT rewards**. Meanwhile, I experimented with **Tenderly Web3 Actions** for off-chain triggered NFT minting.
+
+---
 
 ## 🚀 Quick Start
 
@@ -11,19 +21,40 @@
 
 ---
 
+## 🎥 Demo Previews
+
 <div align="center">
-  <img src="./assets/bet2gether-01.gif" alt="Game creation flow (1/2)" width="600"/>
-  <p><em>Game creation flow (1/2)</em></p>
+  <img src="./assets/desktop-tour.gif" alt="Desktop Tour" width="600"/>
+  <p><em>Desktop Tour</em></p>
 </div>
 
 <div align="center">
-  <img src="./assets/bet2gether-02.gif" alt="Game creation flow (2/2)" width="600"/>
-  <p><em>Game creation flow (2/2)</em></p>
+  <img src="./assets/create-game_and-bet-1.gif" alt="Create Game & Bet (1/2)" width="600"/>
+  <p><em>Create Game & Bet (1/2)</em></p>
+</div>
+
+<div align="center">
+  <img src="./assets/create-game_and-bet-2.gif" alt="Create Game & Bet (2/2)" width="600"/>
+  <p><em>Create Game & Bet (2/2)</em></p>
+</div>
+
+<div align="center">
+  <img src="./assets/game-auto-resolution.gif" alt="Game Auto-Resolution" width="600"/>
+  <p><em>Game Auto-Resolution</em></p>
+</div>
+
+<div align="center">
+  <img src="./assets/auto-mint-to-game-creator-if-winner.gif" alt="Auto-Mint NFT to Game Creator if Winner" width="600"/>
+  <p><em>Auto-Mint NFT to Game Creator if Winner</em></p>
+</div>
+
+<div align="center">
+  <img src="./assets/winner-claim-rewards.gif" alt="Claim Rewards" width="600"/>
+  <p><em>Game Winner Claim Rewards</em></p>
 </div>
 
 ---
   
-
 ## 🎮 How It Works
 
 ### For Players
@@ -123,7 +154,7 @@
 
 - Users create games ("*rounds*") on a given pair, with a target price, their prediction — whether the final price will be Less Than (LT) or Greater Than or Equal (GTE) to the target — as well as the bet amount and round duration.
 - When creating a game ("*round*"), after selecting a pair, the current price for this pair is fetched from **Chainlink Price Feeds** and displayed.
-- Other users can place bets on an active game by choosing a side.
+- Other users can place bets on an active game by choosing a betting side.
 
 ```mermaid
 sequenceDiagram
@@ -238,36 +269,61 @@ Manages NFT rewards for game creators who win their own rounds.
 
 ### 🚀 Setup & Deployment
 
-#### Backend setup
+Below is everything needed to run, test, and deploy the **PredictionPool** & **PredictionPoolToken** contracts and its frontend.
 
-All deployment parameters (e.g., LINK Token, VRF Coordinator, Subscription ID, Key Hash, ...) can be found in the Foundry project under:
+### Clone project
+
+```bash
+git clone git@github.com:SiegfriedBz/Bet2Gether-DApp.git
+```
+
+---
+
+### 🔧 Backend Setup (Foundry)
+
+All deployment parameters (e.g., LINK Token, VRF Coordinator, Subscription ID, Key Hash, ...) are located in:
 
 ```bash
 be/script/Constants_PredictionPool.sol
 be/script/Constants_PredictionPoolToken.sol
 ```
 
-##### 1. (be) Environment Variables
+#### 1. Environment Variables (Backend)
+
+Create a `.env` file in `/be`:
 
 ```bash
-# Backend
+# Backend - Foundry
 ALCHEMY_SEPOLIA_RPC_URL=
 ETHERSCAN_API_KEY=
 PRIVATE_KEY=
 ```
 
-##### 2. Deploy (and get verified) contracts on *Sepolia* Testnet
+#### 2. Deploy Contracts to *Sepolia* Testnet (auto-verify)
 
 ```bash
-# Backend
+# Backend - Foundry
 cd be 
 # Deploy PredictionPool
-forge script script/PredictionPoolScript.s.sol --rpc-url \$RPC_URL --broadcast --verify
+forge script script/PredictionPoolScript.s.sol \
+  --rpc-url $ALCHEMY_SEPOLIA_RPC_URL \
+  --broadcast \
+  --verify
 # Deploy PredictionPoolToken
-forge script script/PredictionPoolTokenScript.s.sol --rpc-url \$RPC_URL --broadcast --verify
+forge script script/PredictionPoolTokenScript.s.sol \
+  --rpc-url $ALCHEMY_SEPOLIA_RPC_URL \
+  --broadcast \
+  --verify
 ```
 
-#### Tenderly Setup
+This deploys:
+
+- PredictionPool.sol (core game logic)
+- PredictionPoolToken.sol (ERC1155 collection)
+
+---
+
+### 🔧 Tenderly Setup
 
 1. **Configure**
    - Update `web3-actions/` with deployed contract addresses/ABIs.
@@ -294,9 +350,13 @@ Example Tenderly Action Log:
 > - Reduce gas costs for users during testing.
 > *Future*: All logic will migrate on-chain.
 
-#### Frontend setup
+---
 
-##### 1. (fe) Environment Variables
+### 🖥️ Frontend Setup (Next.js)
+
+#### 1. Environment Variables (Frontend)
+
+Create a `.env` file in `/fe`:
 
 ```bash
 # Frontend
@@ -305,19 +365,24 @@ NEXT_PUBLIC_ETH_SEPOLIA_ALCHEMY_WS_URL=   # 🔧 For live updates
 NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID=
 ```
 
-##### 2. Set deployed contracts addresses & ABIs
+#### 2. Contract Addresses & ABIs
 
-- Update `/fe/app/_contracts/` with the latest ABIs and addresses from Sepolia.
+Update:
+`/fe/app/_contracts/`
+with the latest ABIs and deployed contract addresses from the backend deployment output.
 
-##### 3. Install dependencies & run locally
+#### 3. Install dependencies & run locally
 
 ```bash
 # Frontend
-cd fe && pnpm install && pnpm dev
+cd fe 
+pnpm install 
+pnpm dev
 ```
 
-#### 📖 See Docs
->
+---
+
+### 📖 See Docs
 >
 > - [Chainlink Price Feeds](https://docs.chain.link/data-feeds/price-feeds)
 > - [Chainlink Keepers](https://docs.chain.link/chainlink-automation)
@@ -325,7 +390,9 @@ cd fe && pnpm install && pnpm dev
 > - [Tenderly Web3 Actions](https://docs.tenderly.co/web3-actions)
 > - [Alchemy WebSockets](<https://docs.alchemy.com/alchemy/guides/ethereum-websockets>)
 
-### 🧪 Testing - Contracts
+---
+
+### 🧪 Testing & Coverage (Smart Contracts)
 
 - **Current Coverage**:
 
@@ -336,6 +403,7 @@ cd fe && pnpm install && pnpm dev
 | **Total**              | **77.97%**     | **76.47%**     | **46.30%**      | **81.48%**      |
 
 ### **Detailed Coverage Breakdown**
+
 - **`PredictionPool.sol`**: **89.53%** (154/172 lines) — Core logic + edge cases.
   - **Branches**: **77.78%** (21/27) — To improve.
   - **Functions**: **96.00%** (24/25) — Nearly full function coverage.
@@ -344,13 +412,19 @@ cd fe && pnpm install && pnpm dev
   - **Branches**: **25.00%** (1/4) — To improve.
   - **Functions**: **87.50%** (7/8) — Strong function coverage.
 
-- **Run locally**
+Run Full Test Suite locally:
 
-  ```bash
-  cd be
-  forge test
-  forge coverage
-  ```
+```bash
+cd be
+forge test
+```
+
+Coverage Report:
+
+```bash
+cd be
+forge coverage
+```
 
 ---
 
@@ -378,32 +452,42 @@ Currently handled off-chain (Tenderly), but easily portable on-chain.
 
 ## 🔮 Future Improvements
 
-### DAO & Governance Expansion
+### 1️⃣ Testing Enhancements
 
-A future iteration of Bet2Gether could introduce a **Bet2GetherDAO smart contract** to decentralize key decisions across the platform.
+Focus Areas:
 
-Game creators who earn PredictionPoolToken NFTs could use them as governance tokens, granting voting power within the DAO.
+- Reentrancy attacks in PredictionPool.
+- Invalid NFT minting in PredictionPoolToken.
+- Goal: Increase branch coverage to >80%.
 
-DAO members would collectively decide on key parameters such as:
+### 2️⃣ On-Chain NFT Minting
 
-- Platform fees for game creation or betting (currently unset).
-- Which Chainlink Price Feeds are authorized for new rounds.
-- The allocation and use of any protocol treasury or revenue.
+Migration Plan:
 
-This governance layer would evolve Bet2Gether from a prediction DApp into a community-owned prediction ecosystem, where active participation directly shapes the platform’s future.
+- Replace Tenderly with PredictionPool contract logic.
+- Benefits:
+  Full transparency (verifiable on-chain).
+  No off-chain dependencies.
 
-### Long-Term Vision
+### 3️⃣ DAO Governance (planned)
 
-Beyond governance, Bet2Gether aims to evolve into a fully community-driven ecosystem where:
+This is a future improvement concept for the platform. The idea is to use PredictionPoolToken NFTs as governance tokens to allow the community to participate in platform decisions.
 
-- A DAO Treasury accumulates a portion of platform fees and funds new feature proposals.
-- Staking mechanisms reward long-term participants and DAO contributors.
-- Cross-chain integrations extend prediction rounds to multiple EVM networks.
-- The NFT collection gains utility in governance, staking, or reputation scoring, reflecting players’ and creators’ historical performance.
+Potential voting areas include:
 
-## 👨‍💻 Author
+- Allocation of platform fees (e.g., 1% of round pots)
+- Selection of supported Chainlink Price Feeds
+- Governance of platform upgrades or new features
 
-Siegfried Bozza
-Full-Stack Web Developer | Blockchain Enthusiast
+⚠️ Note: This feature is currently not implemented and remains a planned enhancement for future versions.
+  
+---
 
+## Author
+
+Built solo by **Siegfried Bozza**: Full-stack development, smart contracts, and deployment.
+
+Full-Stack Developer   React/Next.js & Web3 Enthusiast
+
+💼 [LinkedIn](https://www.linkedin.com/in/siegfriedbozza/)
 🐙 [GitHub](https://github.com/SiegfriedBz)
